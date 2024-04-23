@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "360369770207",
+    "project_id": "iseey-b8562",
+    "storage_bucket": "iseey-b8562.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360369770207:android:6837b8769f368d85f5236a",
+        "android_client_info": {
+          "package_name": "com.iseey.de"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360369770207-scqcu9pdvl4jjn855urv4crod9bmsur7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ7H6lnm5RGWoU27MSnvWAmUZ2q6bJgUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360369770207-scqcu9pdvl4jjn855urv4crod9bmsur7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "360369770207-4p7ktea8uo67ikh3tapd5futnatf35q2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mcode.iseeyApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

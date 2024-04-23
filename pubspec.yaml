@@ -1,0 +1,113 @@
+name: ISEEY
+description: Chat App for Restaurant and Bars.
+
+publish_to: "none"
+
+version: 0.0.4+14
+
+environment:
+  sdk: ">=2.19.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_neumorphic:
+    git:
+      url: https://github.com/den0206/Flutter-Neumorphic.git
+      ref: feature/remoce_accentcolor
+  progress_indicators: ^1.0.0
+  flutter_slidable: ^2.0.0
+  flutter_switch: ^0.3.2
+  popover: ^0.2.7
+  url_launcher: ^6.2.2
+  http: ^0.13.5
+  shared_preferences: ^2.0.15
+  connectivity: ^3.0.6
+  intl: ^0.18.0
+  flutter_material_pickers: ^3.3.0
+  geolocator: ^9.0.2
+  geocoding: ^2.0.5
+  image_picker: ^0.8.6
+  flutter_localizations:
+    sdk: flutter
+  image_cropper: ^3.0.1
+  cached_network_image: ^3.2.3
+  photo_view: ^0.14.0
+  socket_io_client: ^2.0.3+1
+  provider: ^6.0.4
+  path_provider: ^2.0.11
+  flutter_cached_pdfview: ^0.4.1
+  flutter_cache_manager: ^3.3.0
+  getwidget: ^3.0.1
+  get: ^4.6.5
+  fluttertoast: ^8.1.2
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.2.1
+  overlay_support: ^2.1.0
+  flutter_launcher_icons: ^0.11.0
+  cupertino_icons: ^1.0.5
+  localizely_sdk: ^2.5.0
+  flutter_local_notifications: ^13.0.0
+  android_intent_plus: ^4.0.1
+  webview_flutter: ^4.4.2
+  freezed: ^2.4.6
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
+  flutter_test:
+    sdk: flutter
+  intl_utils: ^2.8.2
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/launcher_icon.png"
+
+  flutter_native_splash: ^1.1.7+1
+
+flutter_native_splash:
+  color: "#1a1d24"
+  android: true
+  ios: true
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Thin.ttf
+        - asset: fonts/Poppins-ThinItalic.ttf
+        - asset: fonts/Poppins-ExtraLight.ttf
+        - asset: fonts/Poppins-ExtraLightItalic.ttf
+        - asset: fonts/Poppins-Light.ttf
+        - asset: fonts/Poppins-LightItalic.ttf
+        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/Poppins-Italic.ttf
+        - asset: fonts/Poppins-Medium.ttf
+        - asset: fonts/Poppins-MediumItalic.ttf
+        - asset: fonts/Poppins-SemiBold.ttf
+        - asset: fonts/Poppins-SemiBoldItalic.ttf
+        - asset: fonts/Poppins-Bold.ttf
+        - asset: fonts/Poppins-BoldItalic.ttf
+        - asset: fonts/Poppins-ExtraBold.ttf
+        - asset: fonts/Poppins-ExtraBoldItalic.ttf
+        - asset: fonts/Poppins-Black.ttf
+        - asset: fonts/Poppins-BlackItalic.ttf
+
+flutter_intl:
+  enabled: true
+  class_name: L10n
+  main_locale: de
+  localizely:
+    project_id: 22c42a2f-930a-479d-92ec-f8331e878862
+    ota_enabled: true
