@@ -251,6 +251,7 @@ class GlobalWidgets {
     Widget? customIcon,
     String? titleMessage,
     String message = "",
+    
     String iconAssetPath = "assets/successIcon.png",
     bool conditionButtonEnable = false,
     bool withTextField = false,
