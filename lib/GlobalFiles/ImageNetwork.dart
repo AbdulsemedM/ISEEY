@@ -12,13 +12,7 @@ class ImageNetwork extends StatelessWidget {
   final bool isZoomableViewEnable;
 
   const ImageNetwork(
-      {Key? key,
-      required this.url,
-      required this.placeHolder,
-      this.fit,
-      this.isZoomableViewEnable = false,
-      this.height,
-      this.width})
+      {Key? key, required this.url, required this.placeHolder, this.fit, this.isZoomableViewEnable = false, this.height, this.width})
       : super(key: key);
 
   @override
@@ -26,7 +20,8 @@ class ImageNetwork extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: url,
       imageBuilder: (context, imageProvider) {
-        return this.isZoomableViewEnable? GestureDetector(
+        return this.isZoomableViewEnable
+            ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
                   Navigator.push(
@@ -36,8 +31,7 @@ class ImageNetwork extends StatelessWidget {
                               child: Stack(
                                 children: [
                                   PhotoView(
-                                    backgroundDecoration:
-                                        BoxDecoration(color: Colors.white),
+                                    backgroundDecoration: BoxDecoration(color: Colors.white),
                                     imageProvider: imageProvider,
                                   ),
                                   Positioned(
@@ -87,13 +81,12 @@ class ImageNetwork extends StatelessWidget {
                 height: height,
                 width: width,
                 child: Image.asset(
-                  AssetsConstant.instance.leftArrowIcon,
+                  AssetsConstant.leftArrowIcon,
                 ),
               )
             : placeHolder ?? Container();
       },
-      progressIndicatorBuilder: (context, url, progress) =>
-          Stack(alignment: Alignment.bottomCenter, children: <Widget>[
+      progressIndicatorBuilder: (context, url, progress) => Stack(alignment: Alignment.bottomCenter, children: <Widget>[
         Opacity(
           opacity: 0.5,
           child: placeHolder == null
@@ -103,7 +96,7 @@ class ImageNetwork extends StatelessWidget {
                   height: height,
                   width: width,
                   child: Image.asset(
-                    AssetsConstant.instance.logo,
+                    AssetsConstant.logo,
                     color: Colors.white,
                   ))
               : placeHolder,
@@ -135,7 +128,7 @@ class ImagePlaceholder extends StatelessWidget {
         padding: EdgeInsets.all(5),
         color: Color(0xfff7f7f7),
         child: Image.asset(
-          AssetsConstant.instance.logo,
+          AssetsConstant.logo,
           color: Colors.white,
           height: 15,
         ));

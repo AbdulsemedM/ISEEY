@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: AspectRatio(
                     aspectRatio: 223 / 58,
                     child: Image.asset(
-                      AssetsConstant.instance.logo,
+                      AssetsConstant.logo,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -177,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passwordController,
                     fontColor: AppColors.mainTextColorWhite,
                     cursorColor: AppColors.mainBackgroundColorOrange,
-                    strPrefixAssetImageName: AssetsConstant.instance.pwdIcon,
+                    strPrefixAssetImageName: AssetsConstant.pwdIcon,
                     prefixIconWidth: 20,
                     txtFieldLabelText: L10n.current.password_field_hint_text,
                     txtFieldHintText: "",

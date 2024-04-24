@@ -150,29 +150,14 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
                   child: Container()),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-                child: /*CustomBottomNavyBar(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                backgroundColor: AppColors.screensBackgroundsColor,
-                selectedIndex: inActivateBottomBar ? -1 : currentSelectedTab,
-                showElevation: false,
-                iconSize: 30,
-                items: [
-                  addTabBardItems("", "assets/tab1Icon.png", 0),
-                  addTabBardItems("", "assets/tab2Icon.png", 1),
-                  addTabBardItems("", "assets/tab3Icon.png", 2),
-                ],
-                onItemSelected: (index) {
-
-                },
-              )*/
-                    Container(
+                child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
                         onTap: () => onBottomTabClick(0),
                         child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.instance.tab1Icon, 0),
+                          item: addTabBardItems("", AssetsConstant.tab1Icon, 0),
                           iconSize: 30,
                           isSelected: 0 == selectedIndex,
                           backgroundColor: AppColors.screensBackgroundsColor,
@@ -184,7 +169,7 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
                       InkWell(
                         onTap: () => onBottomTabClick(1),
                         child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.instance.tab2Icon, 1),
+                          item: addTabBardItems("", AssetsConstant.tab2Icon, 1),
                           iconSize: 30,
                           isSelected: 1 == selectedIndex,
                           backgroundColor: AppColors.screensBackgroundsColor,
@@ -196,7 +181,7 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
                       InkWell(
                         onTap: () => onBottomTabClick(2),
                         child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.instance.tab3Icon, 2),
+                          item: addTabBardItems("", AssetsConstant.tab3Icon, 2),
                           iconSize: 30,
                           isSelected: 2 == selectedIndex,
                           backgroundColor: AppColors.screensBackgroundsColor,

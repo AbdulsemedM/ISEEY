@@ -173,7 +173,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           backgroundColor: Colors.transparent,
                           child: CircleAvatar(
                             radius: 70.0,
-                            backgroundImage: AssetImage(AssetsConstant.instance.manPlaceholder),
+                            backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
                             backgroundColor: AppColors.mainBackgroundColorOrange,
                           ),
                         )
@@ -257,7 +257,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 width: 18,
                                 height: 18,
                                 child: Image.asset(
-                                  AssetsConstant.instance.location,
+                                  AssetsConstant.location,
                                   fit: BoxFit.contain,
                                   scale: 1,
                                 ),
@@ -333,7 +333,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 width: 18,
                                 height: 18,
                                 child: Image.asset(
-                                  AssetsConstant.instance.userWhiteIcon,
+                                  AssetsConstant.userWhiteIcon,
                                   fit: BoxFit.contain,
                                   scale: 1,
                                 ),

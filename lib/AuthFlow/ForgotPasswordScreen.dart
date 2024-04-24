@@ -78,7 +78,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: AspectRatio(
                         aspectRatio: 223 / 58,
                         child: Image.asset(
-                          AssetsConstant.instance.logo,
+                          AssetsConstant.logo,
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -86,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
                       child: Image.asset(
-                        AssetsConstant.instance.pwdIcon,
+                        AssetsConstant.pwdIcon,
                         color: AppColors.mainBackgroundColorOrange,
                         fit: BoxFit.contain,
                         height: 50,
@@ -159,7 +159,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Center(
                   child: Image.asset(
-                    AssetsConstant.instance.leftArrowIcon,
+                    AssetsConstant.leftArrowIcon,
                     fit: BoxFit.contain,
                   ),
                 ),

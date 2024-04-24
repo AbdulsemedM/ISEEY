@@ -43,8 +43,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
       accuracy: LocationAccuracy.high,
       distanceFilter: 50,
     );
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position position) {
+    Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       lat = position.latitude.toString();
       lng = position.longitude.toString();
 
@@ -154,9 +153,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
 
         if (modelData.success == 200) {
           setState(() {
-            tableListResult = modelData.result != null
-                ? modelData.result?.checkIns ?? []
-                : [];
+            tableListResult = modelData.result != null ? modelData.result?.checkIns ?? [] : [];
             restaurant = modelData.result != null
                 ? modelData.result?.restaurant != null
                     ? modelData.result?.restaurant
@@ -235,7 +232,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
         children: [
           Container(
             child: Image.asset(
-              AssetsConstant.instance.chatBackground2,
+              AssetsConstant.chatBackground2,
               fit: BoxFit.cover,
             ),
           ),
@@ -256,26 +253,23 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Center(
                             child: Image.asset(
-                              AssetsConstant.instance.leftArrowIcon,
+                              AssetsConstant.leftArrowIcon,
                               fit: BoxFit.contain,
                             ),
                           ),
                           onPressed: () async {
-                            await callCheckoutFromRestaurant(
-                                scaffoldKey, restaurant?.sId ?? '');
+                            await callCheckoutFromRestaurant(scaffoldKey, restaurant?.sId ?? '');
                           },
                           style: NeumorphicStyle(
                             shape: NeumorphicShape.concave,
                             depth: 1,
                             lightSource: LightSource.top,
-                            color:
-                                AppColors.mainTextColorBlack.withOpacity(0.7),
+                            color: AppColors.mainTextColorBlack.withOpacity(0.7),
                             border: NeumorphicBorder(
                               color: AppColors.innerShadowColor,
                               width: 2,
                             ),
-                            shadowDarkColor:
-                                AppColors.mainBackgroundColorOrange,
+                            shadowDarkColor: AppColors.mainBackgroundColorOrange,
                             shadowLightColorEmboss: Colors.transparent,
                             shadowDarkColorEmboss: AppColors.innerShadowColor,
                           ),
@@ -335,8 +329,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
                                   ),
-                                  hintText: L10n.current
-                                      .restaurant_list_seach_bar_hint_text,
+                                  hintText: L10n.current.restaurant_list_seach_bar_hint_text,
                                 ),
                               ),
                             ),
@@ -378,12 +371,11 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                             return GestureDetector(
                               onTap: () {
                                 FocusScope.of(context).unfocus();
-                                CheckIns result =
-                                    searchTextController.text.isEmpty
+                                CheckIns result = searchTextController.text.isEmpty
+                                    ? tableListResult[index]
+                                    : _searchResult.length == 0
                                         ? tableListResult[index]
-                                        : _searchResult.length == 0
-                                            ? tableListResult[index]
-                                            : _searchResult[index];
+                                        : _searchResult[index];
                                 Navigator.push(
                                   context,
                                   SlideLeftRoute(
@@ -399,8 +391,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                               child: setListItemNew(index),
                             );
                           },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              SizedBox(height: 10),
+                          separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
                         ),
                       ),
                     ),
@@ -430,10 +421,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
           var countryDetails = tableUser.userDetail?.countryDetails?.name ?? '';
           if (firstName.toLowerCase().contains(text.toLowerCase()) ||
               lastName.toLowerCase().contains(text.toLowerCase()) ||
-              (countryDetails
-                  .toString()
-                  .toLowerCase()
-                  .contains(text.toLowerCase()))) {
+              (countryDetails.toString().toLowerCase().contains(text.toLowerCase()))) {
             tempSearchResult.add(tableItem);
           }
         });
@@ -501,8 +489,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                 child: Container(
                   margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: Column(
-                    children:
-                        List<Widget>.generate(result.users.length, (int index) {
+                    children: List<Widget>.generate(result.users.length, (int index) {
                       return _createInTableUser(index, result.users[index]);
                     }),
                   ),
@@ -583,8 +570,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                   padding: EdgeInsets.fromLTRB(30, 0, 10, 0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children:
-                        List<Widget>.generate(someList[index], (int index) {
+                    children: List<Widget>.generate(someList[index], (int index) {
                       return _createChildren(index);
                     }),
                   ),
@@ -636,8 +622,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    user.userDetail?.description != null &&
-                            user.userDetail?.description != ''
+                    user.userDetail?.description != null && user.userDetail?.description != ''
                         ? Container(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                             child: GlobalWidgets.setText(
@@ -648,8 +633,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                             ),
                           )
                         : SizedBox(),
-                    if (user.userDetail?.countryDetails?.name != null &&
-                        user.userDetail?.countryDetails?.name != '')
+                    if (user.userDetail?.countryDetails?.name != null && user.userDetail?.countryDetails?.name != '')
                       Container(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: GlobalWidgets.setText(
@@ -692,7 +676,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
                           backgroundColor: Colors.white.withOpacity(0.5),
                           maxRadius: 20,
                           backgroundImage: AssetImage(
-                            AssetsConstant.instance.manPlaceholder,
+                            AssetsConstant.manPlaceholder,
                           ),
                           shape: GFAvatarShape.square,
                         ),
@@ -800,8 +784,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
   void firebaseNotificationListen() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        debugPrint(
-            'Message also contained a notification: ${message.notification}');
+        debugPrint('Message also contained a notification: ${message.notification}');
       }
       var jsonData = jsonDecode(jsonEncode(message.data));
       try {
@@ -829,8 +812,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
-        debugPrint(
-            'Message also contained a notification: ${message.notification}');
+        debugPrint('Message also contained a notification: ${message.notification}');
       }
 
       var jsonData = jsonDecode(jsonEncode(message.data));

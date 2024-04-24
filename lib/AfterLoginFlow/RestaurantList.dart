@@ -60,8 +60,7 @@ class _RestaurantListState extends State<RestaurantList> {
 
   onCheckedInReceived(data) {
     printInfo(info: "Checked in received $data");
-    int index = restaurantListResult
-        .indexWhere((restaurant) => restaurant.sId == data['restaurant_id']);
+    int index = restaurantListResult.indexWhere((restaurant) => restaurant.sId == data['restaurant_id']);
     printInfo(info: "Index: $index");
     if (index != -1) {
       printInfo(info: "lao");
@@ -84,8 +83,7 @@ class _RestaurantListState extends State<RestaurantList> {
     Position? _currentPosition = await determinePosition();
 
     HttpRequestModel req = new HttpRequestModel(
-        url:
-            'restaurants/list?lat=${_currentPosition.latitude}&lng=${_currentPosition.longitude}',
+        url: 'restaurants/list?lat=${_currentPosition.latitude}&lng=${_currentPosition.longitude}',
         method: RequestMethodType.GET,
         body: '',
         params: '',
@@ -139,12 +137,11 @@ class _RestaurantListState extends State<RestaurantList> {
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Center(
                     child: Image.asset(
-                      AssetsConstant.instance.bars,
+                      AssetsConstant.bars,
                       fit: BoxFit.contain,
                     ),
                   ),
-                  onPressed: () =>
-                      mainTabsScaffoldKey.currentState?.openDrawer(),
+                  onPressed: () => mainTabsScaffoldKey.currentState?.openDrawer(),
                   style: NeumorphicStyle(
                     shape: NeumorphicShape.concave,
                     depth: 1,
@@ -228,7 +225,7 @@ class _RestaurantListState extends State<RestaurantList> {
           children: [
             Container(
               child: Image.asset(
-                AssetsConstant.instance.chatBackground2,
+                AssetsConstant.chatBackground2,
                 fit: BoxFit.cover,
               ),
             ),
@@ -260,71 +257,49 @@ class _RestaurantListState extends State<RestaurantList> {
                             width: double.infinity,
                             height: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            alignment: restaurantListResult.length == 0
-                                ? Alignment.center
-                                : Alignment.topCenter,
+                            alignment: restaurantListResult.length == 0 ? Alignment.center : Alignment.topCenter,
                             child: SingleChildScrollView(
                               physics: AlwaysScrollableScrollPhysics(),
                               child: restaurantListResult.length == 0
                                   ? Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.7,
+                                      height: MediaQuery.of(context).size.height * 0.7,
                                       child: Center(
                                         child: Text(
-                                          L10n.current
-                                              .restaurant_list_empty_state_text,
+                                          L10n.current.restaurant_list_empty_state_text,
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     )
                                   : SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.7,
+                                      height: MediaQuery.of(context).size.height * 0.7,
                                       child: GridView.builder(
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           crossAxisSpacing: 6.0,
                                           mainAxisSpacing: 3.0,
                                         ),
                                         padding: EdgeInsets.zero,
-                                        itemCount:
-                                            searchTextController.text.isEmpty
-                                                ? restaurantListResult.length
-                                                : _searchResult.length == 0
-                                                    ? 0
-                                                    : _searchResult.length,
+                                        itemCount: searchTextController.text.isEmpty
+                                            ? restaurantListResult.length
+                                            : _searchResult.length == 0
+                                                ? 0
+                                                : _searchResult.length,
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
+                                        itemBuilder: (BuildContext context, int index) {
                                           return GestureDetector(
                                             onTap: () {
                                               FocusScope.of(context).unfocus();
-                                              RestaurantListResult result =
-                                                  searchTextController
-                                                          .text.isEmpty
-                                                      ? restaurantListResult[
-                                                          index]
-                                                      : _searchResult.length ==
-                                                              0
-                                                          ? restaurantListResult[
-                                                              index]
-                                                          : _searchResult[
-                                                              index];
+                                              RestaurantListResult result = searchTextController.text.isEmpty
+                                                  ? restaurantListResult[index]
+                                                  : _searchResult.length == 0
+                                                      ? restaurantListResult[index]
+                                                      : _searchResult[index];
                                               restaurantId = result.sId;
-                                              Provider.of<StateManagement>(
-                                                      context,
-                                                      listen: false)
-                                                  .setSelectedRestaurant(
-                                                      result);
-                                              isNewLetterSelected =
-                                                  result.newsletter;
+                                              Provider.of<StateManagement>(context, listen: false).setSelectedRestaurant(result);
+                                              isNewLetterSelected = result.newsletter;
                                               isAgree = false;
-                                              callCheckIfUserCheckInTableApi(
-                                                  scaffoldKey);
+                                              callCheckIfUserCheckInTableApi(scaffoldKey);
                                             },
                                             child: setListItem(index),
                                           );
@@ -376,6 +351,7 @@ class _RestaurantListState extends State<RestaurantList> {
         : _searchResult.length == 0
             ? restaurantListResult[index]
             : _searchResult[index];
+
     final address = restaurantDetails.address.substring(
       restaurantDetails.address.indexOf(',') + 2,
       restaurantDetails.address.length,
@@ -403,8 +379,7 @@ class _RestaurantListState extends State<RestaurantList> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: CachedNetworkImageProvider(
-                restaurantListResult[index].restaurantImage?.location ??
-                    restaurantListResult[index].logo,
+                restaurantListResult[index].restaurantImage?.location ?? restaurantListResult[index].logo,
               ),
               fit: BoxFit.cover,
             ),
@@ -429,8 +404,7 @@ class _RestaurantListState extends State<RestaurantList> {
                             splitBackgroundForeground: true,
                             isForeground: false,
                             renderingByPath: true,
-                            shape: NeumorphicBoxShape.roundRect(
-                                BorderRadius.all(Radius.circular(4))),
+                            shape: NeumorphicBoxShape.roundRect(BorderRadius.all(Radius.circular(4))),
                             style: NeumorphicStyle(
                               shape: NeumorphicShape.concave,
                               boxShape: NeumorphicBoxShape.circle(),
@@ -440,8 +414,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                 color: AppColors.innerShadowColor,
                                 width: 1.5,
                               ),
-                              shadowLightColorEmboss:
-                                  AppColors.innerShadowColor,
+                              shadowLightColorEmboss: AppColors.innerShadowColor,
                               shadowDarkColorEmboss: AppColors.innerShadowColor,
                             ),
                           ),
@@ -479,17 +452,13 @@ class _RestaurantListState extends State<RestaurantList> {
                                     padding: EdgeInsets.only(top: 8, right: 3),
                                     child: NeumorphicButton(
                                       onPressed: () => launchUrl(
-                                        Uri.parse(
-                                            restaurantDetails.googlePageUrl ??
-                                                'www.iseey.app'),
+                                        Uri.parse(restaurantDetails.googlePageUrl ?? 'www.iseey.app'),
                                         mode: LaunchMode.inAppWebView,
                                       ),
-                                      padding: EdgeInsets.only(
-                                          left: 8, bottom: 8, top: 5),
+                                      padding: EdgeInsets.only(left: 8, bottom: 8, top: 5),
                                       style: NeumorphicStyle(
                                         shape: NeumorphicShape.convex,
-                                        boxShape: NeumorphicBoxShape.beveled(
-                                            BorderRadius.circular(4)),
+                                        boxShape: NeumorphicBoxShape.beveled(BorderRadius.circular(4)),
                                         depth: 2,
                                         lightSource: LightSource.bottomLeft,
                                         color: AppColors.listBoxBackgroundColor,
@@ -497,33 +466,25 @@ class _RestaurantListState extends State<RestaurantList> {
                                           color: AppColors.innerShadowColor,
                                           width: 0.3,
                                         ),
-                                        shadowDarkColor:
-                                            AppColors.innerShadowColor,
-                                        shadowLightColorEmboss:
-                                            AppColors.innerShadowColor,
-                                        shadowDarkColorEmboss:
-                                            AppColors.innerShadowColor,
+                                        shadowDarkColor: AppColors.innerShadowColor,
+                                        shadowLightColorEmboss: AppColors.innerShadowColor,
+                                        shadowDarkColorEmboss: AppColors.innerShadowColor,
                                       ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          buildStarRow(
-                                              restaurantDetails.ratings),
+                                          buildStarRow(restaurantDetails.ratings),
                                           restaurantDetails.reviews.length == 0
                                               ? SizedBox.shrink()
                                               : Flexible(
                                                   child: GlobalWidgets.setText(
-                                                    ' ${restaurantDetails.ratings}' +
-                                                        ' Reviews (${restaurantDetails.reviewsCount ?? '-'})',
+                                                    ' ${restaurantDetails.ratings}' + ' Reviews (${restaurantDetails.reviewsCount ?? '-'})',
                                                     fontSize: 10,
                                                     fontHeight: 1,
-                                                    strTextColor: AppColors
-                                                        .strMainTextColorWhite,
+                                                    strTextColor: AppColors.strMainTextColorWhite,
                                                     maxLine: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                         ],
@@ -551,9 +512,7 @@ class _RestaurantListState extends State<RestaurantList> {
                             child: NeumorphicButton(
                               padding: EdgeInsets.zero,
                               child: Center(
-                                child: Image.asset(
-                                    AssetsConstant.instance.facebook,
-                                    fit: BoxFit.contain),
+                                child: Image.asset(AssetsConstant.facebook, fit: BoxFit.contain),
                               ),
                               onPressed: () => launchURL(
                                 restaurantDetails.facebook ??
@@ -570,10 +529,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                   width: 0.3,
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
-                                shadowLightColorEmboss:
-                                    AppColors.innerShadowColor,
-                                shadowDarkColorEmboss:
-                                    AppColors.innerShadowColor,
+                                shadowLightColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss: AppColors.innerShadowColor,
                               ),
                             ),
                           ),
@@ -589,13 +546,12 @@ class _RestaurantListState extends State<RestaurantList> {
                               padding: EdgeInsets.zero,
                               child: Center(
                                 child: Image.asset(
-                                  AssetsConstant.instance.instagram,
+                                  AssetsConstant.instagram,
                                   fit: BoxFit.contain,
                                 ),
                               ),
                               onPressed: () => launchURL(
-                                restaurantDetails.instagram ??
-                                    'https://www.instagram.com/iseey.app?igshid=YmMyMTA2M2Y%3D',
+                                restaurantDetails.instagram ?? 'https://www.instagram.com/iseey.app?igshid=YmMyMTA2M2Y%3D',
                               ),
                               style: NeumorphicStyle(
                                 shape: NeumorphicShape.flat,
@@ -608,10 +564,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                   width: 0.3,
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
-                                shadowLightColorEmboss:
-                                    AppColors.innerShadowColor,
-                                shadowDarkColorEmboss:
-                                    AppColors.innerShadowColor,
+                                shadowLightColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss: AppColors.innerShadowColor,
                               ),
                             ),
                           ),
@@ -627,15 +581,13 @@ class _RestaurantListState extends State<RestaurantList> {
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: Center(
                                 child: Image.asset(
-                                  AssetsConstant.instance.website,
+                                  AssetsConstant.website,
                                   fit: BoxFit.contain,
                                   color: Colors.white,
                                   height: 25,
                                 ),
                               ),
-                              onPressed: () => launchURL(
-                                  restaurantDetails.website ??
-                                      'https://iseey.app/'),
+                              onPressed: () => launchURL(restaurantDetails.website ?? 'https://iseey.app/'),
                               style: NeumorphicStyle(
                                 shape: NeumorphicShape.flat,
                                 boxShape: NeumorphicBoxShape.circle(),
@@ -647,10 +599,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                   width: 0.1,
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
-                                shadowLightColorEmboss:
-                                    AppColors.innerShadowColor,
-                                shadowDarkColorEmboss:
-                                    AppColors.innerShadowColor,
+                                shadowLightColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss: AppColors.innerShadowColor,
                               ),
                             ),
                           ),
@@ -757,8 +707,7 @@ class _RestaurantListState extends State<RestaurantList> {
                               ),
                             ),
                             Container(
-                              margin:
-                                  EdgeInsets.only(left: 20, top: 15, right: 20),
+                              margin: EdgeInsets.only(left: 20, top: 15, right: 20),
                               height: 45,
                               width: double.infinity,
                               child: Neumorphic(
@@ -776,8 +725,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                   intensity: 0.5,
                                   shadowDarkColor: AppColors.innerShadowColor,
                                   shadowLightColorEmboss: Colors.transparent,
-                                  shadowDarkColorEmboss:
-                                      AppColors.innerShadowColor,
+                                  shadowDarkColorEmboss: AppColors.innerShadowColor,
                                 ),
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(10, 0, 5, 1),
@@ -785,9 +733,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                     keyboardAppearance: Brightness.dark,
                                     controller: tableNumberController,
                                     keyboardType: TextInputType.number,
-                                    inputFormatters: <TextInputFormatter>[
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
+                                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                                     style: TextStyle(
                                       color: AppColors.mainTextColorWhite,
                                       fontFamily: 'Poppins',
@@ -797,8 +743,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                     decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: AppColors
-                                              .mainBackgroundColorOrange,
+                                          color: AppColors.mainBackgroundColorOrange,
                                           width: 1.5,
                                         ),
                                       ),
@@ -809,12 +754,10 @@ class _RestaurantListState extends State<RestaurantList> {
                             ),
                             isNewLetterSelected
                                 ? Container(
-                                    margin: EdgeInsets.only(
-                                        left: 20, top: 15, right: 20),
+                                    margin: EdgeInsets.only(left: 20, top: 15, right: 20),
                                   )
                                 : Container(
-                                    margin: EdgeInsets.only(
-                                        left: 20, top: 15, right: 20),
+                                    margin: EdgeInsets.only(left: 20, top: 15, right: 20),
                                     child: Row(
                                       children: [
                                         isAgree
@@ -826,9 +769,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                                       overlayEntry?.remove();
                                                       overlayEntry = null;
                                                       showTablePopup(
-                                                        context: mainTabsScaffoldKey
-                                                                .currentContext ??
-                                                            context,
+                                                        context: mainTabsScaffoldKey.currentContext ?? context,
                                                       );
                                                     },
                                                   );
@@ -837,8 +778,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                                   width: 20,
                                                   height: 20,
                                                   child: Image.asset(
-                                                    AssetsConstant.instance
-                                                        .selectedCheckbox,
+                                                    AssetsConstant.selectedCheckbox,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -849,18 +789,14 @@ class _RestaurantListState extends State<RestaurantList> {
                                                     isAgree = !isAgree;
                                                     overlayEntry?.remove();
                                                     overlayEntry = null;
-                                                    showTablePopup(
-                                                        context: mainTabsScaffoldKey
-                                                                .currentContext ??
-                                                            context);
+                                                    showTablePopup(context: mainTabsScaffoldKey.currentContext ?? context);
                                                   });
                                                 },
                                                 child: Container(
                                                   width: 20,
                                                   height: 20,
                                                   child: Image.asset(
-                                                    AssetsConstant.instance
-                                                        .unselectedCheckbox,
+                                                    AssetsConstant.unselectedCheckbox,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -872,18 +808,13 @@ class _RestaurantListState extends State<RestaurantList> {
                                               isAgree = !agreed;
                                               overlayEntry?.remove();
                                               overlayEntry = null;
-                                              showTablePopup(
-                                                  context: mainTabsScaffoldKey
-                                                          .currentContext ??
-                                                      context);
+                                              showTablePopup(context: mainTabsScaffoldKey.currentContext ?? context);
                                             });
                                           },
                                           child: GlobalWidgets.setText(
-                                            L10n.current
-                                                .table_pop_up_newsletter_checkbox_text,
+                                            L10n.current.table_pop_up_newsletter_checkbox_text,
                                             textAlign: TextAlign.left,
-                                            strTextColor:
-                                                AppColors.strMainTextColorWhite,
+                                            strTextColor: AppColors.strMainTextColorWhite,
                                             fontSize: 15,
                                             maxLine: 1,
                                           ),
@@ -903,21 +834,15 @@ class _RestaurantListState extends State<RestaurantList> {
                                       width: 120,
                                       child: GlobalWidgets.setButton(
                                         onPressButton: () async {
-                                          if (tableNumberController
-                                              .text.isEmpty) {
-                                            showSuccessOrFail(
-                                                L10n.current
-                                                    .table_pop_up_error_message,
-                                                000,
-                                                context);
+                                          if (tableNumberController.text.isEmpty) {
+                                            showSuccessOrFail(L10n.current.table_pop_up_error_message, 000, context);
                                             return null;
                                           } else {
                                             overlayEntry?.remove();
                                             overlayEntry = null;
 
                                             callCheckIntoTableApi();
-                                            Map las = await callUpdateLatLong(
-                                                scaffoldKey);
+                                            Map las = await callUpdateLatLong(scaffoldKey);
 
                                             _chatListController.loc.value = las;
                                           }
@@ -929,8 +854,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                             L10n.current.done_title,
                                             textAlign: TextAlign.center,
                                             fontSize: 16,
-                                            strTextColor:
-                                                AppColors.strMainTextColorWhite,
+                                            strTextColor: AppColors.strMainTextColorWhite,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
@@ -999,8 +923,7 @@ class _RestaurantListState extends State<RestaurantList> {
                               ),
                               intensity: 0.6,
                               shadowDarkColor: AppColors.innerShadowColor,
-                              shadowLightColorEmboss:
-                                  AppColors.innerShadowColor,
+                              shadowLightColorEmboss: AppColors.innerShadowColor,
                               shadowDarkColorEmboss: AppColors.innerShadowColor,
                             ),
                           ),
@@ -1019,11 +942,9 @@ class _RestaurantListState extends State<RestaurantList> {
     overlayState.insert(overlayEntry!);
   }
 
-  void callCheckIfUserCheckInTableApi(
-      GlobalKey<ScaffoldState> scaffoldKey) async {
+  void callCheckIfUserCheckInTableApi(GlobalKey<ScaffoldState> scaffoldKey) async {
     HttpRequestModel req = new HttpRequestModel(
-        url:
-            'restaurants/$restaurantId/tables/checkIfUserAlreadyCheckInToRestaurant',
+        url: 'restaurants/$restaurantId/tables/checkIfUserAlreadyCheckInToRestaurant',
         method: RequestMethodType.GET,
         body: '',
         params: '',

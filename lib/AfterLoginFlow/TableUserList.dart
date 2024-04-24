@@ -110,7 +110,7 @@ class _TableUserListState extends State<TableUserList> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.leftArrowIcon,
+                          AssetsConstant.leftArrowIcon,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -256,7 +256,7 @@ class _TableUserListState extends State<TableUserList> {
                           child: GFAvatar(
                             backgroundColor: Colors.white.withOpacity(0.5),
                             maxRadius: 20,
-                            backgroundImage: AssetImage("assets/man-placeholder.png"),
+                            backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
                             shape: GFAvatarShape.square,
                           ),
                         );
@@ -298,7 +298,7 @@ class _TableUserListState extends State<TableUserList> {
                               width: 15,
                               height: 15,
                               child: Image.asset(
-                                AssetsConstant.instance.calendarIcon,
+                                AssetsConstant.calendarIcon,
                                 fit: BoxFit.contain,
                                 color: Colors.orange,
                               ),
@@ -332,7 +332,7 @@ class _TableUserListState extends State<TableUserList> {
                         padding: EdgeInsets.zero,
                         child: Center(
                           child: Image.asset(
-                            AssetsConstant.instance.facebook,
+                            AssetsConstant.facebook,
                             fit: BoxFit.contain,
                             color: Colors.white,
                             height: 25,
@@ -382,7 +382,7 @@ class _TableUserListState extends State<TableUserList> {
                         padding: EdgeInsets.zero,
                         child: Center(
                           child: Image.asset(
-                            AssetsConstant.instance.instagram,
+                            AssetsConstant.instagram,
                             fit: BoxFit.contain,
                             color: Colors.white,
                             height: 25,

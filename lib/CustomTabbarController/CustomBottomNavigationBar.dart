@@ -1,9 +1,9 @@
 library bottom_navy_bar;
 
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:ISEEY/GlobalFiles/AppColors.dart';
 import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
+import 'package:ISEEY/Services/assets_constant.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class CustomBottomNavyBar extends StatelessWidget {
   final int selectedIndex;
@@ -17,7 +17,6 @@ class CustomBottomNavyBar extends StatelessWidget {
   final double itemCornerRadius;
   final double containerHeight;
   final Curve curve;
-
 
   CustomBottomNavyBar({
     Key? key,
@@ -35,9 +34,6 @@ class CustomBottomNavyBar extends StatelessWidget {
   }) {
     assert(items.length >= 2 && items.length <= 5);
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +187,9 @@ Widget createBottomTabBar({required Function(int) onTabPressed}) {
             showElevation: false,
             iconSize: 30,
             items: [
-              addTabBardItems("", AssetsConstant.instance.tab1Icon, 0),
-              addTabBardItems("", AssetsConstant.instance.tab2Icon, 1),
-              addTabBardItems("", AssetsConstant.instance.tab3Icon, 2),
+              addTabBardItems("", AssetsConstant.tab1Icon, 0),
+              addTabBardItems("", AssetsConstant.tab2Icon, 1),
+              addTabBardItems("", AssetsConstant.tab3Icon, 2),
             ],
             onItemSelected: (index) => onTabPressed(index),
           ),

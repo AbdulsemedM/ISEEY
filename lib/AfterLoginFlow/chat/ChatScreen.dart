@@ -20,7 +20,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ProfileScreen.dart';
 
@@ -29,13 +28,7 @@ class ChatScreen extends StatefulWidget {
   final UserDetail toUser;
   final String chatId;
   final Restaurant? restaurant;
-  ChatScreen(
-      {Key? key,
-      required this.fromUser,
-      required this.toUser,
-      required this.chatId,
-      this.restaurant})
-      : super(key: key);
+  ChatScreen({Key? key, required this.fromUser, required this.toUser, required this.chatId, this.restaurant}) : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -46,7 +39,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   List<Map> _chatDataList = [];
   ChatListController _chatListController = Get.put(ChatListController());
   ScrollController _controller = ScrollController();
-  String chatBackgroundPath = "assets/chat-background-gray.png";
+
+  String chatBackgroundPath = AssetsConstant.chatBackgroundGray;
   bool tick = false;
   late UserDetail toUser;
   UserResult? localUser;
@@ -212,8 +206,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     GlobalWidgets.socketUtils.setConnectListener(onConnect);
     GlobalWidgets.socketUtils.setOnDisconnectListener(onDisconnect);
     GlobalWidgets.socketUtils.setOnCustomErrorListener(onCustomError);
-    GlobalWidgets.socketUtils
-        .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
+    GlobalWidgets.socketUtils.setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
 
     GlobalWidgets.socketUtils.sendJoinRoom(
       isChatId: true,
@@ -226,7 +219,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   setOnChatMessageReceivedListener(data) {
-    debugPrint("data ===> ${data}");
+    debugPrint("data ===> $data");
     if (localUser?.userId == data['sender']) {
       return;
     }
@@ -339,14 +332,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Center(
                           child: Image.asset(
-                            AssetsConstant.instance.leftArrowIcon,
+                            AssetsConstant.leftArrowIcon,
                             fit: BoxFit.contain,
                           ),
                         ),
                         onPressed: () {
                           try {
-                            GlobalWidgets.socketUtils
-                                .updateSeenCounts(widget.chatId);
+                            GlobalWidgets.socketUtils.updateSeenCounts(widget.chatId);
                           } catch (e) {}
                           Navigator.pop(context);
                           _chatListController.chatData.clear();
@@ -451,46 +443,26 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 child: Obx(() {
                                   return Container(
                                     child: ListView.builder(
-                                      padding:
-                                          EdgeInsets.only(top: 20, bottom: 0),
+                                      padding: EdgeInsets.only(top: 20, bottom: 0),
                                       controller: _controller,
-                                      itemCount:
-                                          _chatListController.chatData.length,
+                                      itemCount: _chatListController.chatData.length,
                                       itemBuilder: (context, index) {
                                         return GestureDetector(
                                           onLongPress: () {
-                                            getActionSheet(_chatListController
-                                                .chatData[index]['id']);
+                                            getActionSheet(_chatListController.chatData[index]['id']);
                                           },
-                                          child: _chatListController
-                                                  .chatData[index]["isRight"]
+                                          child: _chatListController.chatData[index]["isRight"]
                                               ? RightChatBubble(
-                                                  imgPath: _chatListController
-                                                          .chatData[index]
-                                                      ["imgPath"],
-                                                  nameText: _chatListController
-                                                          .chatData[index]
-                                                      ["nameText"],
-                                                  timestamp: _chatListController
-                                                          .chatData[index]
-                                                      ["timeText"],
-                                                  chatText: _chatListController
-                                                          .chatData[index]
-                                                      ["chatText"],
+                                                  imgPath: _chatListController.chatData[index]["imgPath"],
+                                                  nameText: _chatListController.chatData[index]["nameText"],
+                                                  timestamp: _chatListController.chatData[index]["timeText"],
+                                                  chatText: _chatListController.chatData[index]["chatText"],
                                                 )
                                               : LeftChatBubble(
-                                                  imgPath: _chatListController
-                                                          .chatData[index]
-                                                      ["imgPath"],
-                                                  nameText: _chatListController
-                                                          .chatData[index]
-                                                      ["nameText"],
-                                                  timestamp: _chatListController
-                                                          .chatData[index]
-                                                      ["timeText"],
-                                                  chatText: _chatListController
-                                                          .chatData[index]
-                                                      ["chatText"],
+                                                  imgPath: _chatListController.chatData[index]["imgPath"],
+                                                  nameText: _chatListController.chatData[index]["nameText"],
+                                                  timestamp: _chatListController.chatData[index]["timeText"],
+                                                  chatText: _chatListController.chatData[index]["chatText"],
                                                 ),
                                         );
                                       },
@@ -523,23 +495,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                     ),
                                     shadowDarkColor: AppColors.innerShadowColor,
                                     shadowLightColorEmboss: Colors.transparent,
-                                    shadowDarkColorEmboss:
-                                        AppColors.innerShadowColor,
+                                    shadowDarkColorEmboss: AppColors.innerShadowColor,
                                   ),
                                   child: Row(
                                     children: [
                                       Flexible(
                                         child: Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                          padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
                                           child: TextField(
                                             maxLines: 6,
                                             minLines: 1,
-                                            textCapitalization:
-                                                TextCapitalization.sentences,
+                                            textCapitalization: TextCapitalization.sentences,
                                             style: TextStyle(
-                                              color:
-                                                  AppColors.mainTextColorWhite,
+                                              color: AppColors.mainTextColorWhite,
                                               fontFamily: 'Poppins',
                                               fontWeight: FontWeight.normal,
                                               fontSize: 14,
@@ -554,8 +522,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: 15,
                                               ),
-                                              hintText: L10n.current
-                                                  .chat_page_send_message_title,
+                                              hintText: L10n.current.chat_page_send_message_title,
                                             ),
                                           ),
                                         ),
@@ -565,41 +532,33 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                         height: 50,
                                         alignment: Alignment.center,
                                         child: NeumorphicButton(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                          margin:
-                                              EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                           child: Center(
                                             child: Image.asset(
-                                              "assets/SendMessageIcon.png",
+                                              AssetsConstant.sendMessageIcon,
                                               fit: BoxFit.contain,
-                                              color: AppColors
-                                                  .mainBackgroundColorOrange,
+                                              color: AppColors.mainBackgroundColorOrange,
                                             ),
                                           ),
                                           onPressed: () {
                                             sendMessage();
                                             _controller.jumpTo(
-                                              _controller
-                                                  .position.maxScrollExtent,
+                                              _controller.position.maxScrollExtent,
                                             );
                                           },
                                           style: NeumorphicStyle(
                                             shape: NeumorphicShape.concave,
                                             depth: 1,
                                             lightSource: LightSource.top,
-                                            color: AppColors.mainTextColorBlack
-                                                .withOpacity(0.7),
+                                            color: AppColors.mainTextColorBlack.withOpacity(0.7),
                                             border: NeumorphicBorder(
                                               color: AppColors.innerShadowColor,
                                               width: 2,
                                             ),
-                                            shadowDarkColor: AppColors
-                                                .mainBackgroundColorOrange,
-                                            shadowLightColorEmboss:
-                                                Colors.transparent,
-                                            shadowDarkColorEmboss:
-                                                AppColors.innerShadowColor,
+                                            shadowDarkColor: AppColors.mainBackgroundColorOrange,
+                                            shadowLightColorEmboss: Colors.transparent,
+                                            shadowDarkColorEmboss: AppColors.innerShadowColor,
                                           ),
                                         ),
                                       ),
@@ -701,8 +660,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Future<bool> callUpdateUser() async {
     HttpRequestModel req = new HttpRequestModel(
-        url:
-            'users/getUserDetail/${widget.toUser.sId == '' ? toUser.userId : toUser.sId}',
+        url: 'users/getUserDetail/${widget.toUser.sId == '' ? toUser.userId : toUser.sId}',
         method: RequestMethodType.GET,
         body: '',
         params: '',
@@ -748,12 +706,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'friends/addFriend',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'friends/addFriend', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -769,8 +722,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         String message = jsonRes["message"];
 
         if (success == 200) {
-          showSuccessOrFail(message, success, context, isCustom: true,
-              onCustomOkPress: () {
+          showSuccessOrFail(message, success, context, isCustom: true, onCustomOkPress: () {
             callUpdateUser();
           });
           return true;
@@ -795,12 +747,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     var body = json.encode(data);
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/block',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'users/block', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -880,9 +827,7 @@ class ListItems extends StatelessWidget {
                   height: 20,
                   margin: EdgeInsets.only(top: 10),
                   child: GlobalWidgets.setText(
-                    self.widget.toUser.isFriend
-                        ? L10n.current.chat_page_view_profile_title
-                        : L10n.current.chat_page_add_friend_title,
+                    self.widget.toUser.isFriend ? L10n.current.chat_page_view_profile_title : L10n.current.chat_page_add_friend_title,
                     fontSize: 14,
                     strTextColor: AppColors.strMainTextColorWhite,
                   ),
@@ -899,8 +844,7 @@ class ListItems extends StatelessWidget {
                       onPressOKButton: () {
                         self.callBlockUserApi();
                       },
-                      message:
-                          L10n.current.chat_page_block_user_warning_message);
+                      message: L10n.current.chat_page_block_user_warning_message);
                 },
                 child: Container(
                   height: 20,
@@ -922,8 +866,7 @@ class ListItems extends StatelessWidget {
                       titleMessage: "ISEEY",
                       withTextField: true,
                       onPressOKButton: () => self.callBlockUserApi(),
-                      message:
-                          L10n.current.chat_page_flag_user_warning_message);
+                      message: L10n.current.chat_page_flag_user_warning_message);
                 },
                 child: Container(
                   height: 20,
@@ -945,13 +888,11 @@ class ListItems extends StatelessWidget {
                       conditionButtonEnable: true,
                       titleMessage: "ISEEY",
                       onPressOKButton: () {
-                        GlobalWidgets.socketUtils
-                            .sendClearChat(self.widget.chatId);
+                        GlobalWidgets.socketUtils.sendClearChat(self.widget.chatId);
                         self._chatListController.clearChat();
                         self.clearChatDataList();
                       },
-                      message:
-                          L10n.current.chat_page_clear_chat_warning_message);
+                      message: L10n.current.chat_page_clear_chat_warning_message);
                 },
                 child: Container(
                   height: 20,

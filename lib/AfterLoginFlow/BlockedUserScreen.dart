@@ -36,12 +36,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
     GlobalKey<ScaffoldState> scaffoldKey,
   ) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/blockedList',
-        method: RequestMethodType.GET,
-        body: '',
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'users/blockedList', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -91,7 +86,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.leftArrowIcon,
+                          AssetsConstant.leftArrowIcon,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -133,9 +128,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                 child: Container(
                   child: ListView.builder(
                     padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                    itemCount: blockedUserList.length == 0
-                        ? 1
-                        : blockedUserList.length,
+                    itemCount: blockedUserList.length == 0 ? 1 : blockedUserList.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return blockedUserList.length == 0
@@ -156,49 +149,38 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                                     ),
                                     shadowDarkColor: AppColors.innerShadowColor,
                                     shadowLightColorEmboss: Colors.transparent,
-                                    shadowDarkColorEmboss:
-                                        AppColors.innerShadowColor,
+                                    shadowDarkColorEmboss: AppColors.innerShadowColor,
                                   ),
                                   child: Stack(
                                     children: [
                                       Container(
                                         width: double.infinity,
                                         height: double.infinity,
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 40, 0, 40),
+                                        padding: EdgeInsets.fromLTRB(0, 40, 0, 40),
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 40),
+                                              padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
                                               child: Image.asset(
-                                                AssetsConstant
-                                                    .instance.errorIcon,
+                                                AssetsConstant.errorIcon,
                                                 fit: BoxFit.contain,
                                               ),
                                             ),
                                             Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 15),
+                                              padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                                               child: GlobalWidgets.setText(
-                                                L10n.current
-                                                    .blocked_user_sorry_title,
-                                                strTextColor: AppColors
-                                                    .strMainTextColorWhite,
+                                                L10n.current.blocked_user_sorry_title,
+                                                strTextColor: AppColors.strMainTextColorWhite,
                                                 textAlign: TextAlign.center,
                                                 fontSize: 26,
                                               ),
                                             ),
                                             Container(
                                               child: GlobalWidgets.setText(
-                                                L10n.current
-                                                    .blocked_user_no_data_title,
-                                                strTextColor: AppColors
-                                                    .strMainTextColorWhite,
+                                                L10n.current.blocked_user_no_data_title,
+                                                strTextColor: AppColors.strMainTextColorWhite,
                                                 textAlign: TextAlign.center,
                                                 fontSize: 20,
                                               ),
@@ -229,12 +211,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
 
     var body = json.encode(data);
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/unblock',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'users/unblock', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -338,8 +315,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                             ),
                           );
                         },
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
+                        placeholder: (context, url) => CircularProgressIndicator(),
                         errorWidget: (context, url, error) {
                           return Container(
                             height: 80,
@@ -348,7 +324,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                               backgroundColor: Colors.white.withOpacity(0.5),
                               maxRadius: 20,
                               backgroundImage: AssetImage(
-                                AssetsConstant.instance.manPlaceholder,
+                                AssetsConstant.manPlaceholder,
                               ),
                               shape: GFAvatarShape.square,
                             ),
@@ -380,7 +356,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                               height: 20,
                               margin: EdgeInsets.fromLTRB(20, 5, 0, 0),
                               child: Image.asset(
-                                AssetsConstant.instance.countryTemp,
+                                AssetsConstant.countryTemp,
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -407,7 +383,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                         width: 15,
                         height: 15,
                         child: Image.asset(
-                          "assets/pwdIcon.png",
+                          AssetsConstant.pwdIcon,
                           fit: BoxFit.contain,
                         ),
                       ),

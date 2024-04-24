@@ -48,8 +48,7 @@ void launchURL(String link, [bool shouldOpenNewTab = true]) async {
       final intent = AndroidIntent(action: "action_view", data: url.toString());
       return intent.launch();
     } else {
-      await launchUrl(url,
-          webOnlyWindowName: shouldOpenNewTab ? null : '_self');
+      await launchUrl(url, webOnlyWindowName: shouldOpenNewTab ? null : '_self');
     }
   } else {
     Fluttertoast.showToast(msg: 'Invalid url: $link');
@@ -87,8 +86,7 @@ removePrefForKey(String key) async {
 }
 
 bool validatePasswordStructureContainAllType(String value) {
-  String? pattern =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String? pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   RegExp? regExp = new RegExp(pattern);
   return regExp.hasMatch(value);
 }
@@ -137,24 +135,21 @@ calculateAge(DateTime birthDate) {
   return age;
 }
 
-DateTime? convertDateFromString(
-    {required String strDate, String dateComingFormat = "yyyy-MM-dd"}) {
+DateTime? convertDateFromString({required String strDate, String dateComingFormat = "yyyy-MM-dd"}) {
   var formatter = new DateFormat(dateComingFormat);
   DateTime? giveDate = formatter.parse(strDate);
 
   return giveDate;
 }
 
-String convertStringFromDate(
-    {required DateTime date, String? dateWantInFormat = "yyyy-MM-dd"}) {
+String convertStringFromDate({required DateTime date, String? dateWantInFormat = "yyyy-MM-dd"}) {
   var formatter = new DateFormat(dateWantInFormat);
   String? strFormattedDate = formatter.format(date);
 
   return strFormattedDate;
 }
 
-String? convertFormattedDateStringFromString(
-    String strDate, String dateFormat) {
+String? convertFormattedDateStringFromString(String strDate, String dateFormat) {
   var formatter = new DateFormat('yyyy-MM-dd');
   DateTime giveDate = formatter.parse(strDate);
 
@@ -169,8 +164,7 @@ DateTime getDateFromTimeStamp(int timeStamp) {
   return date;
 }
 
-String? getTimeStampToFormattedTime(
-    {String timeFormat = 'dd.MM.yyyy hh:mm a', required int timestamp}) {
+String? getTimeStampToFormattedTime({String timeFormat = 'dd.MM.yyyy hh:mm a', required int timestamp}) {
   var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   var format = DateFormat(timeFormat);
   String? currentTime = format.format(date);
@@ -232,7 +226,7 @@ showSuccessOrFail(
         isTitleEnable: isTitleEnable,
         context: context,
         titleMessage: L10n.current.sign_up_failure_message_title,
-        iconAssetPath: AssetsConstant.instance.errorIcon,
+        iconAssetPath: AssetsConstant.errorIcon,
         message: message,
         onPressOKButton: () {
           debugPrint("OK Pressed");
@@ -251,12 +245,7 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
   var body = json.encode(data);
 
   HttpRequestModel req = new HttpRequestModel(
-      url: 'users/updatelatlng',
-      method: RequestMethodType.POST,
-      body: body,
-      params: '',
-      headerType: "json",
-      authMethod: true);
+      url: 'users/updatelatlng', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
   var response;
   var x = GlobalWidgets();
   try {
@@ -279,8 +268,7 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
       }
     } else {
       final context = scaffoldKey.currentContext;
-      if (context != null)
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+      if (context != null) showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
       return false;
     }
   } catch (e) {
@@ -308,8 +296,7 @@ Future<Position> determinePosition() async {
   }
 
   if (permission == LocationPermission.deniedForever) {
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
   }
 
   return await Geolocator.getCurrentPosition();

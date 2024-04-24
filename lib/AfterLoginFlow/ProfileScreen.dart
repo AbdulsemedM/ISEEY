@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.leftArrowIcon,
+                          AssetsConstant.leftArrowIcon,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CircleAvatar(
                           radius: 70.0,
                           backgroundImage: AssetImage(
-                            AssetsConstant.instance.manPlaceholder,
+                            AssetsConstant.manPlaceholder,
                           ),
                           backgroundColor: AppColors.mainBackgroundColorOrange,
                         ),
@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
                                     backgroundImage: AssetImage(
-                                      AssetsConstant.instance.manPlaceholder,
+                                      AssetsConstant.manPlaceholder,
                                     ),
                                   ),
                                 ),
@@ -152,9 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 child: GlobalWidgets.setText(
-                  widget.userDetail.firstName +
-                      " " +
-                      widget.userDetail.lastName,
+                  widget.userDetail.firstName + " " + widget.userDetail.lastName,
                   strTextColor: AppColors.strMainTextColorWhite,
                   fontSize: 22,
                 ),
@@ -193,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Center(
                                         child: Image.asset(
-                                          AssetsConstant.instance.userIcon,
+                                          AssetsConstant.userIcon,
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -206,12 +204,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: AppColors.innerShadowColor,
                                           width: 1,
                                         ),
-                                        shadowDarkColor:
-                                            AppColors.innerShadowColor,
-                                        shadowLightColorEmboss:
-                                            Colors.transparent,
-                                        shadowDarkColorEmboss:
-                                            AppColors.innerShadowColor,
+                                        shadowDarkColor: AppColors.innerShadowColor,
+                                        shadowLightColorEmboss: Colors.transparent,
+                                        shadowDarkColorEmboss: AppColors.innerShadowColor,
                                       ),
                                     ),
                                   ),
@@ -224,30 +219,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   Flexible(
                                     child: Container(
-                                      padding:
-                                          EdgeInsets.only(left: 15, right: 15),
+                                      padding: EdgeInsets.only(left: 15, right: 15),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                             child: GlobalWidgets.setText(
                                               L10n.current.menu_friends_title,
                                               fontSize: 16,
                                               fontWeight: FontWeight.w400,
-                                              strTextColor: AppColors
-                                                  .strMainTextColorWhite,
+                                              strTextColor: AppColors.strMainTextColorWhite,
                                             ),
                                           ),
                                           Container(
                                             padding: EdgeInsets.only(left: 15),
                                             child: GlobalWidgets.setText(
-                                              widget.userDetail.friendsCount
-                                                  .toString(),
+                                              widget.userDetail.friendsCount.toString(),
                                               fontSize: 16,
                                               fontWeight: FontWeight.w400,
-                                              strTextColor: AppColors
-                                                  .strMainTextColorWhite,
+                                              strTextColor: AppColors.strMainTextColorWhite,
                                             ),
                                           ),
                                         ],
@@ -290,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Center(
                                         child: Image.asset(
-                                          AssetsConstant.instance.calendar,
+                                          AssetsConstant.calendar,
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -303,12 +293,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: AppColors.innerShadowColor,
                                           width: 1,
                                         ),
-                                        shadowDarkColor:
-                                            AppColors.innerShadowColor,
-                                        shadowLightColorEmboss:
-                                            Colors.transparent,
-                                        shadowDarkColorEmboss:
-                                            AppColors.innerShadowColor,
+                                        shadowDarkColor: AppColors.innerShadowColor,
+                                        shadowLightColorEmboss: Colors.transparent,
+                                        shadowDarkColorEmboss: AppColors.innerShadowColor,
                                       ),
                                     ),
                                   ),
@@ -321,32 +308,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   Flexible(
                                     child: Container(
-                                      padding:
-                                          EdgeInsets.only(left: 15, right: 15),
+                                      padding: EdgeInsets.only(left: 15, right: 15),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                             child: GlobalWidgets.setText(
-                                              L10n.current
-                                                  .profile_page_birth_date_title,
+                                              L10n.current.profile_page_birth_date_title,
                                               fontSize: 16,
                                               fontWeight: FontWeight.w400,
-                                              strTextColor: AppColors
-                                                  .strMainTextColorWhite,
+                                              strTextColor: AppColors.strMainTextColorWhite,
                                             ),
                                           ),
                                           Expanded(
                                             child: Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 15),
-                                              child: GlobalWidgets.setText(
-                                                  strDob,
+                                              padding: EdgeInsets.only(left: 15),
+                                              child: GlobalWidgets.setText(strDob,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
-                                                  strTextColor: AppColors
-                                                      .strMainTextColorWhite,
+                                                  strTextColor: AppColors.strMainTextColorWhite,
                                                   maxLine: 1),
                                             ),
                                           ),
@@ -385,15 +365,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Container(
                                       width: 40,
                                       height: 40,
-                                      margin:
-                                          EdgeInsets.fromLTRB(15, 15, 15, 15),
+                                      margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
                                       alignment: Alignment.center,
                                       child: Neumorphic(
-                                        padding:
-                                            EdgeInsets.fromLTRB(6, 6, 6, 6),
+                                        padding: EdgeInsets.fromLTRB(6, 6, 6, 6),
                                         child: Center(
                                           child: Image.asset(
-                                            AssetsConstant.instance.info,
+                                            AssetsConstant.info,
                                             fit: BoxFit.contain,
                                           ),
                                         ),
@@ -401,18 +379,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           shape: NeumorphicShape.flat,
                                           depth: -3,
                                           lightSource: LightSource.top,
-                                          color:
-                                              AppColors.listBoxBackgroundColor,
+                                          color: AppColors.listBoxBackgroundColor,
                                           border: NeumorphicBorder(
                                             color: AppColors.innerShadowColor,
                                             width: 1,
                                           ),
-                                          shadowDarkColor:
-                                              AppColors.innerShadowColor,
-                                          shadowLightColorEmboss:
-                                              Colors.transparent,
-                                          shadowDarkColorEmboss:
-                                              AppColors.innerShadowColor,
+                                          shadowDarkColor: AppColors.innerShadowColor,
+                                          shadowLightColorEmboss: Colors.transparent,
+                                          shadowDarkColorEmboss: AppColors.innerShadowColor,
                                         ),
                                       ),
                                     ),
@@ -425,11 +399,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     Flexible(
                                       child: Container(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15),
+                                        padding: EdgeInsets.only(left: 15, right: 15),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Flexible(
                                               child: Container(
@@ -437,8 +409,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   description,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
-                                                  strTextColor: AppColors
-                                                      .strMainTextColorWhite,
+                                                  strTextColor: AppColors.strMainTextColorWhite,
                                                 ),
                                               ),
                                             )
@@ -470,47 +441,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   shadowDarkColor: AppColors.innerShadowColor,
                                   shadowLightColor: Colors.transparent,
                                   shadowLightColorEmboss: Colors.transparent,
-                                  shadowDarkColorEmboss:
-                                      AppColors.innerShadowColor,
+                                  shadowDarkColorEmboss: AppColors.innerShadowColor,
                                   border: NeumorphicBorder(
                                     color: Color(0x33000000),
                                     width: 0.1,
                                   ),
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.circular(30)),
+                                  boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(30)),
                                 ),
                                 onPressed: () {
                                   globalWidget.showPopUpWithMessage(
                                     isTitleEnable: false,
-                                    context:
-                                        scaffoldKey.currentContext ?? context,
+                                    context: scaffoldKey.currentContext ?? context,
                                     conditionButtonEnable: true,
                                     onPressOKButton: () {
-                                      widget.userDetail.isBlocked
-                                          ? callUnBlockUserApi(scaffoldKey)
-                                          : callBlockUserApi(scaffoldKey);
+                                      widget.userDetail.isBlocked ? callUnBlockUserApi(scaffoldKey) : callBlockUserApi(scaffoldKey);
                                     },
                                     titleMessage: L10n.current.app_name,
                                     message: widget.userDetail.isBlocked
-                                        ? L10n.current
-                                            .blocked_user_unblock_user_warning_message
-                                        : L10n.current
-                                            .chat_page_block_user_warning_message,
+                                        ? L10n.current.blocked_user_unblock_user_warning_message
+                                        : L10n.current.chat_page_block_user_warning_message,
                                   );
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: GlobalWidgets.setText(
                                     widget.userDetail.isBlocked
-                                        ? L10n.current
-                                            .profiel_page_unblock_user_action_title
-                                        : L10n.current
-                                            .profiel_page_block_user_action_title,
+                                        ? L10n.current.profiel_page_unblock_user_action_title
+                                        : L10n.current.profiel_page_block_user_action_title,
                                     textAlign: TextAlign.center,
                                     fontSize: 16,
                                     maxLine: 1,
-                                    strTextColor:
-                                        AppColors.strMainTextColorWhite,
+                                    strTextColor: AppColors.strMainTextColorWhite,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -530,19 +491,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   shadowDarkColor: AppColors.innerShadowColor,
                                   shadowLightColor: Colors.transparent,
                                   shadowLightColorEmboss: Colors.transparent,
-                                  shadowDarkColorEmboss:
-                                      AppColors.innerShadowColor,
+                                  shadowDarkColorEmboss: AppColors.innerShadowColor,
                                   border: NeumorphicBorder(
                                     color: Color(0x33000000),
                                     width: 0.1,
                                   ),
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.circular(30)),
+                                  boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(30)),
                                 ),
                                 onPressed: () async {
-                                  widget.isFromChatScreen
-                                      ? Navigator.pop(context)
-                                      : navigateToChatScreen();
+                                  widget.isFromChatScreen ? Navigator.pop(context) : navigateToChatScreen();
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
@@ -551,8 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     textAlign: TextAlign.center,
                                     fontSize: 16,
                                     maxLine: 1,
-                                    strTextColor:
-                                        AppColors.strMainTextColorWhite,
+                                    strTextColor: AppColors.strMainTextColorWhite,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -708,8 +664,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         String message = jsonRes["message"];
         debugPrint('message $message');
         if (success == 200) {
-          showSuccessOrFail(L10n.current.login_success_title, success, context,
-              isTitleEnable: false);
+          showSuccessOrFail(L10n.current.login_success_title, success, context, isTitleEnable: false);
           return true;
         } else {
           showSuccessOrFail(message, success, context);
@@ -726,20 +681,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return false;
   }
 
-  Future<bool> callCreateOrGetChatApi(
-      GlobalKey<ScaffoldState> scaffoldKey, String userId) async {
+  Future<bool> callCreateOrGetChatApi(GlobalKey<ScaffoldState> scaffoldKey, String userId) async {
     var data = new Map<String, dynamic>();
     data['user_id'] = userId;
 
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'socket/createOrGetChat',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'socket/createOrGetChat', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -778,8 +727,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     UserResult userInfo = UserResult.fromJson(data);
 
     widget.userDetail.sId = widget.userDetail.userId;
-    bool isResponseSuccess =
-        await callCreateOrGetChatApi(scaffoldKey, widget.userDetail.userId);
+    bool isResponseSuccess = await callCreateOrGetChatApi(scaffoldKey, widget.userDetail.userId);
 
     if (isResponseSuccess) {
       Navigator.push(

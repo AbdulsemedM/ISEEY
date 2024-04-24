@@ -74,15 +74,9 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
     x.hideLoading();
   }
 
-  Future<bool> callUnFriendUser(
-      GlobalKey<ScaffoldState> scaffoldKey, String strId) async {
+  Future<bool> callUnFriendUser(GlobalKey<ScaffoldState> scaffoldKey, String strId) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'friends/unfriend/$strId',
-        method: RequestMethodType.DELETE,
-        body: '',
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'friends/unfriend/$strId', method: RequestMethodType.DELETE, body: '', params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -113,15 +107,9 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
     return false;
   }
 
-  Future<bool> callUpdateUser(
-      GlobalKey<ScaffoldState> scaffoldKey, String? strId) async {
+  Future<bool> callUpdateUser(GlobalKey<ScaffoldState> scaffoldKey, String? strId) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/getUserDetail/$strId',
-        method: RequestMethodType.GET,
-        body: '',
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'users/getUserDetail/$strId', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -188,7 +176,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.leftArrowIcon,
+                          AssetsConstant.leftArrowIcon,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -230,9 +218,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                 child: Container(
                   child: ListView.builder(
                     padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                    itemCount: friendListResult.length == 0
-                        ? 1
-                        : friendListResult.length,
+                    itemCount: friendListResult.length == 0 ? 1 : friendListResult.length,
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
@@ -268,8 +254,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                               extentRatio: 0.24,
                               children: [
                                 CustomSlidableAction(
-                                  backgroundColor:
-                                      AppColors.listBoxBackgroundColor,
+                                  backgroundColor: AppColors.listBoxBackgroundColor,
                                   onPressed: (BuildContext context) {},
                                   child: Container(
                                     width: 45,
@@ -279,28 +264,22 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Center(
                                         child: Image.asset(
-                                          AssetsConstant.instance.deleteIcon,
+                                          AssetsConstant.deleteIcon,
                                           fit: BoxFit.contain,
                                           scale: 1.2,
                                         ),
                                       ),
                                       onPressed: () {
                                         globalWidget.showPopUpWithMessage(
-                                            context: mainTabsScaffoldKey
-                                                    .currentContext ??
-                                                context,
+                                            context: mainTabsScaffoldKey.currentContext ?? context,
                                             conditionButtonEnable: true,
                                             titleMessage: L10n.current.app_name,
                                             onPressOKButton: () {
-                                              final listResult =
-                                                  friendListResult;
-                                              FriendListResult friend =
-                                                  listResult[index];
-                                              callUnFriendUser(
-                                                  scaffoldKey, friend.friendId);
+                                              final listResult = friendListResult;
+                                              FriendListResult friend = listResult[index];
+                                              callUnFriendUser(scaffoldKey, friend.friendId);
                                             },
-                                            message: L10n.current
-                                                .friends_list_remove_friend_warning_message);
+                                            message: L10n.current.friends_list_remove_friend_warning_message);
                                       },
                                       style: NeumorphicStyle(
                                         shape: NeumorphicShape.flat,
@@ -312,12 +291,9 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                           color: AppColors.innerShadowColor,
                                           width: 2,
                                         ),
-                                        shadowDarkColor:
-                                            AppColors.innerShadowColor,
-                                        shadowLightColorEmboss:
-                                            Colors.transparent,
-                                        shadowDarkColorEmboss:
-                                            AppColors.innerShadowColor,
+                                        shadowDarkColor: AppColors.innerShadowColor,
+                                        shadowLightColorEmboss: Colors.transparent,
+                                        shadowDarkColorEmboss: AppColors.innerShadowColor,
                                       ),
                                     ),
                                   ),
@@ -335,66 +311,46 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                             shape: NeumorphicShape.flat,
                                             depth: -3,
                                             lightSource: LightSource.top,
-                                            color: AppColors
-                                                .tabBarBoxBackgroundColor,
+                                            color: AppColors.tabBarBoxBackgroundColor,
                                             border: NeumorphicBorder(
                                               color: AppColors.innerShadowColor,
                                               width: 1,
                                             ),
-                                            shadowDarkColor:
-                                                AppColors.innerShadowColor,
-                                            shadowLightColorEmboss:
-                                                Colors.transparent,
-                                            shadowDarkColorEmboss:
-                                                AppColors.innerShadowColor,
+                                            shadowDarkColor: AppColors.innerShadowColor,
+                                            shadowLightColorEmboss: Colors.transparent,
+                                            shadowDarkColorEmboss: AppColors.innerShadowColor,
                                           ),
                                           child: Stack(
                                             children: [
                                               Container(
                                                 width: double.infinity,
                                                 height: double.infinity,
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 40, 0, 40),
+                                                padding: EdgeInsets.fromLTRB(0, 40, 0, 40),
                                                 child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 0, 0, 40),
+                                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
                                                       child: Image.asset(
-                                                        AssetsConstant
-                                                            .instance.errorIcon,
+                                                        AssetsConstant.errorIcon,
                                                         fit: BoxFit.contain,
                                                       ),
                                                     ),
                                                     Container(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 0, 0, 15),
-                                                      child:
-                                                          GlobalWidgets.setText(
-                                                        L10n.current
-                                                            .blocked_user_sorry_title,
-                                                        strTextColor: AppColors
-                                                            .strMainTextColorWhite,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                                      child: GlobalWidgets.setText(
+                                                        L10n.current.blocked_user_sorry_title,
+                                                        strTextColor: AppColors.strMainTextColorWhite,
+                                                        textAlign: TextAlign.center,
                                                         fontSize: 26,
                                                       ),
                                                     ),
                                                     Container(
-                                                      child:
-                                                          GlobalWidgets.setText(
-                                                        L10n.current
-                                                            .blocked_user_no_data_title,
-                                                        strTextColor: AppColors
-                                                            .strMainTextColorWhite,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                      child: GlobalWidgets.setText(
+                                                        L10n.current.blocked_user_no_data_title,
+                                                        strTextColor: AppColors.strMainTextColorWhite,
+                                                        textAlign: TextAlign.center,
                                                         fontSize: 20,
                                                       ),
                                                     ),
@@ -463,7 +419,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                           backgroundColor: Colors.white.withOpacity(0.5),
                           maxRadius: 20,
                           backgroundImage: AssetImage(
-                            AssetsConstant.instance.manPlaceholder,
+                            AssetsConstant.manPlaceholder,
                           ),
                           shape: GFAvatarShape.square,
                         ),
@@ -512,7 +468,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                           width: 20,
                           height: 20,
                           child: Image.asset(
-                            AssetsConstant.instance.countryTemp,
+                            AssetsConstant.countryTemp,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -542,7 +498,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       padding: EdgeInsets.zero,
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.facebook,
+                          AssetsConstant.facebook,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -566,8 +522,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       ),
                     ),
                   ),
-                if (friend.friendDetail?.facebook != null &&
-                    friend.friendDetail?.instagram != null)
+                if (friend.friendDetail?.facebook != null && friend.friendDetail?.instagram != null)
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -593,7 +548,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       padding: EdgeInsets.zero,
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.instagram,
+                          AssetsConstant.instagram,
                           fit: BoxFit.contain,
                         ),
                       ),

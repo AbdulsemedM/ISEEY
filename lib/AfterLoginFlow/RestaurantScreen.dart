@@ -48,12 +48,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   @override
   void didChangeDependencies() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => callGetOfferApi(scaffoldKey));
-    selectedRestaurant =
-        Provider.of<StateManagement>(context).getSelectedRestaurant();
-    bool isReload =
-        Provider.of<StateManagement>(context).isRestaurantReload ?? false;
+    WidgetsBinding.instance.addPostFrameCallback((_) => callGetOfferApi(scaffoldKey));
+    selectedRestaurant = Provider.of<StateManagement>(context).getSelectedRestaurant();
+    bool isReload = Provider.of<StateManagement>(context).isRestaurantReload ?? false;
     if (isReload) {
       callRebuild();
     }
@@ -67,9 +64,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     foodMenu = restaurant != null ? restaurant.menu ?? '' : '';
     drinkMenu = restaurant != null ? restaurant.drinkMenu ?? '' : '';
     final drinkMenuUri = Uri.tryParse(
-      drinkMenu.toString().isEmpty
-          ? selectedRestaurant?.drinkMenu ?? ''
-          : drinkMenu,
+      drinkMenu.toString().isEmpty ? selectedRestaurant?.drinkMenu ?? '' : drinkMenu,
     );
 
     return Scaffold(
@@ -91,7 +86,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.bars,
+                          AssetsConstant.bars,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -120,9 +115,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       width: double.infinity,
                       child: Center(
                         child: GlobalWidgets.setText(
-                          selectedRestaurant != null
-                              ? selectedRestaurant?.name
-                              : '',
+                          selectedRestaurant != null ? selectedRestaurant?.name : '',
                           fontSize: 22,
                           maxLine: 2,
                           textAlign: TextAlign.center,
@@ -150,11 +143,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     setState(() {
                                       FocusScope.of(context).unfocus();
                                       selectedScreenIndex = 0;
-                                      foodMenu = restaurant != null
-                                          ? restaurant.menu.toString()
-                                          : '';
-                                      if (restaurant != null &&
-                                          restaurant.menuType == "url") {
+                                      foodMenu = restaurant != null ? restaurant.menu.toString() : '';
+                                      if (restaurant != null && restaurant.menuType == "url") {
                                         isMenuUrl = true;
                                       } else {
                                         isMenuUrl = false;
@@ -163,12 +153,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    padding:
-                                        EdgeInsets.fromLTRB(10, 20, 10, 10),
+                                    padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                                     child: GlobalWidgets.setText(
                                       L10n.current.restaurant_page_menu,
-                                      strTextColor:
-                                          AppColors.strMainTextColorWhite,
+                                      strTextColor: AppColors.strMainTextColorWhite,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -177,8 +165,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 selectedScreenIndex == 0
                                     ? Divider(
                                         thickness: 2,
-                                        color:
-                                            AppColors.mainBackgroundColorOrange,
+                                        color: AppColors.mainBackgroundColorOrange,
                                         height: 0,
                                       )
                                     : SizedBox(),
@@ -195,11 +182,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     setState(() {
                                       FocusScope.of(context).unfocus();
                                       selectedScreenIndex = 1;
-                                      drinkMenu = restaurant != null
-                                          ? restaurant.drinkMenu.toString()
-                                          : '';
-                                      if (restaurant != null &&
-                                          restaurant.drinkMenuType == "url") {
+                                      drinkMenu = restaurant != null ? restaurant.drinkMenu.toString() : '';
+                                      if (restaurant != null && restaurant.drinkMenuType == "url") {
                                         isDrinkMenuUrl = true;
                                       } else {
                                         isDrinkMenuUrl = false;
@@ -208,12 +192,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    padding:
-                                        EdgeInsets.fromLTRB(10, 20, 10, 10),
+                                    padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                                     child: GlobalWidgets.setText(
                                       L10n.current.restaurant_page_drink_menu,
-                                      strTextColor:
-                                          AppColors.strMainTextColorWhite,
+                                      strTextColor: AppColors.strMainTextColorWhite,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -222,8 +204,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 selectedScreenIndex == 1
                                     ? Divider(
                                         thickness: 2,
-                                        color:
-                                            AppColors.mainBackgroundColorOrange,
+                                        color: AppColors.mainBackgroundColorOrange,
                                         height: 0,
                                       )
                                     : SizedBox(),
@@ -251,8 +232,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                               ),
                             ),
                           ),
-                          selectedScreenIndex == 2 ||
-                                  noFoodAndDrinkMenu(foodMenu, drinkMenu)
+                          selectedScreenIndex == 2 || noFoodAndDrinkMenu(foodMenu, drinkMenu)
                               ? Container(
                                   margin: EdgeInsets.only(left: 20),
                                   child: Divider(
@@ -298,27 +278,21 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 ? Center(
                                     child: WebViewWidget(
                                       controller: foodMenuController
-                                        ..loadRequest(Uri.parse(
-                                            'https://docs.google.com/gview?embedded=true&url=$foodMenu')),
+                                        ..loadRequest(Uri.parse('https://docs.google.com/gview?embedded=true&url=$foodMenu')),
                                     ),
                                   )
                                 : isMenuUrl
                                     ? Center(
                                         child: WebViewWidget(
                                           controller: foodMenuController
-                                            ..loadRequest(Uri.parse(foodMenu
-                                                    .toString()
-                                                    .isEmpty
-                                                ? selectedRestaurant?.menu ?? ''
-                                                : foodMenu)),
+                                            ..loadRequest(
+                                                Uri.parse(foodMenu.toString().isEmpty ? selectedRestaurant?.menu ?? '' : foodMenu)),
                                         ),
                                       )
                                     : PDF(swipeHorizontal: true).cachedFromUrl(
                                         foodMenu,
-                                        placeholder: (progress) =>
-                                            Center(child: Text('$progress %')),
-                                        errorWidget: (error) => Center(
-                                            child: Text(error.toString())),
+                                        placeholder: (progress) => Center(child: Text('$progress %')),
+                                        errorWidget: (error) => Center(child: Text(error.toString())),
                                       ),
                           ),
                         ),
@@ -341,8 +315,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
                                 shadowLightColorEmboss: Colors.transparent,
-                                shadowDarkColorEmboss:
-                                    AppColors.innerShadowColor,
+                                shadowDarkColorEmboss: AppColors.innerShadowColor,
                               ),
                               child: GestureDetector(
                                 onTap: () {
@@ -355,24 +328,19 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     ? Center(
                                         child: WebViewWidget(
                                           controller: drinkMenuController
-                                            ..loadRequest(Uri.parse(
-                                                'https://docs.google.com/gview?embedded=true&url=$drinkMenu')),
+                                            ..loadRequest(Uri.parse('https://docs.google.com/gview?embedded=true&url=$drinkMenu')),
                                         ),
                                       )
                                     : isDrinkMenuUrl && drinkMenuUri != null
                                         ? Center(
                                             child: WebViewWidget(
-                                              controller: drinkMenuController
-                                                ..loadRequest(drinkMenuUri),
+                                              controller: drinkMenuController..loadRequest(drinkMenuUri),
                                             ),
                                           )
-                                        : PDF(swipeHorizontal: true)
-                                            .cachedFromUrl(
+                                        : PDF(swipeHorizontal: true).cachedFromUrl(
                                             drinkMenu,
-                                            placeholder: (progress) => Center(
-                                                child: Text('$progress %')),
-                                            errorWidget: (error) => Center(
-                                                child: Text(error.toString())),
+                                            placeholder: (progress) => Center(child: Text('$progress %')),
+                                            errorWidget: (error) => Center(child: Text(error.toString())),
                                           ),
                               ),
                             ),
@@ -393,20 +361,15 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                         color: AppColors.innerShadowColor,
                                         width: 1,
                                       ),
-                                      shadowDarkColor:
-                                          AppColors.innerShadowColor,
-                                      shadowLightColorEmboss:
-                                          Colors.transparent,
-                                      shadowDarkColorEmboss:
-                                          AppColors.innerShadowColor,
+                                      shadowDarkColor: AppColors.innerShadowColor,
+                                      shadowLightColorEmboss: Colors.transparent,
+                                      shadowDarkColorEmboss: AppColors.innerShadowColor,
                                     ),
                                     child: Center(
                                       child: GlobalWidgets.setText(
-                                        L10n.current
-                                            .restaurant_page_no_offers_message,
+                                        L10n.current.restaurant_page_no_offers_message,
                                         fontSize: 18,
-                                        strTextColor:
-                                            AppColors.strMainTextColorWhite,
+                                        strTextColor: AppColors.strMainTextColorWhite,
                                       ),
                                     ),
                                   ),
@@ -415,59 +378,46 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                   ? Container(
                                       child: Center(
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 25),
-                                              child: GlobalWidgets.setText(
-                                                  L10n.current.loading_title,
-                                                  strTextColor: AppColors
-                                                      .strMainTextColorWhite,
-                                                  fontSize: 16),
+                                              margin: EdgeInsets.fromLTRB(0, 0, 0, 25),
+                                              child: GlobalWidgets.setText(L10n.current.loading_title,
+                                                  strTextColor: AppColors.strMainTextColorWhite, fontSize: 16),
                                             ),
                                             CollectionSlideTransition(
                                               children: <Widget>[
                                                 Container(),
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0, 5, 8, 0),
+                                                  margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                                   child: Icon(
                                                     Icons.circle,
-                                                    color: AppColors
-                                                        .mainBackgroundColorOrange,
+                                                    color: AppColors.mainBackgroundColorOrange,
                                                     size: 15,
                                                   ),
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0, 5, 8, 0),
+                                                  margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                                   child: Icon(
                                                     Icons.circle,
-                                                    color: AppColors
-                                                        .mainBackgroundColorOrange,
+                                                    color: AppColors.mainBackgroundColorOrange,
                                                     size: 15,
                                                   ),
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0, 5, 8, 0),
+                                                  margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                                   child: Icon(
                                                     Icons.circle,
-                                                    color: AppColors
-                                                        .mainBackgroundColorOrange,
+                                                    color: AppColors.mainBackgroundColorOrange,
                                                     size: 15,
                                                   ),
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0, 5, 0, 0),
+                                                  margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                   child: Icon(
                                                     Icons.circle,
-                                                    color: AppColors
-                                                        .mainBackgroundColorOrange,
+                                                    color: AppColors.mainBackgroundColorOrange,
                                                     size: 15,
                                                   ),
                                                 ),
@@ -480,12 +430,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     )
                                   : Container(
                                       child: ListView.builder(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 30, 0, 30),
+                                        padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
                                         itemCount: offerListResult.length,
                                         shrinkWrap: true,
-                                        itemBuilder:
-                                            (BuildContext? context, int index) {
+                                        itemBuilder: (BuildContext? context, int index) {
                                           return setListItem(index);
                                         },
                                       ),
@@ -498,8 +446,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     );
   }
 
-  noFoodAndDrinkMenu(String foodMenu, String drinkMenu) =>
-      foodMenu == '' && drinkMenu == '';
+  noFoodAndDrinkMenu(String foodMenu, String drinkMenu) => foodMenu == '' && drinkMenu == '';
 
   callGetOfferApi(GlobalKey<ScaffoldState> scaffoldKey) async {
     HttpRequestModel req = new HttpRequestModel(
@@ -564,10 +511,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           setState(() {
             foodMenu = restaurant.menu ?? '';
             drinkMenu = restaurant.drinkMenu ?? '';
-            isMenuUrl =
-                getMenuTypeFromString(restaurant.menuType) == MenuType.url;
-            isDrinkMenuUrl =
-                getMenuTypeFromString(restaurant.drinkMenuType) == MenuType.url;
+            isMenuUrl = getMenuTypeFromString(restaurant.menuType) == MenuType.url;
+            isDrinkMenuUrl = getMenuTypeFromString(restaurant.drinkMenuType) == MenuType.url;
           });
       },
     );
@@ -673,14 +618,12 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 shadowDarkColor: AppColors.innerShadowColor,
                                 shadowLightColor: Colors.transparent,
                                 shadowLightColorEmboss: Colors.transparent,
-                                shadowDarkColorEmboss:
-                                    AppColors.innerShadowColor,
+                                shadowDarkColorEmboss: AppColors.innerShadowColor,
                                 border: NeumorphicBorder(
                                   color: Color(0x33000000),
                                   width: 1,
                                 ),
-                                boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.circular(10)),
+                                boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(10)),
                               ),
                               padding: EdgeInsets.fromLTRB(10, 6, 10, 5),
                               child: GlobalWidgets.setText(
@@ -714,8 +657,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           Flexible(
                             child: SingleChildScrollView(
                               child: Container(
-                                margin: EdgeInsets.only(
-                                    left: 15, top: 10, right: 30),
+                                margin: EdgeInsets.only(left: 15, top: 10, right: 30),
                                 alignment: Alignment.topLeft,
                                 child: GlobalWidgets.setText(offer.description,
                                     strTextColor: AppColors.mainTextColorWhite,
@@ -752,9 +694,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     ),
                     depth: -3,
                     lightSource: LightSource.top,
-                    color: selectedIndex == index
-                        ? AppColors.mainBackgroundColorOrange
-                        : AppColors.screensBackgroundsColor,
+                    color: selectedIndex == index ? AppColors.mainBackgroundColorOrange : AppColors.screensBackgroundsColor,
                     border: NeumorphicBorder(
                       color: AppColors.innerShadowColor,
                       width: 1,
@@ -766,9 +706,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   child: Container(
                     padding: EdgeInsets.fromLTRB(10, 10, 5, 7),
                     child: Image.asset(
-                      selectedIndex == index
-                          ? AssetsConstant.instance.upArrowIcon
-                          : AssetsConstant.instance.downArrowIcon,
+                      selectedIndex == index ? AssetsConstant.upArrowIcon : AssetsConstant.downArrowIcon,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -792,9 +730,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       if (isMenuUrl) {
         foodMenuController
           ..loadRequest(Uri.parse(
-            foodMenu.toString().isEmpty
-                ? selectedRestaurant?.menu ?? ''
-                : foodMenu,
+            foodMenu.toString().isEmpty ? selectedRestaurant?.menu ?? '' : foodMenu,
           ));
       }
 
@@ -807,9 +743,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       if (isDrinkMenuUrl) {
         drinkMenuController
           ..loadRequest(Uri.parse(
-            drinkMenu.toString().isEmpty
-                ? selectedRestaurant?.drinkMenu ?? ''
-                : drinkMenu,
+            drinkMenu.toString().isEmpty ? selectedRestaurant?.drinkMenu ?? '' : drinkMenu,
           ));
       }
     });
@@ -834,8 +768,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             debugPrint('Food Page error loading: ${error.description}');
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url
-                .startsWith('https://www.youtube.com/watch?v=_oM_AD3OSbk')) {
+            if (request.url.startsWith('https://www.youtube.com/watch?v=_oM_AD3OSbk')) {
               return NavigationDecision.prevent;
             }
 
@@ -862,8 +795,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             debugPrint('Food Page error loading: ${error.description}');
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url
-                .startsWith('https://www.youtube.com/watch?v=_oM_AD3OSbk')) {
+            if (request.url.startsWith('https://www.youtube.com/watch?v=_oM_AD3OSbk')) {
               return NavigationDecision.prevent;
             }
 

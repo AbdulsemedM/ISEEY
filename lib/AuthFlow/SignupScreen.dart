@@ -58,12 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/signup',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: false);
+        url: 'users/signup', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: false);
     var response;
     var x = GlobalWidgets();
     try {
@@ -120,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return globalWidget.showPopUpWithMessage(
         context: context,
         titleMessage: L10n.current.sign_up_failure_message_title,
-        iconAssetPath: AssetsConstant.instance.errorIcon,
+        iconAssetPath: AssetsConstant.errorIcon,
         message: message,
         onPressOKButton: () {
           print("OK Pressed");
@@ -154,13 +149,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    margin:
-                        EdgeInsets.fromLTRB(0, screenSize.width * 0.2, 0, 30),
+                    margin: EdgeInsets.fromLTRB(0, screenSize.width * 0.2, 0, 30),
                     width: screenSize.width * 0.65,
                     child: AspectRatio(
                       aspectRatio: 223 / 58,
                       child: Image.asset(
-                        AssetsConstant.instance.logo,
+                        AssetsConstant.logo,
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -172,18 +166,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: firstNameController,
                       fontColor: AppColors.mainTextColorWhite,
                       cursorColor: AppColors.mainBackgroundColorOrange,
-                      txtFieldHintText:
-                          L10n.current.edit_profile_example_first_name,
-                      txtFieldLabelText:
-                          L10n.current.sign_up_first_name_text_field_title,
-                      strPrefixAssetImageName: AssetsConstant.instance.userIcon,
+                      txtFieldHintText: L10n.current.edit_profile_example_first_name,
+                      txtFieldLabelText: L10n.current.sign_up_first_name_text_field_title,
+                      strPrefixAssetImageName: AssetsConstant.userIcon,
                       prefixIconWidth: 20,
                       inputType: TextInputType.name,
                       validator: (value) {
                         if (value.length == 0) {
-                          return "      " +
-                              L10n.current.sign_up_first_name_required_error +
-                              strSup;
+                          return "      " + L10n.current.sign_up_first_name_required_error + strSup;
                         }
                         return null;
                       },
@@ -195,19 +185,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       onTap: () {},
                       controller: lastNameController,
                       fontColor: AppColors.mainTextColorWhite,
-                      txtFieldHintText:
-                          L10n.current.edit_profile_example_last_name,
+                      txtFieldHintText: L10n.current.edit_profile_example_last_name,
                       cursorColor: AppColors.mainBackgroundColorOrange,
-                      txtFieldLabelText:
-                          L10n.current.sign_up_last_name_text_field_title,
-                      strPrefixAssetImageName: AssetsConstant.instance.userIcon,
+                      txtFieldLabelText: L10n.current.sign_up_last_name_text_field_title,
+                      strPrefixAssetImageName: AssetsConstant.userIcon,
                       prefixIconWidth: 20,
                       inputType: TextInputType.name,
                       validator: (value) {
                         if (value.length == 0) {
-                          return "      " +
-                              L10n.current.sign_up_last_name_required_error +
-                              strSup;
+                          return "      " + L10n.current.sign_up_last_name_required_error + strSup;
                         }
                         return null;
                       },
@@ -218,8 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: GlobalWidgets.setTextField(
                       onTap: () {},
                       controller: emailController,
-                      txtFieldLabelText:
-                          L10n.current.sign_up_email_text_field_title,
+                      txtFieldLabelText: L10n.current.sign_up_email_text_field_title,
                       fontColor: AppColors.mainTextColorWhite,
                       txtFieldHintText: L10n.current.email_field_hint_text,
                       prefixIconWidth: 25,
@@ -229,9 +214,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       textCapitalization: TextCapitalization.none,
                       validator: (value) {
                         if (value.length == 0) {
-                          return "      " +
-                              L10n.current.sign_up_email_required_error +
-                              strSup;
+                          return "      " + L10n.current.sign_up_email_required_error + strSup;
                         }
                         return null;
                       },
@@ -244,7 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: passwordController,
                       fontColor: AppColors.mainTextColorWhite,
                       cursorColor: AppColors.mainBackgroundColorOrange,
-                      strPrefixAssetImageName: AssetsConstant.instance.pwdIcon,
+                      strPrefixAssetImageName: AssetsConstant.pwdIcon,
                       txtFieldLabelText: L10n.current.password_field_hint_text,
                       prefixIconWidth: 20,
                       txtFieldHintText: "",
@@ -252,9 +235,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       inputType: TextInputType.text,
                       validator: (value) {
                         if (value.length == 0) {
-                          return "      " +
-                              L10n.current.sign_up_password_required_error +
-                              strSup;
+                          return "      " + L10n.current.sign_up_password_required_error + strSup;
                         }
                         return null;
                       },
@@ -267,25 +248,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: confirmPasswordController,
                       fontColor: AppColors.mainTextColorWhite,
                       cursorColor: AppColors.mainBackgroundColorOrange,
-                      strPrefixAssetImageName: AssetsConstant.instance.pwdIcon,
-                      txtFieldLabelText: L10n
-                          .current.sign_up_confirm_password_text_field_title,
+                      strPrefixAssetImageName: AssetsConstant.pwdIcon,
+                      txtFieldLabelText: L10n.current.sign_up_confirm_password_text_field_title,
                       prefixIconWidth: 20,
                       txtFieldHintText: "",
                       obscureText: true,
                       inputType: TextInputType.text,
                       validator: (value) {
                         if (value.length == 0) {
-                          return "      " +
-                              L10n.current
-                                  .sign_up_confirm_password_required_error +
-                              strSup;
+                          return "      " + L10n.current.sign_up_confirm_password_required_error + strSup;
                         }
 
                         if (value != passwordController.text) {
-                          return "      " +
-                              L10n.current.sign_up_passwords_not_equal +
-                              strSup;
+                          return "      " + L10n.current.sign_up_passwords_not_equal + strSup;
                         }
                         return null;
                       },
@@ -310,7 +285,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     width: 20,
                                     height: 20,
                                     child: Image.asset(
-                                      AssetsConstant.instance.selectedCheckbox,
+                                      AssetsConstant.selectedCheckbox,
                                       fit: BoxFit.cover,
                                     ),
                                   )
@@ -318,7 +293,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     width: 20,
                                     height: 20,
                                     child: Image.asset(
-                                      AssetsConstant.instance.unselectedCheckbox,
+                                      AssetsConstant.unselectedCheckbox,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -327,9 +302,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: Text.rich(
                                   TextSpan(
-                                    text: L10n.current
-                                            .sign_up_terms_of_use_agreement_text +
-                                        ' ',
+                                    text: L10n.current.sign_up_terms_of_use_agreement_text + ' ',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: "Poppins",
@@ -341,19 +314,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                           onTap: () {
                                             setState(() {
                                               FocusScope.of(context).unfocus();
-                                              launchURL(
-                                                  "https://iseey.app/privacy/");
+                                              launchURL("https://iseey.app/privacy/");
                                             });
                                           },
                                           child: GlobalWidgets.setText(
-                                            L10n.current
-                                                .sign_up_terms_of_use_title,
+                                            L10n.current.sign_up_terms_of_use_title,
                                             textAlign: TextAlign.left,
-                                            strTextColor:
-                                                AppColors.strMainTextColorWhite,
+                                            strTextColor: AppColors.strMainTextColorWhite,
                                             fontSize: 15,
-                                            decoration:
-                                                TextDecoration.underline,
+                                            decoration: TextDecoration.underline,
                                           ),
                                         ),
                                       )
@@ -373,21 +342,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.fromLTRB(30, 10, 20, 40),
                     child: GlobalWidgets.setButton(
-                      padding: EdgeInsets.only(
-                          right: 35, left: 35, top: 15, bottom: 15),
+                      padding: EdgeInsets.only(right: 35, left: 35, top: 15, bottom: 15),
                       onPressButton: () {
-                        if (emailController.text.isEmpty ||
-                            passwordController.text.isEmpty) {
-                          return Fluttertoast.showToast(
-                              msg: L10n.current
-                                  .sign_up_email_and_password_is_empty_error_message);
+                        if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+                          return Fluttertoast.showToast(msg: L10n.current.sign_up_email_and_password_is_empty_error_message);
                         }
-                        if (!RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             .hasMatch(emailController.text)) {
-                          return Fluttertoast.showToast(
-                              msg: L10n
-                                  .current.email_is_not_valid_error_message);
+                          return Fluttertoast.showToast(msg: L10n.current.email_is_not_valid_error_message);
                         }
                         validateAndSave();
                       },

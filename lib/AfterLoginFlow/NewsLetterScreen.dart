@@ -34,12 +34,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
 
   callGetNewsLetterApi() async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'newsletters/list',
-        method: RequestMethodType.GET,
-        body: '',
-        params: '',
-        headerType: "json",
-        authMethod: true);
+        url: 'newsletters/list', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
     var response;
     try {
       setState(() {
@@ -74,8 +69,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
     }
   }
 
-  callPatchNewsLetterApi(GlobalKey<ScaffoldState> scaffoldKey,
-      String restaurantId, bool newsletterEnable) async {
+  callPatchNewsLetterApi(GlobalKey<ScaffoldState> scaffoldKey, String restaurantId, bool newsletterEnable) async {
     HttpRequestModel req = new HttpRequestModel(
         url: 'newsletters/subscribe/$restaurantId/$newsletterEnable',
         method: RequestMethodType.PATCH,
@@ -134,7 +128,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.leftArrowIcon,
+                          AssetsConstant.leftArrowIcon,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -183,11 +177,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                             children: [
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                                child: GlobalWidgets.setText(
-                                    L10n.current.loading_title,
-                                    strTextColor:
-                                        AppColors.strMainTextColorWhite,
-                                    fontSize: 16),
+                                child: GlobalWidgets.setText(L10n.current.loading_title,
+                                    strTextColor: AppColors.strMainTextColorWhite, fontSize: 16),
                               ),
                               CollectionSlideTransition(
                                 children: <Widget>[
@@ -196,8 +187,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color:
-                                          AppColors.mainBackgroundColorOrange,
+                                      color: AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -205,8 +195,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color:
-                                          AppColors.mainBackgroundColorOrange,
+                                      color: AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -214,8 +203,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color:
-                                          AppColors.mainBackgroundColorOrange,
+                                      color: AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -223,8 +211,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color:
-                                          AppColors.mainBackgroundColorOrange,
+                                      color: AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -240,9 +227,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                       child: Container(
                         child: ListView.builder(
                           padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                          itemCount: newsletterListResult.length == 0
-                              ? 1
-                              : newsletterListResult.length,
+                          itemCount: newsletterListResult.length == 0 ? 1 : newsletterListResult.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return GestureDetector(
@@ -258,65 +243,46 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                             shape: NeumorphicShape.flat,
                                             depth: -3,
                                             lightSource: LightSource.top,
-                                            color: AppColors
-                                                .tabBarBoxBackgroundColor,
+                                            color: AppColors.tabBarBoxBackgroundColor,
                                             border: NeumorphicBorder(
                                               color: AppColors.innerShadowColor,
                                               width: 1,
                                             ),
-                                            shadowDarkColor:
-                                                AppColors.innerShadowColor,
-                                            shadowLightColorEmboss:
-                                                Colors.transparent,
-                                            shadowDarkColorEmboss:
-                                                AppColors.innerShadowColor,
+                                            shadowDarkColor: AppColors.innerShadowColor,
+                                            shadowLightColorEmboss: Colors.transparent,
+                                            shadowDarkColorEmboss: AppColors.innerShadowColor,
                                           ),
                                           child: Stack(
                                             children: [
                                               Container(
                                                 width: double.infinity,
                                                 height: double.infinity,
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 40, 0, 40),
+                                                padding: EdgeInsets.fromLTRB(0, 40, 0, 40),
                                                 child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 0, 0, 40),
+                                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
                                                       child: Image.asset(
-                                                        AssetsConstant.instance.errorIcon,
+                                                        AssetsConstant.errorIcon,
                                                         fit: BoxFit.contain,
                                                       ),
                                                     ),
                                                     Container(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 0, 0, 15),
-                                                      child:
-                                                          GlobalWidgets.setText(
-                                                        L10n.current
-                                                            .blocked_user_sorry_title,
-                                                        strTextColor: AppColors
-                                                            .strMainTextColorWhite,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                                      child: GlobalWidgets.setText(
+                                                        L10n.current.blocked_user_sorry_title,
+                                                        strTextColor: AppColors.strMainTextColorWhite,
+                                                        textAlign: TextAlign.center,
                                                         fontSize: 26,
                                                       ),
                                                     ),
                                                     Container(
-                                                      child:
-                                                          GlobalWidgets.setText(
-                                                        L10n.current
-                                                            .blocked_user_no_data_title,
-                                                        strTextColor: AppColors
-                                                            .strMainTextColorWhite,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                      child: GlobalWidgets.setText(
+                                                        L10n.current.blocked_user_no_data_title,
+                                                        strTextColor: AppColors.strMainTextColorWhite,
+                                                        textAlign: TextAlign.center,
                                                         fontSize: 20,
                                                       ),
                                                     ),
@@ -328,8 +294,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                         ),
                                       )),
                                     )
-                                  : setListItem(
-                                      newsletterListResult[index], index),
+                                  : setListItem(newsletterListResult[index], index),
                             );
                           },
                         ),
@@ -381,23 +346,20 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Center(
                         child: Image.asset(
-                          AssetsConstant.instance.deleteIcon,
+                          AssetsConstant.deleteIcon,
                           fit: BoxFit.contain,
                           scale: 1.2,
                         ),
                       ),
                       onPressed: () {
                         globalWidget.showPopUpWithMessage(
-                            context:
-                                mainTabsScaffoldKey.currentContext ?? context,
+                            context: mainTabsScaffoldKey.currentContext ?? context,
                             conditionButtonEnable: true,
                             titleMessage: L10n.current.app_name,
                             onPressOKButton: () {
-                              callDeleteNewsLetter(
-                                  scaffoldKey, result.restaurantId, index);
+                              callDeleteNewsLetter(scaffoldKey, result.restaurantId, index);
                             },
-                            message: L10n.current
-                                .newsletter_page_delete_newsletter_warning_message);
+                            message: L10n.current.newsletter_page_delete_newsletter_warning_message);
                       },
                       style: NeumorphicStyle(
                         shape: NeumorphicShape.flat,
@@ -437,8 +399,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                       padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
                       width: 250,
                       child: GlobalWidgets.setText(
-                        result.restaurantDetail?.cityDetails != null &&
-                                result.restaurantDetail?.countryDetails != null
+                        result.restaurantDetail?.cityDetails != null && result.restaurantDetail?.countryDetails != null
                             ? "${result.restaurantDetail?.cityDetails?.name} - ${result.restaurantDetail?.countryDetails?.name}"
                             : "",
                         maxLine: 4,
@@ -477,8 +438,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                               value: result.enabled,
                               onToggle: (value) {
                                 setState(() {
-                                  callPatchNewsLetterApi(scaffoldKey,
-                                      result.restaurantId, !result.enabled);
+                                  callPatchNewsLetterApi(scaffoldKey, result.restaurantId, !result.enabled);
                                   result.enabled = !result.enabled;
                                 });
                               },
@@ -497,9 +457,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                               boxShape: NeumorphicBoxShape.circle(),
                               depth: -3,
                               lightSource: LightSource.top,
-                              color: result.enabled
-                                  ? AppColors.mainBackgroundColorOrange
-                                  : AppColors.screensBackgroundsColor,
+                              color: result.enabled ? AppColors.mainBackgroundColorOrange : AppColors.screensBackgroundsColor,
                               shadowDarkColor: AppColors.innerShadowColor,
                               shadowLightColorEmboss: Colors.transparent,
                               shadowDarkColorEmboss: AppColors.innerShadowColor,
@@ -516,8 +474,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
     );
   }
 
-  Future<bool> callDeleteNewsLetter(GlobalKey<ScaffoldState> scaffoldKey,
-      String restaurantId, int index) async {
+  Future<bool> callDeleteNewsLetter(GlobalKey<ScaffoldState> scaffoldKey, String restaurantId, int index) async {
     HttpRequestModel req = new HttpRequestModel(
         url: 'newsletters/delete/$restaurantId',
         method: RequestMethodType.DELETE,

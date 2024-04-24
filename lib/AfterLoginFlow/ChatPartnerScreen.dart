@@ -44,8 +44,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
   void firebaseNotificationListen() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        debugPrint(
-            'Message also contained a notification: ${message.notification}');
+        debugPrint('Message also contained a notification: ${message.notification}');
       }
       var jsonData = jsonDecode(jsonEncode(message.data));
       try {
@@ -58,8 +57,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
 
   List<ChatUserResult> chatUserListResult = [];
 
-  callGetFriendListApi(GlobalKey<ScaffoldState> scaffoldKey,
-      {required bool showLoader}) async {
+  callGetFriendListApi(GlobalKey<ScaffoldState> scaffoldKey, {required bool showLoader}) async {
     HttpRequestModel req = new HttpRequestModel(
       url: 'socket/getChats',
       method: RequestMethodType.GET,
@@ -112,8 +110,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
     var headers = {'Authorization': 'Bearer $token'};
-    var request = http.Request('DELETE',
-        Uri.parse('https://iseey.app/api/app/socket/deleteChat/$chatID'));
+    var request = http.Request('DELETE', Uri.parse('https://iseey.app/api/app/socket/deleteChat/$chatID'));
     request.bodyFields = {};
     request.headers.addAll(headers);
 
@@ -126,8 +123,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
     }
   }
 
-  Future<bool>? callUnFriendUser(
-      GlobalKey<ScaffoldState> scaffoldKey, String strId) async {
+  Future<bool>? callUnFriendUser(GlobalKey<ScaffoldState> scaffoldKey, String strId) async {
     HttpRequestModel req = new HttpRequestModel(
       url: 'friends/unfriend/$strId',
       method: RequestMethodType.DELETE,
@@ -180,7 +176,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            AssetsConstant.instance.chatBackground2,
+            AssetsConstant.chatBackground2,
             fit: BoxFit.cover,
           ),
           ColoredBox(color: Colors.black87),
@@ -202,28 +198,23 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 child: Center(
                                   child: Image.asset(
-                                    AssetsConstant.instance.bars,
+                                    AssetsConstant.bars,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
-                                onPressed: () => mainTabsScaffoldKey
-                                    .currentState
-                                    ?.openDrawer(),
+                                onPressed: () => mainTabsScaffoldKey.currentState?.openDrawer(),
                                 style: NeumorphicStyle(
                                   shape: NeumorphicShape.concave,
                                   depth: 1,
                                   lightSource: LightSource.top,
-                                  color: AppColors.mainTextColorBlack
-                                      .withOpacity(0.7),
+                                  color: AppColors.mainTextColorBlack.withOpacity(0.7),
                                   border: NeumorphicBorder(
                                     color: AppColors.innerShadowColor,
                                     width: 2,
                                   ),
-                                  shadowDarkColor:
-                                      AppColors.mainBackgroundColorOrange,
+                                  shadowDarkColor: AppColors.mainBackgroundColorOrange,
                                   shadowLightColorEmboss: Colors.transparent,
-                                  shadowDarkColorEmboss:
-                                      AppColors.innerShadowColor,
+                                  shadowDarkColorEmboss: AppColors.innerShadowColor,
                                 ),
                               ),
                             ),
@@ -252,8 +243,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                     width: 300,
                                     child: Center(
                                       child: Text(
-                                        L10n.current
-                                            .friends_page_no_chats_available_title,
+                                        L10n.current.friends_page_no_chats_available_title,
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 22,
@@ -269,23 +259,16 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                 child: Container(
                                   child: ListView.builder(
                                     padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                                    itemCount: chatUserListResult.isEmpty
-                                        ? 0
-                                        : chatUserListResult.length,
+                                    itemCount: chatUserListResult.isEmpty ? 0 : chatUserListResult.length,
                                     shrinkWrap: true,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      ChatUserResult? friend =
-                                          chatUserListResult[index];
+                                    itemBuilder: (BuildContext context, int index) {
+                                      ChatUserResult? friend = chatUserListResult[index];
                                       return friend.userDetail.isBlocked
                                           ? Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  8, 25, 8, 0),
+                                              padding: EdgeInsets.fromLTRB(8, 25, 8, 0),
                                               child: GlobalWidgets.setText(
-                                                L10n.current
-                                                    .no_chats_connection,
-                                                strTextColor: AppColors
-                                                    .strMainTextColorWhite,
+                                                L10n.current.no_chats_connection,
+                                                strTextColor: AppColors.strMainTextColorWhite,
                                                 textAlign: TextAlign.center,
                                                 fontSize: 18,
                                                 maxLine: 2,
@@ -293,63 +276,43 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                             )
                                           : GestureDetector(
                                               onTap: () async {
-                                                FocusScope.of(context)
-                                                    .unfocus();
+                                                FocusScope.of(context).unfocus();
 
-                                                Map<String, dynamic> data =
-                                                    await getMapData(
-                                                        "userdata");
-                                                UserResult userInfo =
-                                                    UserResult.fromJson(data);
+                                                Map<String, dynamic> data = await getMapData("userdata");
+                                                UserResult userInfo = UserResult.fromJson(data);
                                                 Navigator.push(
-                                                  mainTabsScaffoldKey
-                                                          .currentContext ??
-                                                      context,
+                                                  mainTabsScaffoldKey.currentContext ?? context,
                                                   SlideLeftRoute(
                                                     page: ChatScreen(
                                                       fromUser: userInfo,
                                                       toUser: friend.userDetail,
                                                       chatId: friend.chatId,
-                                                      restaurant:
-                                                          friend.restaurant,
+                                                      restaurant: friend.restaurant,
                                                     ),
                                                     routeName: "/chat",
                                                   ),
-                                                ).then((value) =>
-                                                    callGetFriendListApi(
-                                                        scaffoldKey,
-                                                        showLoader: true));
+                                                ).then((value) => callGetFriendListApi(scaffoldKey, showLoader: true));
                                               },
                                               child: Container(
                                                 height: 120,
                                                 child: Neumorphic(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 10),
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 0),
+                                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                                   style: NeumorphicStyle(
                                                     shape: NeumorphicShape.flat,
-                                                    boxShape: NeumorphicBoxShape
-                                                        .roundRect(
+                                                    boxShape: NeumorphicBoxShape.roundRect(
                                                       BorderRadius.circular(5),
                                                     ),
                                                     depth: -3,
-                                                    lightSource:
-                                                        LightSource.top,
-                                                    color: AppColors
-                                                        .listBoxBackgroundColor,
+                                                    lightSource: LightSource.top,
+                                                    color: AppColors.listBoxBackgroundColor,
                                                     border: NeumorphicBorder(
-                                                      color: AppColors
-                                                          .innerShadowColor,
+                                                      color: AppColors.innerShadowColor,
                                                       width: 1,
                                                     ),
-                                                    shadowDarkColor: AppColors
-                                                        .innerShadowColor,
-                                                    shadowLightColorEmboss:
-                                                        Colors.transparent,
-                                                    shadowDarkColorEmboss:
-                                                        AppColors
-                                                            .innerShadowColor,
+                                                    shadowDarkColor: AppColors.innerShadowColor,
+                                                    shadowLightColorEmboss: Colors.transparent,
+                                                    shadowDarkColorEmboss: AppColors.innerShadowColor,
                                                   ),
                                                   child: Slidable(
                                                     key: ValueKey(index),
@@ -360,189 +323,120 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                       extentRatio: 0.24,
                                                       children: [
                                                         CustomSlidableAction(
-                                                          backgroundColor: AppColors
-                                                              .listBoxBackgroundColor,
-                                                          onPressed:
-                                                              (BuildContext?
-                                                                  context) {},
+                                                          backgroundColor: AppColors.listBoxBackgroundColor,
+                                                          onPressed: (BuildContext? context) {},
                                                           child: Container(
                                                             width: 45,
                                                             height: 45,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child:
-                                                                NeumorphicButton(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          0,
-                                                                          0,
-                                                                          0,
-                                                                          0),
+                                                            alignment: Alignment.center,
+                                                            child: NeumorphicButton(
+                                                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                                               child: Center(
-                                                                child:
-                                                                    Image.asset(
-                                                                  AssetsConstant.instance.deleteIcon,
-                                                                  fit: BoxFit
-                                                                      .contain,
+                                                                child: Image.asset(
+                                                                  AssetsConstant.deleteIcon,
+                                                                  fit: BoxFit.contain,
                                                                 ),
                                                               ),
                                                               onPressed: () {
-                                                                globalWidget
-                                                                    .showPopUpWithMessage(
-                                                                  context: mainTabsScaffoldKey
-                                                                          .currentContext ??
-                                                                      context,
-                                                                  conditionButtonEnable:
-                                                                      true,
-                                                                  titleMessage: L10n
-                                                                      .current
-                                                                      .app_name,
-                                                                  onPressOKButton:
-                                                                      () async {
-                                                                    await sendDeleteChat(
-                                                                        friend
-                                                                            .chatId);
-                                                                    callGetFriendListApi(
-                                                                        scaffoldKey,
-                                                                        showLoader:
-                                                                            true);
+                                                                globalWidget.showPopUpWithMessage(
+                                                                  context: mainTabsScaffoldKey.currentContext ?? context,
+                                                                  conditionButtonEnable: true,
+                                                                  titleMessage: L10n.current.app_name,
+                                                                  onPressOKButton: () async {
+                                                                    await sendDeleteChat(friend.chatId);
+                                                                    callGetFriendListApi(scaffoldKey, showLoader: true);
                                                                   },
-                                                                  message: L10n
-                                                                      .current
-                                                                      .friends_page_delete_chat_warning_message,
+                                                                  message: L10n.current.friends_page_delete_chat_warning_message,
                                                                 );
                                                               },
-                                                              style:
-                                                                  NeumorphicStyle(
-                                                                shape:
-                                                                    NeumorphicShape
-                                                                        .flat,
-                                                                boxShape:
-                                                                    NeumorphicBoxShape
-                                                                        .circle(),
+                                                              style: NeumorphicStyle(
+                                                                shape: NeumorphicShape.flat,
+                                                                boxShape: NeumorphicBoxShape.circle(),
                                                                 depth: -5,
-                                                                lightSource:
-                                                                    LightSource
-                                                                        .top,
-                                                                color: AppColors
-                                                                    .listBoxBackgroundColor,
-                                                                border:
-                                                                    NeumorphicBorder(
-                                                                  color: AppColors
-                                                                      .innerShadowColor,
+                                                                lightSource: LightSource.top,
+                                                                color: AppColors.listBoxBackgroundColor,
+                                                                border: NeumorphicBorder(
+                                                                  color: AppColors.innerShadowColor,
                                                                   width: 2,
                                                                 ),
-                                                                shadowDarkColor:
-                                                                    AppColors
-                                                                        .innerShadowColor,
-                                                                shadowLightColorEmboss:
-                                                                    Colors
-                                                                        .transparent,
-                                                                shadowDarkColorEmboss:
-                                                                    AppColors
-                                                                        .mainBackgroundColorOrange,
+                                                                shadowDarkColor: AppColors.innerShadowColor,
+                                                                shadowLightColorEmboss: Colors.transparent,
+                                                                shadowDarkColorEmboss: AppColors.mainBackgroundColorOrange,
                                                               ),
                                                             ),
                                                           ),
                                                         ),
                                                       ],
                                                     ),
-                                                    child:
-                                                        chatUserListResult
-                                                                    .length ==
-                                                                0
-                                                            ? Container(
-                                                                child: Center(
-                                                                  child:
-                                                                      Container(
-                                                                    width: screenSize
-                                                                            .width -
-                                                                        40,
-                                                                    height:
-                                                                        screenSize.width -
-                                                                            40,
-                                                                    child:
-                                                                        Neumorphic(
-                                                                      style:
-                                                                          NeumorphicStyle(
-                                                                        shape: NeumorphicShape
-                                                                            .flat,
-                                                                        depth:
-                                                                            -3,
-                                                                        lightSource:
-                                                                            LightSource.top,
-                                                                        color: AppColors
-                                                                            .tabBarBoxBackgroundColor,
-                                                                        border:
-                                                                            NeumorphicBorder(
-                                                                          color:
-                                                                              AppColors.innerShadowColor,
-                                                                          width:
-                                                                              1,
-                                                                        ),
-                                                                        shadowDarkColor:
-                                                                            AppColors.innerShadowColor,
-                                                                        shadowLightColorEmboss:
-                                                                            Colors.transparent,
-                                                                        shadowDarkColorEmboss:
-                                                                            AppColors.innerShadowColor,
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        children: [
-                                                                          Container(
-                                                                            width:
-                                                                                double.infinity,
-                                                                            height:
-                                                                                double.infinity,
-                                                                            padding:
-                                                                                EdgeInsets.fromLTRB(
-                                                                              0,
-                                                                              40,
-                                                                              0,
-                                                                              40,
-                                                                            ),
-                                                                            child:
-                                                                                Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                                              children: [
-                                                                                Container(
-                                                                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
-                                                                                  child: Image.asset(
-                                                                                    AssetsConstant.instance.errorIcon,
-                                                                                    fit: BoxFit.contain,
-                                                                                  ),
-                                                                                ),
-                                                                                Container(
-                                                                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                                                                                  child: GlobalWidgets.setText(
-                                                                                    L10n.current.blocked_user_sorry_title,
-                                                                                    strTextColor: AppColors.strMainTextColorWhite,
-                                                                                    textAlign: TextAlign.center,
-                                                                                    fontSize: 26,
-                                                                                  ),
-                                                                                ),
-                                                                                Container(
-                                                                                  child: GlobalWidgets.setText(
-                                                                                    L10n.current.blocked_user_no_data_title,
-                                                                                    strTextColor: AppColors.strMainTextColorWhite,
-                                                                                    textAlign: TextAlign.center,
-                                                                                    fontSize: 20,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
+                                                    child: chatUserListResult.length == 0
+                                                        ? Container(
+                                                            child: Center(
+                                                              child: Container(
+                                                                width: screenSize.width - 40,
+                                                                height: screenSize.width - 40,
+                                                                child: Neumorphic(
+                                                                  style: NeumorphicStyle(
+                                                                    shape: NeumorphicShape.flat,
+                                                                    depth: -3,
+                                                                    lightSource: LightSource.top,
+                                                                    color: AppColors.tabBarBoxBackgroundColor,
+                                                                    border: NeumorphicBorder(
+                                                                      color: AppColors.innerShadowColor,
+                                                                      width: 1,
                                                                     ),
+                                                                    shadowDarkColor: AppColors.innerShadowColor,
+                                                                    shadowLightColorEmboss: Colors.transparent,
+                                                                    shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                                                  ),
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      Container(
+                                                                        width: double.infinity,
+                                                                        height: double.infinity,
+                                                                        padding: EdgeInsets.fromLTRB(
+                                                                          0,
+                                                                          40,
+                                                                          0,
+                                                                          40,
+                                                                        ),
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            Container(
+                                                                              padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
+                                                                              child: Image.asset(
+                                                                                AssetsConstant.errorIcon,
+                                                                                fit: BoxFit.contain,
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                                                              child: GlobalWidgets.setText(
+                                                                                L10n.current.blocked_user_sorry_title,
+                                                                                strTextColor: AppColors.strMainTextColorWhite,
+                                                                                textAlign: TextAlign.center,
+                                                                                fontSize: 26,
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              child: GlobalWidgets.setText(
+                                                                                L10n.current.blocked_user_no_data_title,
+                                                                                strTextColor: AppColors.strMainTextColorWhite,
+                                                                                textAlign: TextAlign.center,
+                                                                                fontSize: 20,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                    ],
                                                                   ),
                                                                 ),
-                                                              )
-                                                            : setListItem(
-                                                                index),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : setListItem(index),
                                                   ),
                                                 ),
                                               ),
@@ -581,8 +475,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                           child: GFAvatar(
                             backgroundColor: Colors.white.withOpacity(0.5),
                             maxRadius: 20,
-                            backgroundImage:
-                                AssetImage(AssetsConstant.instance.manPlaceholder),
+                            backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
                             shape: GFAvatarShape.circle,
                           ),
                         )
@@ -601,8 +494,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                               ),
                             );
                           },
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                          placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) {
                             return Container(
                               height: 80,
@@ -610,8 +502,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                               child: GFAvatar(
                                 backgroundColor: Colors.white.withOpacity(0.5),
                                 maxRadius: 20,
-                                backgroundImage:
-                                    AssetImage(AssetsConstant.instance.manPlaceholder),
+                                backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
                                 shape: GFAvatarShape.square,
                               ),
                             );
@@ -630,9 +521,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                     Container(
                       padding: EdgeInsets.fromLTRB(20, 10, 0, 5),
                       child: GlobalWidgets.setText(
-                        friend.userDetail.firstName +
-                            " " +
-                            friend.userDetail.lastName,
+                        friend.userDetail.firstName + " " + friend.userDetail.lastName,
                         fontSize: 16,
                         strTextColor: AppColors.strMainTextColorWhite,
                       ),
@@ -667,9 +556,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                       maxRadius: 16,
                       backgroundColor: Colors.red,
                       child: Text(
-                        friend.messagesCount > 0
-                            ? friend.messagesCount.toString()
-                            : "",
+                        friend.messagesCount > 0 ? friend.messagesCount.toString() : "",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
