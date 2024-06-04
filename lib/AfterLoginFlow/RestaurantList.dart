@@ -49,12 +49,10 @@ class _RestaurantListState extends State<RestaurantList> {
   }
 
   _onConnect() async {
-    printInfo(info: "Play++ALex");
     await GlobalWidgets.initSocket();
     await GlobalWidgets.socketUtils.initSocket(null, '');
 
     GlobalWidgets.socketUtils.connectToSocket();
-
     GlobalWidgets.socketUtils.setOnCheckedInListener(onCheckedInReceived);
   }
 
@@ -73,17 +71,15 @@ class _RestaurantListState extends State<RestaurantList> {
       restaurantListResult = resturants;
       setState(() {});
     }
-
-    // restaurantListResult.forEach((element) {
-    //   printInfo(info: "${element.checkedInCount}");
-    // });
   }
 
   callGetRestaurantApi(GlobalKey<ScaffoldState> scaffoldKey) async {
-    Position? _currentPosition = await determinePosition();
+    Position _currentPosition = await determinePosition();
+    final latitude = _currentPosition.latitude;
+    final longitude = _currentPosition.longitude;
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'restaurants/list?lat=${_currentPosition.latitude}&lng=${_currentPosition.longitude}',
+        url: 'restaurants/list?lat=$latitude&lng=$longitude',
         method: RequestMethodType.GET,
         body: '',
         params: '',

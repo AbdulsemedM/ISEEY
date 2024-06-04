@@ -245,13 +245,17 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
   var body = json.encode(data);
 
   HttpRequestModel req = new HttpRequestModel(
-      url: 'users/updatelatlng', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+    url: 'users/updatelatlng',
+    method: RequestMethodType.POST,
+    body: body,
+    params: '',
+    headerType: "json",
+    authMethod: true,
+  );
   var response;
   var x = GlobalWidgets();
   try {
-    // x.showLoading(scaffoldKey.currentContext);
     response = await HttpService().init(req, scaffoldKey);
-    // x.hideLoading();
 
     if (response is String && response != '') {
       var jsonRes = jsonDecode(response);
@@ -279,24 +283,20 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
 }
 
 Future<Position> determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return Future.error('Location services are disabled.');
+  if (!await Geolocator.isLocationServiceEnabled()) {
+    throw Exception('Location services are disabled.');
   }
 
-  permission = await Geolocator.checkPermission();
+  LocationPermission permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');
+      throw Exception('Location permissions are denied');
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+    throw Exception('Location permissions are permanently denied, we cannot request permissions.');
   }
 
   return await Geolocator.getCurrentPosition();
