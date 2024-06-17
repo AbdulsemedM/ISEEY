@@ -9,7 +9,7 @@ part of 'google_review.dart';
 _$GoogleReviewImpl _$$GoogleReviewImplFromJson(Map<String, dynamic> json) =>
     _$GoogleReviewImpl(
       authorName: json['author_name'] as String,
-      rating: json['rating'] as int,
+      rating: (json['rating'] as num).toInt(),
       text: json['text'] as String,
     );
 

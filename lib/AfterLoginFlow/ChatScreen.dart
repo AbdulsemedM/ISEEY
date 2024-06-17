@@ -41,7 +41,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // Add the observer.
     WidgetsBinding.instance.addObserver(this);
     toUser = widget.toUser;
 
@@ -410,14 +409,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         Duration(milliseconds: 300),
         () => _controller.jumpTo(_controller.position.maxScrollExtent),
       );
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: AppColors.screensBackgroundsColor,
       body: SafeArea(
         child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 15),
             padding: EdgeInsets.only(top: 15),
@@ -895,14 +893,12 @@ class PopOverButton extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () {
+        onTap: () async {
           FocusScope.of(context).unfocus();
-          showPopover(
+          await showPopover(
             backgroundColor: AppColors.listBoxBackgroundColor,
             context: context,
-            bodyBuilder: (context) => ListItems(
-              self: self,
-            ),
+            bodyBuilder: (context) => ListItems(self: self),
             onPop: () => print('Popover was popped!'),
             direction: PopoverDirection.top,
             width: 180,

@@ -12,7 +12,7 @@ part of 'restaurant_image.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 RestaurantImage _$RestaurantImageFromJson(Map<String, dynamic> json) {
   return _RestaurantImage.fromJson(json);
@@ -21,7 +21,7 @@ RestaurantImage _$RestaurantImageFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RestaurantImage {
   RestaurantImageSource get source => throw _privateConstructorUsedError;
-  String get location => throw _privateConstructorUsedError;
+  String? get location => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $RestaurantImageCopyWith<$Res> {
           RestaurantImage value, $Res Function(RestaurantImage) then) =
       _$RestaurantImageCopyWithImpl<$Res, RestaurantImage>;
   @useResult
-  $Res call({RestaurantImageSource source, String location});
+  $Res call({RestaurantImageSource source, String? location});
 }
 
 /// @nodoc
@@ -52,17 +52,17 @@ class _$RestaurantImageCopyWithImpl<$Res, $Val extends RestaurantImage>
   @override
   $Res call({
     Object? source = null,
-    Object? location = null,
+    Object? location = freezed,
   }) {
     return _then(_value.copyWith(
       source: null == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
               as RestaurantImageSource,
-      location: null == location
+      location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -75,7 +75,7 @@ abstract class _$$RestaurantImageImplCopyWith<$Res>
       __$$RestaurantImageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({RestaurantImageSource source, String location});
+  $Res call({RestaurantImageSource source, String? location});
 }
 
 /// @nodoc
@@ -90,17 +90,17 @@ class __$$RestaurantImageImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? source = null,
-    Object? location = null,
+    Object? location = freezed,
   }) {
     return _then(_$RestaurantImageImpl(
       source: null == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
               as RestaurantImageSource,
-      location: null == location
+      location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -116,7 +116,7 @@ class _$RestaurantImageImpl implements _RestaurantImage {
   @override
   final RestaurantImageSource source;
   @override
-  final String location;
+  final String? location;
 
   @override
   String toString() {
@@ -155,7 +155,7 @@ class _$RestaurantImageImpl implements _RestaurantImage {
 abstract class _RestaurantImage implements RestaurantImage {
   const factory _RestaurantImage(
       {required final RestaurantImageSource source,
-      required final String location}) = _$RestaurantImageImpl;
+      required final String? location}) = _$RestaurantImageImpl;
 
   factory _RestaurantImage.fromJson(Map<String, dynamic> json) =
       _$RestaurantImageImpl.fromJson;
@@ -163,7 +163,7 @@ abstract class _RestaurantImage implements RestaurantImage {
   @override
   RestaurantImageSource get source;
   @override
-  String get location;
+  String? get location;
   @override
   @JsonKey(ignore: true)
   _$$RestaurantImageImplCopyWith<_$RestaurantImageImpl> get copyWith =>

@@ -266,41 +266,38 @@ class _RestaurantListState extends State<RestaurantList> {
                                         ),
                                       ),
                                     )
-                                  : SizedBox(
-                                      height: MediaQuery.of(context).size.height * 0.7,
-                                      child: GridView.builder(
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 6.0,
-                                          mainAxisSpacing: 3.0,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        itemCount: searchTextController.text.isEmpty
-                                            ? restaurantListResult.length
-                                            : _searchResult.length == 0
-                                                ? 0
-                                                : _searchResult.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (BuildContext context, int index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              FocusScope.of(context).unfocus();
-                                              RestaurantListResult result = searchTextController.text.isEmpty
-                                                  ? restaurantListResult[index]
-                                                  : _searchResult.length == 0
-                                                      ? restaurantListResult[index]
-                                                      : _searchResult[index];
-                                              restaurantId = result.sId;
-                                              Provider.of<StateManagement>(context, listen: false).setSelectedRestaurant(result);
-                                              isNewLetterSelected = result.newsletter;
-                                              isAgree = false;
-                                              callCheckIfUserCheckInTableApi(scaffoldKey);
-                                            },
-                                            child: setListItem(index),
-                                          );
-                                        },
+                                  : GridView.builder(
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 6.0,
+                                        mainAxisSpacing: 3.0,
                                       ),
+                                      padding: EdgeInsets.zero,
+                                      itemCount: searchTextController.text.isEmpty
+                                          ? restaurantListResult.length
+                                          : _searchResult.length == 0
+                                              ? 0
+                                              : _searchResult.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            FocusScope.of(context).unfocus();
+                                            RestaurantListResult result = searchTextController.text.isEmpty
+                                                ? restaurantListResult[index]
+                                                : _searchResult.length == 0
+                                                    ? restaurantListResult[index]
+                                                    : _searchResult[index];
+                                            restaurantId = result.sId;
+                                            Provider.of<StateManagement>(context, listen: false).setSelectedRestaurant(result);
+                                            isNewLetterSelected = result.newsletter;
+                                            isAgree = false;
+                                            callCheckIfUserCheckInTableApi(scaffoldKey);
+                                          },
+                                          child: setListItem(index),
+                                        );
+                                      },
                                     ),
                             )),
                       ),

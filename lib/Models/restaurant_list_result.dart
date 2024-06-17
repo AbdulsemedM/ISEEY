@@ -50,8 +50,7 @@ class RestaurantListResult with _$RestaurantListResult {
     @Default([]) List<GoogleReview> reviews,
   }) = _RestaurantListResult;
 
-  factory RestaurantListResult.fromJson(Map<String, dynamic> json) =>
-      _$RestaurantListResultFromJson(json);
+  factory RestaurantListResult.fromJson(Map<String, dynamic> json) => _$RestaurantListResultFromJson(json);
 
   // return model.googlePageUrl == null
   //     ? model

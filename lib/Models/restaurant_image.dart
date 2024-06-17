@@ -9,7 +9,7 @@ part 'restaurant_image.g.dart';
 class RestaurantImage with _$RestaurantImage {
   const factory RestaurantImage({
     required RestaurantImageSource source,
-    required String location,
+    required String? location,
   }) = _RestaurantImage;
 
   factory RestaurantImage.fromJson(Map<String, dynamic> json) {

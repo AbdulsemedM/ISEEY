@@ -10,7 +10,7 @@ _$RestaurantImageImpl _$$RestaurantImageImplFromJson(
         Map<String, dynamic> json) =>
     _$RestaurantImageImpl(
       source: $enumDecode(_$RestaurantImageSourceEnumMap, json['source']),
-      location: json['location'] as String,
+      location: json['location'] as String?,
     );
 
 Map<String, dynamic> _$$RestaurantImageImplToJson(

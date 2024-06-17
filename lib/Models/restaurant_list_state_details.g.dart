@@ -10,7 +10,7 @@ _$RestaurantListStateDetailsImpl _$$RestaurantListStateDetailsImplFromJson(
         Map<String, dynamic> json) =>
     _$RestaurantListStateDetailsImpl(
       sId: json['sId'] as String,
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
     );
 
