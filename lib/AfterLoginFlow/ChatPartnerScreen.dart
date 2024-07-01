@@ -263,6 +263,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                     shrinkWrap: true,
                                     itemBuilder: (BuildContext context, int index) {
                                       ChatUserResult? friend = chatUserListResult[index];
+
                                       return friend.userDetail.isBlocked
                                           ? Container(
                                               padding: EdgeInsets.fromLTRB(8, 25, 8, 0),
@@ -393,12 +394,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                                       Container(
                                                                         width: double.infinity,
                                                                         height: double.infinity,
-                                                                        padding: EdgeInsets.fromLTRB(
-                                                                          0,
-                                                                          40,
-                                                                          0,
-                                                                          40,
-                                                                        ),
+                                                                        padding: EdgeInsets.symmetric(vertical: 40),
                                                                         child: Column(
                                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -549,7 +545,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
               ),
             ),
             friend.messagesCount == 0
-                ? Container()
+                ? SizedBox.shrink()
                 : Padding(
                     padding: const EdgeInsets.only(right: 10.0),
                     child: CircleAvatar(

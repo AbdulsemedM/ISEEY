@@ -50,12 +50,13 @@ class RestaurantListResult with _$RestaurantListResult {
     @Default([]) List<GoogleReview> reviews,
   }) = _RestaurantListResult;
 
-  factory RestaurantListResult.fromJson(Map<String, dynamic> json) => _$RestaurantListResultFromJson(json);
-
-  // return model.googlePageUrl == null
-  //     ? model
-  //     : model.copyWith(
-  //         googlePageUrl:
-  //             "https://www.google.com/maps/search/?api=1&query=${model.lat},${model.lng}&query_place_id=${model.googlePageUrl}",
-  //       );
+  factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
+    final model = _$RestaurantListResultFromJson(json);
+    return model.googlePageUrl == null
+        ? model
+        : model.copyWith(
+            googlePageUrl:
+                "https://www.google.com/maps/search/?api=1&query=${model.lat},${model.lng}&query_place_id=${model.googlePageUrl}",
+          );
+  }
 }

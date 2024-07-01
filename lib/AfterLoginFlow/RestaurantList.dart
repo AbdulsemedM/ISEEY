@@ -38,6 +38,7 @@ class _RestaurantListState extends State<RestaurantList> {
   bool isAgree = false;
   bool isNewLetterSelected = false;
   String restaurantId = "";
+  List<RestaurantListResult> _searchResult = [];
 
   @override
   void initState() {
@@ -312,11 +313,7 @@ class _RestaurantListState extends State<RestaurantList> {
     );
   }
 
-  Future<void> _pullRefresh() async {
-    await callGetRestaurantApi(scaffoldKey);
-  }
-
-  List<RestaurantListResult> _searchResult = [];
+  Future<void> _pullRefresh() async => await callGetRestaurantApi(scaffoldKey);
 
   searchList(String text) {
     if (text.isEmpty) {

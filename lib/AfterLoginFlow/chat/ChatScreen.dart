@@ -1,34 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ISEEY/AfterLoginFlow/chat/widgets/left_chat_bubble.dart';
-import 'package:ISEEY/AfterLoginFlow/chat/widgets/pop_over_button.dart';
-import 'package:ISEEY/AfterLoginFlow/chat/widgets/right_chat_bubble.dart';
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
+import 'package:ISEEY/AfterLoginFlow/ProfileScreen.dart';
+import 'package:ISEEY/AfterLoginFlow/chat/widgets/widgets.dart';
+import 'package:ISEEY/GlobalFiles/GlobalFiles.dart';
 import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
 import 'package:ISEEY/Models/TableListModel.dart';
 import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/ChatController.dart';
-import 'package:ISEEY/Services/SocketUtils.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
+import 'package:ISEEY/Services/Services.dart';
 import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
-import 'package:popover/popover.dart';
-
-import '../ProfileScreen.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserResult fromUser;
   final UserDetail toUser;
   final String chatId;
   final Restaurant? restaurant;
-  ChatScreen({Key? key, required this.fromUser, required this.toUser, required this.chatId, this.restaurant}) : super(key: key);
+  ChatScreen({
+    Key? key,
+    required this.fromUser,
+    required this.toUser,
+    required this.chatId,
+    this.restaurant,
+  }) : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -38,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   TextEditingController messageBoxController = TextEditingController();
   List<Map> _chatDataList = [];
   ChatListController _chatListController = Get.put(ChatListController());
-  ScrollController _controller = ScrollController();
+  late ScrollController _controller;
 
   String chatBackgroundPath = AssetsConstant.chatBackgroundGray;
   bool tick = false;
@@ -53,11 +49,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // Add the observer.
+
     WidgetsBinding.instance.addObserver(this);
     loadLocalUserData();
     toUser = widget.toUser;
-
+    _controller = ScrollController();
     globalChatUserId = widget.toUser.userId;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -70,9 +66,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     _chatListController.chatData.clear();
-    // Remove the observer
     WidgetsBinding.instance.removeObserver(this);
     globalChatUserId = null;
+    _controller.dispose();
     super.dispose();
   }
 
@@ -80,7 +76,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    // These are the callbacks
     switch (state) {
       case AppLifecycleState.resumed:
         if (!GlobalWidgets.socketUtils.socket.connected) {
@@ -104,11 +99,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
-  clearChatDataList() {
-    setState(() {
-      _chatDataList.clear();
-    });
-  }
+  clearChatDataList() => setState(() => _chatDataList.clear());
 
   Future<bool> callGetAllMessageApi() async {
     HttpRequestModel req = new HttpRequestModel(
@@ -303,11 +294,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (_chatDataList.length > 5)
-      Timer(
-        Duration(milliseconds: 300),
-        () => _controller.jumpTo(_controller.position.maxScrollExtent),
-      );
+    if (_chatDataList.length > 5) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_controller.hasClients) {
+          _controller.jumpTo(_controller.position.maxScrollExtent);
+        }
+      });
+    }
 
     return Scaffold(
       key: scaffoldKey,
@@ -337,9 +330,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                         ),
                         onPressed: () {
-                          try {
-                            GlobalWidgets.socketUtils.updateSeenCounts(widget.chatId);
-                          } catch (e) {}
+                          GlobalWidgets.socketUtils.updateSeenCounts(widget.chatId);
+
                           Navigator.pop(context);
                           _chatListController.chatData.clear();
                           globalChatUserId = '';
@@ -388,21 +380,108 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         ),
                       ),
                     ),
-                    PopOverButton(onTap: () {
+                    PopOverButton(onTap: () async {
                       FocusScope.of(context).unfocus();
-                      showPopover(
-                        backgroundColor: AppColors.listBoxBackgroundColor,
+                      await showMenu(
                         context: context,
-                        bodyBuilder: (context) => ListItems(
-                          self: this,
-                        ),
-                        onPop: () => debugPrint('Popover was popped!'),
-                        direction: PopoverDirection.top,
-                        width: 180,
-                        height: 200,
-                        arrowHeight: 20,
-                        arrowWidth: 30,
-                        barrierColor: Colors.transparent,
+                        position: RelativeRect.fromLTRB(100, 120, 0, 0),
+                        color: AppColors.listBoxBackgroundColor,
+                        items: [
+                          PopupMenuItem(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              toUser.isFriend
+                                  ? Navigator.push(
+                                      context,
+                                      SlideLeftRoute(
+                                        routeName: "/profileScreen",
+                                        page: ProfileScreen(
+                                          userDetail: toUser,
+                                          isFromChatScreen: true,
+                                        ),
+                                      ),
+                                    )
+                                  : callAddAsFriendUserApi();
+                            },
+                            child: Container(
+                              height: 20,
+                              margin: EdgeInsets.only(top: 10),
+                              child: GlobalWidgets.setText(
+                                widget.toUser.isFriend
+                                    ? L10n.current.chat_page_view_profile_title
+                                    : L10n.current.chat_page_add_friend_title,
+                                fontSize: 14,
+                                strTextColor: AppColors.strMainTextColorWhite,
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              globalWidget.showPopUpWithMessage(
+                                  context: mainTabsScaffoldKey.currentContext ?? context,
+                                  conditionButtonEnable: true,
+                                  titleMessage: "ISEEY",
+                                  onPressOKButton: () => callBlockUserApi(),
+                                  message: L10n.current.chat_page_block_user_warning_message);
+                            },
+                            child: Container(
+                              height: 20,
+                              margin: EdgeInsets.only(top: 10),
+                              child: GlobalWidgets.setText(
+                                L10n.current.chat_page_block_user_title,
+                                fontSize: 14,
+                                strTextColor: AppColors.strMainTextColorWhite,
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              globalWidget.showPopUpWithMessage(
+                                  context: mainTabsScaffoldKey.currentContext ?? context,
+                                  conditionButtonEnable: true,
+                                  titleMessage: "ISEEY",
+                                  withTextField: true,
+                                  onPressOKButton: () => callBlockUserApi(),
+                                  message: L10n.current.chat_page_flag_user_warning_message);
+                            },
+                            child: Container(
+                              height: 20,
+                              margin: EdgeInsets.only(top: 10),
+                              child: GlobalWidgets.setText(
+                                L10n.current.chat_page_flag_user_title,
+                                fontSize: 14,
+                                strTextColor: AppColors.strMainTextColorWhite,
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            onTap: () {
+                              Navigator.of(context).pop();
+
+                              globalWidget.showPopUpWithMessage(
+                                  context: mainTabsScaffoldKey.currentContext ?? context,
+                                  conditionButtonEnable: true,
+                                  titleMessage: "ISEEY",
+                                  onPressOKButton: () {
+                                    GlobalWidgets.socketUtils.sendClearChat(widget.chatId);
+                                    _chatListController.clearChat();
+                                    clearChatDataList();
+                                  },
+                                  message: L10n.current.chat_page_clear_chat_warning_message);
+                            },
+                            child: Container(
+                              height: 20,
+                              margin: EdgeInsets.only(top: 10),
+                              child: GlobalWidgets.setText(
+                                L10n.current.chat_page_clear_chat_title,
+                                fontSize: 14,
+                                strTextColor: AppColors.strMainTextColorWhite,
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     }),
                   ],
@@ -787,25 +866,26 @@ class ListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: Container(
-        child: Neumorphic(
-          style: NeumorphicStyle(
-            shape: NeumorphicShape.flat,
-            depth: -3,
-            lightSource: LightSource.top,
-            color: AppColors.listBoxBackgroundColor,
-            border: NeumorphicBorder(
-              color: AppColors.innerShadowColor,
-              width: 1,
-            ),
-            shadowDarkColor: AppColors.innerShadowColor,
-            shadowLightColorEmboss: Colors.transparent,
-            shadowDarkColorEmboss: AppColors.innerShadowColor,
+    return SizedBox(
+      height: 200,
+      width: 180,
+      child: Neumorphic(
+        style: NeumorphicStyle(
+          shape: NeumorphicShape.flat,
+          depth: -3,
+          lightSource: LightSource.top,
+          color: AppColors.listBoxBackgroundColor,
+          border: NeumorphicBorder(
+            color: AppColors.innerShadowColor,
+            width: 1,
           ),
-          child: ListView(
-            physics: NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(20),
+          shadowDarkColor: AppColors.innerShadowColor,
+          shadowLightColorEmboss: Colors.transparent,
+          shadowDarkColorEmboss: AppColors.innerShadowColor,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
             children: [
               InkWell(
                 onTap: () {
@@ -841,9 +921,7 @@ class ListItems extends StatelessWidget {
                       context: mainTabsScaffoldKey.currentContext ?? context,
                       conditionButtonEnable: true,
                       titleMessage: "ISEEY",
-                      onPressOKButton: () {
-                        self.callBlockUserApi();
-                      },
+                      onPressOKButton: () => self.callBlockUserApi(),
                       message: L10n.current.chat_page_block_user_warning_message);
                 },
                 child: Container(
