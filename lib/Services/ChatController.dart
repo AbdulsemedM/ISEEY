@@ -5,15 +5,9 @@ class ChatListController extends GetxController {
   var loc = {}.obs;
 
   @override
-  void onInit() {
-    super.onInit();
-  }
+  void onInit() => super.onInit();
 
-  addMsgToList(Map message) {
-    chatData.add(message);
-  }
+  addMsgToList(Map message) => chatData.add(message);
 
-  clearChat() {
-    chatData.clear();
-  }
+  clearChat() => chatData.clear();
 }

@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/ChatUserModel.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/StateManagement.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/ChatUserModel.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/StateManagement.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,15 +82,15 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
 
         ChatUserModel modelData = ChatUserModel.fromJson(jsonRes);
 
-        if (modelData.success == 200) {
+        if (modelData.success) {
           setState(() {
             chatUserListResult = modelData.result;
           });
         } else {
-          showSuccessOrFail(modelData.message, modelData.success, context);
+          showSuccessOrFail(modelData.message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -148,11 +148,11 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
           callGetFriendListApi(scaffoldKey, showLoader: true);
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -340,14 +340,16 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                               ),
                                                               onPressed: () {
                                                                 globalWidget.showPopUpWithMessage(
-                                                                  context: mainTabsScaffoldKey.currentContext ?? context,
+                                                                  context:
+                                                                      mainTabsScaffoldKey.currentContext ?? context,
                                                                   conditionButtonEnable: true,
                                                                   titleMessage: L10n.current.app_name,
                                                                   onPressOKButton: () async {
                                                                     await sendDeleteChat(friend.chatId);
                                                                     callGetFriendListApi(scaffoldKey, showLoader: true);
                                                                   },
-                                                                  message: L10n.current.friends_page_delete_chat_warning_message,
+                                                                  message: L10n
+                                                                      .current.friends_page_delete_chat_warning_message,
                                                                 );
                                                               },
                                                               style: NeumorphicStyle(
@@ -362,7 +364,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                                 ),
                                                                 shadowDarkColor: AppColors.innerShadowColor,
                                                                 shadowLightColorEmboss: Colors.transparent,
-                                                                shadowDarkColorEmboss: AppColors.mainBackgroundColorOrange,
+                                                                shadowDarkColorEmboss:
+                                                                    AppColors.mainBackgroundColorOrange,
                                                               ),
                                                             ),
                                                           ),
@@ -410,7 +413,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                                               padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                                                                               child: GlobalWidgets.setText(
                                                                                 L10n.current.blocked_user_sorry_title,
-                                                                                strTextColor: AppColors.strMainTextColorWhite,
+                                                                                strTextColor:
+                                                                                    AppColors.strMainTextColorWhite,
                                                                                 textAlign: TextAlign.center,
                                                                                 fontSize: 26,
                                                                               ),
@@ -418,7 +422,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                                                             Container(
                                                                               child: GlobalWidgets.setText(
                                                                                 L10n.current.blocked_user_no_data_title,
-                                                                                strTextColor: AppColors.strMainTextColorWhite,
+                                                                                strTextColor:
+                                                                                    AppColors.strMainTextColorWhite,
                                                                                 textAlign: TextAlign.center,
                                                                                 fontSize: 20,
                                                                               ),

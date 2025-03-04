@@ -1,15 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ISEEY/AuthFlow/LoginScreen.dart';
-import 'package:ISEEY/CustomTabbarController/CustomTabbarController.dart';
-import 'package:ISEEY/GlobalFiles/GlobalFiles.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/Services/notification_utils.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +10,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/GlobalFiles/GlobalFiles.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/Services/notification_utils.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -106,6 +105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   callProfileUpdateApi(String imgUrl) async {
     FocusScope.of(context).unfocus();
     var x = GlobalWidgets();
+
     try {
       var data = new Map<String, String>();
       data['email'] = emailController.text;
@@ -117,25 +117,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         data['lng'] = currentPosition!.longitude.toString();
         data['lat'] = currentPosition!.latitude.toString();
       }
+      if (descriptionController.text.isNotEmpty) data['description'] = descriptionController.text;
+      if (fbController.text.isNotEmpty) data['facebookURL'] = fbController.text;
+      if (instaController.text.isNotEmpty) data['instagramURL'] = instaController.text;
 
-      data['description'] = descriptionController.text;
-      data['facebookURL'] = fbController.text;
-      data['instagramURL'] = instaController.text;
       var selectedPath = selectedImage?.path ?? '';
-      if (selectedPath.isEmpty) {
-        File f = await getImageFileFromAssets('man-placeholder.png');
-        selectedImage = f;
+
+      if (selectedPath.isNotEmpty) {
+        await HttpRequestModel(
+          url: 'upload/user',
+          method: RequestMethodType.POST,
+          body: {"picture": selectedPath},
+          headerType: "json",
+          authMethod: true,
+        );
       }
 
       HttpRequestModel req = new HttpRequestModel(
-          url: 'users/updateProfile',
-          method: RequestMethodType.MULTIPART,
-          body: json.encode(data),
-          multipartBody: data,
-          file: selectedImage,
-          params: '',
-          headerType: "json",
-          authMethod: true);
+        url: 'users/updateProfile',
+        method: RequestMethodType.PUT,
+        body: json.encode(data),
+        multipartBody: data,
+        params: '',
+        headerType: "json",
+        authMethod: true,
+      );
+
       var response;
 
       try {
@@ -147,42 +154,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           var jsonRes = jsonDecode(response);
 
           UserModel user = UserModel.fromJson(jsonRes);
-          if (user.success == 200) {
-            saveResponse(user.result);
-            showSuccessOrFail(
-              user.message,
-              user.success,
-              context,
-              isCustom: true,
-              onCustomOkPress: () {
-                if (widget.isFromSignUp) {
-                  _navigateToOnBoardingScreen();
-                }
-              },
-            );
-          } else {
-            showSuccessOrFail(user.message, user.success, context);
+
+          if (user.success != 200) {
+            showSuccessOrFail(user.message, false, context);
+          }
+
+          HttpRequestModel getProfileResponse = new HttpRequestModel(
+            url: 'users/getProfile',
+            method: RequestMethodType.GET,
+            body: '',
+            multipartBody: null,
+            params: '',
+            headerType: "json",
+            authMethod: true,
+          );
+
+          final profileResponse = await HttpService().init(getProfileResponse, scaffoldKey);
+          final data = jsonDecode(profileResponse);
+
+          if (profileResponse != '') {
+            UserResult user = UserResult.fromJson(data['data']);
+            saveResponse(user);
           }
         } else {}
-      } catch (e) {
-        debugPrint("EXCEPTION $e");
+      } catch (error) {
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
+        debugPrint("EXCEPTION $error");
       }
     } catch (error) {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       debugPrint("Error in getting current position $error");
     }
     x.hideLoading();
-  }
-
-  _navigateToOnBoardingScreen() {
-    return Navigator.pushAndRemoveUntil(
-        context,
-        SlideLeftRoute(
-          page: CustomTabBarController(
-            key: customTabBarControllerKey,
-          ),
-          routeName: "/tabBarController",
-        ),
-        (route) => false);
   }
 
   void saveResponse(UserResult? userInfo) async {
@@ -301,7 +304,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         Container(
                                           width: MediaQuery.of(context).size.width * 0.45,
                                           height: 3,
-                                          color: selectedScreenIndex == 0 ? AppColors.mainBackgroundColorOrange : Colors.transparent,
+                                          color: selectedScreenIndex == 0
+                                              ? AppColors.mainBackgroundColorOrange
+                                              : Colors.transparent,
                                         )
                                       ],
                                     ),
@@ -328,7 +333,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         Container(
                                           width: MediaQuery.of(context).size.width * 0.45,
                                           height: 3,
-                                          color: selectedScreenIndex == 1 ? AppColors.mainBackgroundColorOrange : Colors.transparent,
+                                          color: selectedScreenIndex == 1
+                                              ? AppColors.mainBackgroundColorOrange
+                                              : Colors.transparent,
                                         )
                                       ],
                                     ),
@@ -530,7 +537,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     lastDate: DateTime.now(),
                   ).then((value) {
                     selectedDob = value != null ? value.toUtc() : DateTime.now();
-                    String strDate = convertStringFromDate(date: value ?? DateTime.now(), dateWantInFormat: "dd-MM-yyyy");
+                    String strDate =
+                        convertStringFromDate(date: value ?? DateTime.now(), dateWantInFormat: "dd-MM-yyyy");
                     dobController.text = strDate;
                   });
                 },
@@ -584,7 +592,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   if (selectedGender == "None" || emailController.text.isEmpty) {
                     return Fluttertoast.showToast(msg: L10n.current.edit_profile_missing_info_error_message);
                   }
-                  if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailController.text)) {
+                  if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(emailController.text)) {
                     return Fluttertoast.showToast(msg: L10n.current.email_is_not_valid_error_message);
                   }
                   callProfileUpdateApi('');
@@ -643,7 +652,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   _deleteAccountNavigateToLogin(GlobalKey<ScaffoldState> scaffoldKey) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/deleteUser', method: RequestMethodType.DELETE, body: '', params: '', headerType: "json", authMethod: true);
+        url: 'users/deleteUser',
+        method: RequestMethodType.DELETE,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     try {
       var x = GlobalWidgets();
@@ -679,10 +693,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             setState(() {});
           }
         } else {
-          showSuccessOrFail(L10n.current.something_went_wrong, success, context);
+          showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -894,7 +908,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/changePassword', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+        url: 'users/changePassword',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -909,15 +928,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (user.success == 200) {
           showSuccessOrFail(
             user.message,
-            user.success,
+            true,
             context,
             isTitleEnable: false,
           );
         } else {
-          showSuccessOrFail(user.message, user.success, context);
+          showSuccessOrFail(user.message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");

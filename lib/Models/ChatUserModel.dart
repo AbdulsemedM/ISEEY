@@ -1,12 +1,11 @@
-import 'package:ISEEY/Models/TableListModel.dart';
+import 'package:iseey/Models/TableListModel.dart';
 
 class ChatUserModel {
-  late int success;
+  late bool success;
   late String message;
   List<ChatUserResult> result = [];
 
-  ChatUserModel(
-      {required this.success, required this.message, required this.result});
+  ChatUserModel({required this.success, required this.message, required this.result});
 
   ChatUserModel.fromJson(Map<String, dynamic> json) {
     success = json['success'] ?? 0;
@@ -55,12 +54,10 @@ class ChatUserResult {
     userDetail = new UserDetail.fromJson(json['userDetail']);
     messagesCount = json['messagesCount'] ?? 0;
     chatId = json['chat_id'] ?? '';
-    lastMessage = json['lastMessage'] != null
-        ? new LastMessage.fromJson(json['lastMessage'] as Map<String, dynamic>)
-        : null;
-    restaurant = json['restaurant'] != null
-        ? new Restaurant.fromJson(json['restaurant'] as Map<String, dynamic>)
-        : null;
+    lastMessage =
+        json['lastMessage'] != null ? new LastMessage.fromJson(json['lastMessage'] as Map<String, dynamic>) : null;
+    restaurant =
+        json['restaurant'] != null ? new Restaurant.fromJson(json['restaurant'] as Map<String, dynamic>) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -179,6 +176,7 @@ class LastMessage {
     data['created'] = this.created;
     data['updated'] = this.updated;
     data['__v'] = this.iV;
+
     return data;
   }
 }

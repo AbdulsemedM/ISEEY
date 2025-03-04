@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/restaurant_list_model.dart';
-import 'package:ISEEY/Models/restaurant_list_result.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/ChatController.dart';
-import 'package:ISEEY/Services/StateManagement.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/restaurant_list_model.dart';
+import 'package:iseey/Models/restaurant_list_result.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/ChatController.dart';
+import 'package:iseey/Services/StateManagement.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,11 +58,11 @@ class _RestaurantListState extends State<RestaurantList> {
   }
 
   onCheckedInReceived(data) {
-    printInfo(info: "Checked in received $data");
-    int index = restaurantListResult.indexWhere((restaurant) => restaurant.sId == data['restaurant_id']);
-    printInfo(info: "Index: $index");
+    int index = restaurantListResult.indexWhere(
+      (restaurant) => restaurant.sId == data['restaurant_id'],
+    );
+
     if (index != -1) {
-      printInfo(info: "lao");
       final resturant = restaurantListResult[index];
       int count = resturant.checkedInCount;
       final resturants = List.of(restaurantListResult);
@@ -80,37 +80,33 @@ class _RestaurantListState extends State<RestaurantList> {
     final longitude = _currentPosition.longitude;
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'restaurants/list?lat=$latitude&lng=$longitude',
-        method: RequestMethodType.GET,
-        body: '',
-        params: '',
-        headerType: "json",
-        authMethod: true);
-    var response;
-    var x = GlobalWidgets();
+      url: 'restaurants/list?lat=$latitude&lng=$longitude',
+      method: RequestMethodType.GET,
+      headerType: "json",
+      authMethod: true,
+      body: '',
+      params: '',
+    );
 
     try {
-      response = await HttpService().init(req, scaffoldKey);
+      final response = await HttpService().init(req, scaffoldKey);
 
-      if (response is String && response != '') {
-        var jsonRes = jsonDecode(response);
+      if (response != '') {
+        RestaurantListModel modelData = RestaurantListModel.fromJson(jsonDecode(response));
 
-        RestaurantListModel modelData = RestaurantListModel.fromJson(jsonRes);
-
-        if (modelData.success == 200) {
-          setState(() {
-            restaurantListResult = modelData.result;
-          });
+        if (modelData.success) {
+          setState(() => restaurantListResult = modelData.result);
         } else {
           showSuccessOrFail(modelData.message, modelData.success, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
-    } catch (e) {
-      debugPrint("EXCEPTION $e");
+    } catch (error) {
+      debugPrint("EXCEPTION $error");
     }
-    x.hideLoading();
+
+    GlobalWidgets().hideLoading();
   }
 
   @override
@@ -156,12 +152,11 @@ class _RestaurantListState extends State<RestaurantList> {
               ),
             ],
           ),
-          title: Container(
+          title: SizedBox(
             height: 45,
-            width: double.infinity,
             child: Neumorphic(
-              padding: EdgeInsets.all(0),
-              margin: EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
               style: NeumorphicStyle(
                 shape: NeumorphicShape.flat,
                 depth: -3,
@@ -196,9 +191,7 @@ class _RestaurantListState extends State<RestaurantList> {
                     suffixIcon: Container(
                         child: IconButton(
                       alignment: Alignment.centerRight,
-                      onPressed: () {
-                        searchList(searchTextController.text);
-                      },
+                      onPressed: () => searchList(searchTextController.text),
                       icon: Icon(
                         Icons.search,
                         color: AppColors.mainTextColorWhite,
@@ -220,13 +213,13 @@ class _RestaurantListState extends State<RestaurantList> {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Container(
+            SizedBox(
               child: Image.asset(
                 AssetsConstant.chatBackground2,
                 fit: BoxFit.cover,
               ),
             ),
-            Container(color: Colors.black87),
+            ColoredBox(color: Colors.black87),
             SafeArea(
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 18),
@@ -238,7 +231,7 @@ class _RestaurantListState extends State<RestaurantList> {
                       padding: EdgeInsets.only(top: 30),
                       child: Container(
                         alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        padding: EdgeInsets.zero,
                         child: GlobalWidgets.setText(
                           L10n.current.restaurant_list_title,
                           fontSize: 20,
@@ -251,56 +244,54 @@ class _RestaurantListState extends State<RestaurantList> {
                         backgroundColor: AppColors.fieldsBackgroundColor,
                         onRefresh: _pullRefresh,
                         child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            alignment: restaurantListResult.length == 0 ? Alignment.center : Alignment.topCenter,
-                            child: SingleChildScrollView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              child: restaurantListResult.length == 0
-                                  ? Container(
-                                      height: MediaQuery.of(context).size.height * 0.7,
-                                      child: Center(
-                                        child: Text(
-                                          L10n.current.restaurant_list_empty_state_text,
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          alignment: restaurantListResult.length == 0 ? Alignment.center : Alignment.topCenter,
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: restaurantListResult.length == 0
+                                ? Container(
+                                    height: MediaQuery.of(context).size.height * 0.7,
+                                    child: Center(
+                                      child: Text(
+                                        L10n.current.restaurant_list_empty_state_text,
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    )
-                                  : GridView.builder(
-                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 6.0,
-                                        mainAxisSpacing: 3.0,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      itemCount: searchTextController.text.isEmpty
-                                          ? restaurantListResult.length
-                                          : _searchResult.length == 0
-                                              ? 0
-                                              : _searchResult.length,
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            FocusScope.of(context).unfocus();
-                                            RestaurantListResult result = searchTextController.text.isEmpty
-                                                ? restaurantListResult[index]
-                                                : _searchResult.length == 0
-                                                    ? restaurantListResult[index]
-                                                    : _searchResult[index];
-                                            restaurantId = result.sId;
-                                            Provider.of<StateManagement>(context, listen: false).setSelectedRestaurant(result);
-                                            isNewLetterSelected = result.newsletter;
-                                            isAgree = false;
-                                            callCheckIfUserCheckInTableApi(scaffoldKey);
-                                          },
-                                          child: setListItem(index),
-                                        );
-                                      },
                                     ),
-                            )),
+                                  )
+                                : GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 6.0,
+                                      mainAxisSpacing: 3.0,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    itemCount: searchTextController.text.isEmpty
+                                        ? restaurantListResult.length
+                                        : _searchResult.length == 0
+                                            ? 0
+                                            : _searchResult.length,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (BuildContext context, int index) => GestureDetector(
+                                      onTap: () {
+                                        FocusScope.of(context).unfocus();
+                                        RestaurantListResult result = searchTextController.text.isEmpty
+                                            ? restaurantListResult[index]
+                                            : _searchResult.length == 0
+                                                ? restaurantListResult[index]
+                                                : _searchResult[index];
+                                        restaurantId = result.sId;
+                                        Provider.of<StateManagement>(context, listen: false)
+                                            .setSelectedRestaurant(result);
+                                        isNewLetterSelected = result.newsletter;
+                                        isAgree = false;
+                                        callCheckIfUserCheckInTableApi(scaffoldKey);
+                                      },
+                                      child: setListItem(index),
+                                    ),
+                                  ),
+                          ),
+                        ),
                       ),
                     )
                   ],
@@ -315,11 +306,9 @@ class _RestaurantListState extends State<RestaurantList> {
 
   Future<void> _pullRefresh() async => await callGetRestaurantApi(scaffoldKey);
 
-  searchList(String text) {
+  void searchList(String text) {
     if (text.isEmpty) {
-      setState(() {
-        _searchResult.clear();
-      });
+      setState(() => _searchResult.clear());
     } else {
       List<RestaurantListResult> tempSearchResult = [];
       restaurantListResult.forEach((restaurantItem) {
@@ -347,7 +336,7 @@ class _RestaurantListState extends State<RestaurantList> {
       restaurantDetails.address.length,
     );
 
-    return Container(
+    return SizedBox(
       child: Neumorphic(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
         padding: EdgeInsets.zero,
@@ -376,8 +365,6 @@ class _RestaurantListState extends State<RestaurantList> {
           ),
           child: Container(
             color: Colors.black.withOpacity(0.5),
-            width: double.infinity,
-            height: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -469,7 +456,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                               ? SizedBox.shrink()
                                               : Flexible(
                                                   child: GlobalWidgets.setText(
-                                                    ' ${restaurantDetails.ratings}' + ' Reviews (${restaurantDetails.reviewsCount ?? '-'})',
+                                                    ' ${restaurantDetails.ratings}' +
+                                                        ' Reviews (${restaurantDetails.reviewsCount ?? '-'})',
                                                     fontSize: 10,
                                                     fontHeight: 1,
                                                     strTextColor: AppColors.strMainTextColorWhite,
@@ -541,7 +529,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                 ),
                               ),
                               onPressed: () => launchURL(
-                                restaurantDetails.instagram ?? 'https://www.instagram.com/iseey.app?igshid=YmMyMTA2M2Y%3D',
+                                restaurantDetails.instagram ??
+                                    'https://www.instagram.com/iseey.app?igshid=YmMyMTA2M2Y%3D',
                               ),
                               style: NeumorphicStyle(
                                 shape: NeumorphicShape.flat,
@@ -779,7 +768,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                                     isAgree = !isAgree;
                                                     overlayEntry?.remove();
                                                     overlayEntry = null;
-                                                    showTablePopup(context: mainTabsScaffoldKey.currentContext ?? context);
+                                                    showTablePopup(
+                                                        context: mainTabsScaffoldKey.currentContext ?? context);
                                                   });
                                                 },
                                                 child: Container(
@@ -825,7 +815,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                       child: GlobalWidgets.setButton(
                                         onPressButton: () async {
                                           if (tableNumberController.text.isEmpty) {
-                                            showSuccessOrFail(L10n.current.table_pop_up_error_message, 000, context);
+                                            showSuccessOrFail(L10n.current.table_pop_up_error_message, false, context);
                                             return null;
                                           } else {
                                             overlayEntry?.remove();
@@ -942,6 +932,7 @@ class _RestaurantListState extends State<RestaurantList> {
         authMethod: true);
     var response;
     var x = GlobalWidgets();
+
     try {
       x.showLoading(scaffoldKey.currentContext ?? context);
       response = await HttpService().init(req, scaffoldKey);
@@ -971,10 +962,10 @@ class _RestaurantListState extends State<RestaurantList> {
             isNewLetterSelected = newsLetter;
           } catch (_) {}
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -1014,10 +1005,10 @@ class _RestaurantListState extends State<RestaurantList> {
             navigateToTableList(restaurantId);
           });
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");

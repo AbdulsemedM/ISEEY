@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,9 +20,9 @@ setCurrentLanguage(String value) async {
   await prefs.setString("currentLanguage", value);
 }
 
-setFCM(String value) async {
-  var prefs = await SharedPreferences.getInstance();
-  return await prefs.setString('FCM', value);
+Future<void> setFCM(String value) async {
+  await SharedPreferences.getInstance()
+    ..setString('FCM', value);
 }
 
 getFCM() async {
@@ -70,7 +70,7 @@ Future<String> getStringValueForKey(String key) async {
   return (prefs.getString(key) ?? "");
 }
 
-getMapData(String key) async {
+dynamic getMapData(String key) async {
   final prefs = await SharedPreferences.getInstance();
   return json.decode(prefs.getString(key) ?? '');
 }
@@ -205,19 +205,19 @@ int getSecondsFromDate(DateTime date) {
 
 showSuccessOrFail(
   String message,
-  int? statusCode,
+  bool? success,
   BuildContext? context, {
   bool isCustom = false,
   bool isTitleEnable = true,
   VoidCallback? onCustomOkPress,
 }) {
-  if (statusCode == 200 && context != null) {
+  if (success != null && context != null) {
     return globalWidget.showPopUpWithMessage(
       isTitleEnable: isTitleEnable,
       context: context,
       message: message,
       onPressOKButton: () {
-        return isCustom ? onCustomOkPress!() : Navigator.pop(context);
+        return isCustom ? onCustomOkPress!() : (Navigator.canPop(context) ? Navigator.pop(context) : null);
       },
     );
   } else {
@@ -260,7 +260,7 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
     if (response is String && response != '') {
       var jsonRes = jsonDecode(response);
 
-      int success = jsonRes["success"];
+      bool success = jsonRes["success"];
       String message = jsonRes["message"];
 
       if (success == 200) {
@@ -272,7 +272,12 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
       }
     } else {
       final context = scaffoldKey.currentContext;
-      if (context != null) showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+      if (context != null)
+        showSuccessOrFail(
+          L10n.current.something_went_wrong,
+          false,
+          context,
+        );
       return false;
     }
   } catch (e) {

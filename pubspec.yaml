@@ -1,4 +1,4 @@
-name: ISEEY
+name: iseey
 description: Chat App for Restaurant and Bars.
 
 publish_to: "none"
@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.0.6+16
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -14,8 +14,7 @@ dependencies:
 
   flutter_neumorphic:
     git:
-      url: https://github.com/den0206/Flutter-Neumorphic.git
-      ref: feature/remoce_accentcolor
+      url: https://github.com/Idean/Flutter-Neumorphic.git
   progress_indicators: ^1.0.0
   flutter_slidable: ^3.1.0
   flutter_switch: ^0.3.2
@@ -42,8 +41,8 @@ dependencies:
   getwidget: ^3.0.1
   get: ^4.6.5
   fluttertoast: ^8.1.2
-  firebase_core: ^2.24.2
-  firebase_messaging: ^14.2.1
+  firebase_core: ^3.8.0
+  firebase_messaging: ^15.1.5
   overlay_support: ^2.1.0
   flutter_launcher_icons: ^0.11.0
   cupertino_icons: ^1.0.5

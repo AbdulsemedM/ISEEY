@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-import 'package:ISEEY/AfterLoginFlow/BlockedUserScreen.dart';
-import 'package:ISEEY/AfterLoginFlow/FriendsListScreen.dart';
-import 'package:ISEEY/AfterLoginFlow/NewsLetterScreen.dart';
-import 'package:ISEEY/AuthFlow/EditProfileScreen.dart';
-import 'package:ISEEY/AuthFlow/LoginScreen.dart';
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/Services/notification_utils.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:iseey/AfterLoginFlow/BlockedUserScreen.dart';
+import 'package:iseey/AfterLoginFlow/FriendsListScreen.dart';
+import 'package:iseey/AfterLoginFlow/NewsLetterScreen.dart';
+import 'package:iseey/AuthFlow/EditProfileScreen.dart';
+import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/Services/notification_utils.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -55,12 +55,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   UserResult? userInfo;
 
-  getUserDetail() async {
+  Future<void> getUserDetail() async {
     Map<String, dynamic> data = await getMapData("userdata");
 
     setState(() {
       userInfo = UserResult.fromJson(data);
-
       _getCurrentLocation();
     });
   }
@@ -102,26 +101,31 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   callGetCountApi(GlobalKey<ScaffoldState> scaffoldKey) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/getCounts', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
+        url: 'users/getCounts',
+        method: RequestMethodType.GET,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     try {
       response = await HttpService().init(req, scaffoldKey);
 
       if (response is String && response != '') {
         var jsonRes = jsonDecode(response);
-        int success = jsonRes["success"];
+        bool success = jsonRes["success"];
 
-        if (success == 200) {
+        if (success) {
           setState(() {
             Map<String, dynamic> result = jsonRes["result"];
-            locationCount = result['locations'];
-            friendsCount = result['friends'];
+            locationCount = result['locationsCount'];
+            friendsCount = result['friendsCount'];
           });
         } else {
-          showSuccessOrFail(L10n.current.blocked_user_sorry_title, success, context);
+          showSuccessOrFail(L10n.current.blocked_user_sorry_title, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -141,11 +145,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            stops: [
-              0,
-              0.8,
-              1,
-            ],
+            stops: [0, 0.8, 1],
           ),
         ),
         child: SafeArea(
@@ -159,11 +159,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       SlideLeftRoute(
                         page: EditProfileScreen(),
                         routeName: '/editProfile',
-                      )).then((value) {
-                    if (mainTabsScaffoldKey.currentState?.isDrawerOpen ?? false) {
-                      Navigator.pop(context);
-                    }
-                  });
+                      )).then(
+                    (value) {
+                      if (mainTabsScaffoldKey.currentState?.isDrawerOpen ?? false) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.only(top: 20),
@@ -513,7 +515,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
                               alignment: Alignment.center,
                               child: GlobalWidgets.setText(items[index],
-                                  fontSize: 18, fontWeight: FontWeight.w500, strTextColor: AppColors.strMainTextColorWhite),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  strTextColor: AppColors.strMainTextColorWhite),
                             ),
                           ),
                         ],
@@ -583,10 +587,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
             setState(() {});
           }
         } else {
-          showSuccessOrFail(L10n.current.blocked_user_sorry_title, success, context);
+          showSuccessOrFail(L10n.current.blocked_user_sorry_title, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");

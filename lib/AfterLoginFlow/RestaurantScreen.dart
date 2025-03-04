@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/GlobalFiles.dart';
-import 'package:ISEEY/Models/OfferModel.dart';
-import 'package:ISEEY/Models/restaurant_list_result.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/StateManagement.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:iseey/GlobalFiles/GlobalFiles.dart';
+import 'package:iseey/Models/OfferModel.dart';
+import 'package:iseey/Models/restaurant_list_result.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/StateManagement.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -278,15 +278,17 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 ? Center(
                                     child: WebViewWidget(
                                       controller: foodMenuController
-                                        ..loadRequest(Uri.parse('https://docs.google.com/gview?embedded=true&url=$foodMenu')),
+                                        ..loadRequest(
+                                            Uri.parse('https://docs.google.com/gview?embedded=true&url=$foodMenu')),
                                     ),
                                   )
                                 : isMenuUrl
                                     ? Center(
                                         child: WebViewWidget(
                                           controller: foodMenuController
-                                            ..loadRequest(
-                                                Uri.parse(foodMenu.toString().isEmpty ? selectedRestaurant?.menu ?? '' : foodMenu)),
+                                            ..loadRequest(Uri.parse(foodMenu.toString().isEmpty
+                                                ? selectedRestaurant?.menu ?? ''
+                                                : foodMenu)),
                                         ),
                                       )
                                     : PDF(swipeHorizontal: true).cachedFromUrl(
@@ -328,7 +330,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     ? Center(
                                         child: WebViewWidget(
                                           controller: drinkMenuController
-                                            ..loadRequest(Uri.parse('https://docs.google.com/gview?embedded=true&url=$drinkMenu')),
+                                            ..loadRequest(Uri.parse(
+                                                'https://docs.google.com/gview?embedded=true&url=$drinkMenu')),
                                         ),
                                       )
                                     : isDrinkMenuUrl && drinkMenuUri != null
@@ -449,6 +452,17 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   noFoodAndDrinkMenu(String foodMenu, String drinkMenu) => foodMenu == '' && drinkMenu == '';
 
   callGetOfferApi(GlobalKey<ScaffoldState> scaffoldKey) async {
+    final restairantId = selectedRestaurantId;
+    if (restairantId == null) {
+      showSuccessOrFail(
+        L10n.current.something_went_wrong,
+        false,
+        context,
+      );
+
+      return;
+    }
+
     HttpRequestModel req = new HttpRequestModel(
       url: 'offers/list/$selectedRestaurantId',
       method: RequestMethodType.GET,
@@ -480,7 +494,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       } else {
         showSuccessOrFail(
           L10n.current.something_went_wrong,
-          000,
+          false,
           context,
         );
       }
@@ -694,7 +708,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     ),
                     depth: -3,
                     lightSource: LightSource.top,
-                    color: selectedIndex == index ? AppColors.mainBackgroundColorOrange : AppColors.screensBackgroundsColor,
+                    color: selectedIndex == index
+                        ? AppColors.mainBackgroundColorOrange
+                        : AppColors.screensBackgroundsColor,
                     border: NeumorphicBorder(
                       color: AppColors.innerShadowColor,
                       width: 1,

@@ -1,6 +1,6 @@
-import 'package:ISEEY/Services/assets_constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:iseey/Services/assets_constant.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageNetwork extends StatelessWidget {
@@ -12,7 +12,13 @@ class ImageNetwork extends StatelessWidget {
   final bool isZoomableViewEnable;
 
   const ImageNetwork(
-      {Key? key, required this.url, required this.placeHolder, this.fit, this.isZoomableViewEnable = false, this.height, this.width})
+      {Key? key,
+      required this.url,
+      required this.placeHolder,
+      this.fit,
+      this.isZoomableViewEnable = false,
+      this.height,
+      this.width})
       : super(key: key);
 
   @override
@@ -27,30 +33,31 @@ class ImageNetwork extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Container(
-                              child: Stack(
-                                children: [
-                                  PhotoView(
-                                    backgroundDecoration: BoxDecoration(color: Colors.white),
-                                    imageProvider: imageProvider,
-                                  ),
-                                  Positioned(
-                                    top: 45,
-                                    left: 15,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.black,
-                                        size: 24,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                ],
+                      builder: (context) => Container(
+                        child: Stack(
+                          children: [
+                            PhotoView(
+                              backgroundDecoration: BoxDecoration(color: Colors.white),
+                              imageProvider: imageProvider,
+                            ),
+                            Positioned(
+                              top: 45,
+                              left: 15,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                               ),
-                            )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   );
                 },
                 child: Container(
@@ -120,17 +127,22 @@ class ImagePlaceholder extends StatelessWidget {
   final double? width;
   final double? height;
 
-  const ImagePlaceholder({Key? key, this.width, this.height}) : super(key: key);
+  const ImagePlaceholder({
+    Key? key,
+    this.width,
+    this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5),
-        color: Color(0xfff7f7f7),
-        child: Image.asset(
-          AssetsConstant.logo,
-          color: Colors.white,
-          height: 15,
-        ));
+      padding: EdgeInsets.all(5),
+      color: Color(0xfff7f7f7),
+      child: Image.asset(
+        AssetsConstant.logo,
+        color: Colors.white,
+        height: 15,
+      ),
+    );
   }
 }

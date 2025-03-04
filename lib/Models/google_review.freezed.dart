@@ -25,8 +25,12 @@ mixin _$GoogleReview {
   int get rating => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
 
+  /// Serializes this GoogleReview to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of GoogleReview
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $GoogleReviewCopyWith<GoogleReview> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,6 +57,8 @@ class _$GoogleReviewCopyWithImpl<$Res, $Val extends GoogleReview>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of GoogleReview
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,6 +105,8 @@ class __$$GoogleReviewImplCopyWithImpl<$Res>
       _$GoogleReviewImpl _value, $Res Function(_$GoogleReviewImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of GoogleReview
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -158,11 +166,13 @@ class _$GoogleReviewImpl implements _GoogleReview {
             (identical(other.text, text) || other.text == text));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, authorName, rating, text);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of GoogleReview
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GoogleReviewImplCopyWith<_$GoogleReviewImpl> get copyWith =>
@@ -192,8 +202,11 @@ abstract class _GoogleReview implements GoogleReview {
   int get rating;
   @override
   String get text;
+
+  /// Create a copy of GoogleReview
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GoogleReviewImplCopyWith<_$GoogleReviewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:ISEEY/AfterLoginFlow/Abc.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:iseey/AfterLoginFlow/Abc.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 
 class NotificationUtils {
   Future<void> initializeFirebaseApp() async {
@@ -81,7 +81,8 @@ class NotificationUtils {
       // Disable foreground notifications
       defaultPresentAlert: true,
     );
-    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (details) {
       if (details.payload != null) {
         openAppPageFromNotification(data: details.payload.toString(), fromInitialMessage: false, context: context);
@@ -134,8 +135,9 @@ class NotificationUtils {
     } else {
       debugPrint('FCM User declined or has not accepted permission');
     }
+
     fcmRegistrationToken = await FirebaseMessaging.instance.getToken() ?? 'no token';
-    setFCM(fcmRegistrationToken);
+    await setFCM(fcmRegistrationToken);
   }
 
   Future<void> openAppPageFromNotification({

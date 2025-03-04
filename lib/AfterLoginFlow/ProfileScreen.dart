@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-import 'package:ISEEY/AfterLoginFlow/chat/ChatScreen.dart';
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/ImageNetwork.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/ChatUserModel.dart';
-import 'package:ISEEY/Models/TableListModel.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:iseey/AfterLoginFlow/chat/ChatScreen.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/ImageNetwork.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/ChatUserModel.dart';
+import 'package:iseey/Models/TableListModel.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserDetail userDetail;
@@ -454,7 +454,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     context: scaffoldKey.currentContext ?? context,
                                     conditionButtonEnable: true,
                                     onPressOKButton: () {
-                                      widget.userDetail.isBlocked ? callUnBlockUserApi(scaffoldKey) : callBlockUserApi(scaffoldKey);
+                                      widget.userDetail.isBlocked
+                                          ? callUnBlockUserApi(scaffoldKey)
+                                          : callBlockUserApi(scaffoldKey);
                                     },
                                     titleMessage: L10n.current.app_name,
                                     message: widget.userDetail.isBlocked
@@ -558,12 +560,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             chatUserListResult = modelData.result;
           });
         } else {
-          showSuccessOrFail(modelData.message, modelData.success, context);
+          showSuccessOrFail(modelData.message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       debugPrint("EXCEPTION $e");
     }
     x.hideLoading();
@@ -616,17 +619,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (success == 200) {
           showSuccessOrFail(
             message,
-            success,
+            true,
             context,
             isTitleEnable: false,
           );
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -664,17 +667,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         String message = jsonRes["message"];
         debugPrint('message $message');
         if (success == 200) {
-          showSuccessOrFail(L10n.current.login_success_title, success, context, isTitleEnable: false);
+          showSuccessOrFail(
+            L10n.current.login_success_title,
+            true,
+            context,
+            isTitleEnable: false,
+          );
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       debugPrint("EXCEPTION $e");
     }
     x.hideLoading();
@@ -688,7 +697,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'socket/createOrGetChat', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+        url: 'socket/createOrGetChat',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -708,14 +722,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       debugPrint("EXCEPTION $e");
     }
     x.hideLoading();

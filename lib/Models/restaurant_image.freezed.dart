@@ -23,8 +23,12 @@ mixin _$RestaurantImage {
   RestaurantImageSource get source => throw _privateConstructorUsedError;
   String? get location => throw _privateConstructorUsedError;
 
+  /// Serializes this RestaurantImage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RestaurantImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RestaurantImageCopyWith<RestaurantImage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$RestaurantImageCopyWithImpl<$Res, $Val extends RestaurantImage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RestaurantImage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$RestaurantImageImplCopyWithImpl<$Res>
       _$RestaurantImageImpl _value, $Res Function(_$RestaurantImageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RestaurantImage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -133,11 +141,13 @@ class _$RestaurantImageImpl implements _RestaurantImage {
                 other.location == location));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, source, location);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RestaurantImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RestaurantImageImplCopyWith<_$RestaurantImageImpl> get copyWith =>
@@ -164,8 +174,11 @@ abstract class _RestaurantImage implements RestaurantImage {
   RestaurantImageSource get source;
   @override
   String? get location;
+
+  /// Create a copy of RestaurantImage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RestaurantImageImplCopyWith<_$RestaurantImageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

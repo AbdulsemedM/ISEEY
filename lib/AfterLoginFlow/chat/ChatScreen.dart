@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ISEEY/AfterLoginFlow/ProfileScreen.dart';
-import 'package:ISEEY/AfterLoginFlow/chat/widgets/widgets.dart';
-import 'package:ISEEY/GlobalFiles/GlobalFiles.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/TableListModel.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/Services.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
+import 'package:iseey/AfterLoginFlow/ProfileScreen.dart';
+import 'package:iseey/AfterLoginFlow/chat/widgets/widgets.dart';
+import 'package:iseey/GlobalFiles/GlobalFiles.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/TableListModel.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/Services.dart';
+import 'package:iseey/generated/l10n.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserResult fromUser;
@@ -175,11 +175,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           setState(() {});
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -764,11 +764,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           });
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -785,7 +785,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'friends/addFriend', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+        url: 'friends/addFriend',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -801,16 +806,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         String message = jsonRes["message"];
 
         if (success == 200) {
-          showSuccessOrFail(message, success, context, isCustom: true, onCustomOkPress: () {
+          showSuccessOrFail(message, true, context, isCustom: true, onCustomOkPress: () {
             callUpdateUser();
           });
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -826,7 +831,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     var body = json.encode(data);
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/block', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+        url: 'users/block',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -841,14 +851,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         String message = jsonRes["message"];
 
         if (success == 200) {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, true, context);
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -907,7 +917,9 @@ class ListItems extends StatelessWidget {
                   height: 20,
                   margin: EdgeInsets.only(top: 10),
                   child: GlobalWidgets.setText(
-                    self.widget.toUser.isFriend ? L10n.current.chat_page_view_profile_title : L10n.current.chat_page_add_friend_title,
+                    self.widget.toUser.isFriend
+                        ? L10n.current.chat_page_view_profile_title
+                        : L10n.current.chat_page_add_friend_title,
                     fontSize: 14,
                     strTextColor: AppColors.strMainTextColorWhite,
                   ),

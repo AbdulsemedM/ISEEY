@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:ISEEY/CustomTabbarController/CustomTabbarController.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:ISEEY/AuthFlow/LoginScreen.dart';
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/CustomTabbarController/CustomTabbarController.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +15,7 @@ class LoaderScreen extends StatefulWidget {
   final bool isInitial;
   final bool? notify;
 
-  LoaderScreen({Key? key,required this.isInitial, this.notify = false}) : super(key: key);
+  LoaderScreen({Key? key, required this.isInitial, this.notify = false}) : super(key: key);
 
   @override
   _LoaderScreenState createState() => _LoaderScreenState();

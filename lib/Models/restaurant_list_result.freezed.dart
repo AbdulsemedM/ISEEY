@@ -41,15 +41,15 @@ mixin _$RestaurantListResult {
   @JsonKey(name: 'email')
   String get email => throw _privateConstructorUsedError;
   @JsonKey(name: 'updated')
-  int get updated => throw _privateConstructorUsedError;
+  int? get updated => throw _privateConstructorUsedError;
   @JsonKey(name: 'created')
-  int get created => throw _privateConstructorUsedError;
+  int? get created => throw _privateConstructorUsedError;
   @JsonKey(name: 'number_of_tables')
   int get numberOfTables => throw _privateConstructorUsedError;
   @JsonKey(name: 'address')
   String get address => throw _privateConstructorUsedError;
   @JsonKey(name: 'menu_type')
-  String get menuType => throw _privateConstructorUsedError;
+  String? get menuType => throw _privateConstructorUsedError;
   @JsonKey(name: 'drink_menu_type')
   String? get drinkMenuType => throw _privateConstructorUsedError;
   @JsonKey(name: 'menu')
@@ -81,8 +81,12 @@ mixin _$RestaurantListResult {
       throw _privateConstructorUsedError;
   List<GoogleReview> get reviews => throw _privateConstructorUsedError;
 
+  /// Serializes this RestaurantListResult to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RestaurantListResultCopyWith<RestaurantListResult> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -104,11 +108,11 @@ abstract class $RestaurantListResultCopyWith<$Res> {
       @JsonKey(name: 'name') String name,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
       @JsonKey(name: 'email') String email,
-      @JsonKey(name: 'updated') int updated,
-      @JsonKey(name: 'created') int created,
+      @JsonKey(name: 'updated') int? updated,
+      @JsonKey(name: 'created') int? created,
       @JsonKey(name: 'number_of_tables') int numberOfTables,
       @JsonKey(name: 'address') String address,
-      @JsonKey(name: 'menu_type') String menuType,
+      @JsonKey(name: 'menu_type') String? menuType,
       @JsonKey(name: 'drink_menu_type') String? drinkMenuType,
       @JsonKey(name: 'menu') String? menu,
       @JsonKey(name: 'drinkMenu') String? drinkMenu,
@@ -148,6 +152,8 @@ class _$RestaurantListResultCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,11 +167,11 @@ class _$RestaurantListResultCopyWithImpl<$Res,
     Object? name = null,
     Object? phoneNumber = null,
     Object? email = null,
-    Object? updated = null,
-    Object? created = null,
+    Object? updated = freezed,
+    Object? created = freezed,
     Object? numberOfTables = null,
     Object? address = null,
-    Object? menuType = null,
+    Object? menuType = freezed,
     Object? drinkMenuType = freezed,
     Object? menu = freezed,
     Object? drinkMenu = freezed,
@@ -230,14 +236,14 @@ class _$RestaurantListResultCopyWithImpl<$Res,
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      updated: null == updated
+      updated: freezed == updated
           ? _value.updated
           : updated // ignore: cast_nullable_to_non_nullable
-              as int,
-      created: null == created
+              as int?,
+      created: freezed == created
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       numberOfTables: null == numberOfTables
           ? _value.numberOfTables
           : numberOfTables // ignore: cast_nullable_to_non_nullable
@@ -246,10 +252,10 @@ class _$RestaurantListResultCopyWithImpl<$Res,
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      menuType: null == menuType
+      menuType: freezed == menuType
           ? _value.menuType
           : menuType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       drinkMenuType: freezed == drinkMenuType
           ? _value.drinkMenuType
           : drinkMenuType // ignore: cast_nullable_to_non_nullable
@@ -341,6 +347,8 @@ class _$RestaurantListResultCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RestaurantImageCopyWith<$Res>? get restaurantImage {
@@ -353,6 +361,8 @@ class _$RestaurantListResultCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RestaurantListStateDetailsCopyWith<$Res>? get stateDetails {
@@ -366,6 +376,8 @@ class _$RestaurantListResultCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RestaurantListStateDetailsCopyWith<$Res>? get cityDetails {
@@ -399,11 +411,11 @@ abstract class _$$RestaurantListResultImplCopyWith<$Res>
       @JsonKey(name: 'name') String name,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
       @JsonKey(name: 'email') String email,
-      @JsonKey(name: 'updated') int updated,
-      @JsonKey(name: 'created') int created,
+      @JsonKey(name: 'updated') int? updated,
+      @JsonKey(name: 'created') int? created,
       @JsonKey(name: 'number_of_tables') int numberOfTables,
       @JsonKey(name: 'address') String address,
-      @JsonKey(name: 'menu_type') String menuType,
+      @JsonKey(name: 'menu_type') String? menuType,
       @JsonKey(name: 'drink_menu_type') String? drinkMenuType,
       @JsonKey(name: 'menu') String? menu,
       @JsonKey(name: 'drinkMenu') String? drinkMenu,
@@ -443,6 +455,8 @@ class __$$RestaurantListResultImplCopyWithImpl<$Res>
       $Res Function(_$RestaurantListResultImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -456,11 +470,11 @@ class __$$RestaurantListResultImplCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = null,
     Object? email = null,
-    Object? updated = null,
-    Object? created = null,
+    Object? updated = freezed,
+    Object? created = freezed,
     Object? numberOfTables = null,
     Object? address = null,
-    Object? menuType = null,
+    Object? menuType = freezed,
     Object? drinkMenuType = freezed,
     Object? menu = freezed,
     Object? drinkMenu = freezed,
@@ -525,14 +539,14 @@ class __$$RestaurantListResultImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      updated: null == updated
+      updated: freezed == updated
           ? _value.updated
           : updated // ignore: cast_nullable_to_non_nullable
-              as int,
-      created: null == created
+              as int?,
+      created: freezed == created
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       numberOfTables: null == numberOfTables
           ? _value.numberOfTables
           : numberOfTables // ignore: cast_nullable_to_non_nullable
@@ -541,10 +555,10 @@ class __$$RestaurantListResultImplCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      menuType: null == menuType
+      menuType: freezed == menuType
           ? _value.menuType
           : menuType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       drinkMenuType: freezed == drinkMenuType
           ? _value.drinkMenuType
           : drinkMenuType // ignore: cast_nullable_to_non_nullable
@@ -651,11 +665,11 @@ class _$RestaurantListResultImpl implements _RestaurantListResult {
       @JsonKey(name: 'name') required this.name,
       @JsonKey(name: 'phoneNumber') required this.phoneNumber,
       @JsonKey(name: 'email') required this.email,
-      @JsonKey(name: 'updated') required this.updated,
-      @JsonKey(name: 'created') required this.created,
+      @JsonKey(name: 'updated') this.updated,
+      @JsonKey(name: 'created') this.created,
       @JsonKey(name: 'number_of_tables') required this.numberOfTables,
       @JsonKey(name: 'address') required this.address,
-      @JsonKey(name: 'menu_type') required this.menuType,
+      @JsonKey(name: 'menu_type') this.menuType,
       @JsonKey(name: 'drink_menu_type') this.drinkMenuType,
       @JsonKey(name: 'menu') this.menu,
       @JsonKey(name: 'drinkMenu') this.drinkMenu,
@@ -715,10 +729,10 @@ class _$RestaurantListResultImpl implements _RestaurantListResult {
   final String email;
   @override
   @JsonKey(name: 'updated')
-  final int updated;
+  final int? updated;
   @override
   @JsonKey(name: 'created')
-  final int created;
+  final int? created;
   @override
   @JsonKey(name: 'number_of_tables')
   final int numberOfTables;
@@ -727,7 +741,7 @@ class _$RestaurantListResultImpl implements _RestaurantListResult {
   final String address;
   @override
   @JsonKey(name: 'menu_type')
-  final String menuType;
+  final String? menuType;
   @override
   @JsonKey(name: 'drink_menu_type')
   final String? drinkMenuType;
@@ -854,7 +868,7 @@ class _$RestaurantListResultImpl implements _RestaurantListResult {
             const DeepCollectionEquality().equals(other._reviews, _reviews));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -897,7 +911,9 @@ class _$RestaurantListResultImpl implements _RestaurantListResult {
         const DeepCollectionEquality().hash(_reviews)
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RestaurantListResultImplCopyWith<_$RestaurantListResultImpl>
@@ -925,11 +941,11 @@ abstract class _RestaurantListResult implements RestaurantListResult {
       @JsonKey(name: 'name') required final String name,
       @JsonKey(name: 'phoneNumber') required final String phoneNumber,
       @JsonKey(name: 'email') required final String email,
-      @JsonKey(name: 'updated') required final int updated,
-      @JsonKey(name: 'created') required final int created,
+      @JsonKey(name: 'updated') final int? updated,
+      @JsonKey(name: 'created') final int? created,
       @JsonKey(name: 'number_of_tables') required final int numberOfTables,
       @JsonKey(name: 'address') required final String address,
-      @JsonKey(name: 'menu_type') required final String menuType,
+      @JsonKey(name: 'menu_type') final String? menuType,
       @JsonKey(name: 'drink_menu_type') final String? drinkMenuType,
       @JsonKey(name: 'menu') final String? menu,
       @JsonKey(name: 'drinkMenu') final String? drinkMenu,
@@ -988,10 +1004,10 @@ abstract class _RestaurantListResult implements RestaurantListResult {
   String get email;
   @override
   @JsonKey(name: 'updated')
-  int get updated;
+  int? get updated;
   @override
   @JsonKey(name: 'created')
-  int get created;
+  int? get created;
   @override
   @JsonKey(name: 'number_of_tables')
   int get numberOfTables;
@@ -1000,7 +1016,7 @@ abstract class _RestaurantListResult implements RestaurantListResult {
   String get address;
   @override
   @JsonKey(name: 'menu_type')
-  String get menuType;
+  String? get menuType;
   @override
   @JsonKey(name: 'drink_menu_type')
   String? get drinkMenuType;
@@ -1051,8 +1067,11 @@ abstract class _RestaurantListResult implements RestaurantListResult {
   RestaurantListStateDetails? get cityDetails;
   @override
   List<GoogleReview> get reviews;
+
+  /// Create a copy of RestaurantListResult
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RestaurantListResultImplCopyWith<_$RestaurantListResultImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

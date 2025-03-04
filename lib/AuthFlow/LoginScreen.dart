@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ISEEY/AuthFlow/ForgotPasswordScreen.dart';
-import 'package:ISEEY/AuthFlow/SignupScreen.dart';
-import 'package:ISEEY/CustomTabbarController/CustomTabbarController.dart';
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iseey/AuthFlow/ForgotPasswordScreen.dart';
+import 'package:iseey/AuthFlow/SignupScreen.dart';
+import 'package:iseey/CustomTabbarController/CustomTabbarController.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -91,14 +91,19 @@ class _LoginScreenState extends State<LoginScreen> {
       response = await HttpService().init(req, scaffoldKey);
       x.hideLoading();
 
-      if (response is String && response != '') {
+      if (response is String && response.isNotEmpty) {
         var jsonRes = jsonDecode(response);
 
-        UserModel user = UserModel.fromJson(jsonRes);
-        if (user.success == 200) {
-          saveResponse(user.result?.token ?? '', user.result);
+        if (jsonRes['data'] != null && jsonRes['data']['user'] != null) {
+          UserModel user = UserModel.fromJson(jsonRes);
+
+          if (user.success == 200) {
+            saveResponse(user.result?.token ?? '', user.result);
+          } else {
+            showSuccessOrFail(user.message, false, context);
+          }
         } else {
-          showSuccessOrFail(user.message, user.success, context);
+          showSuccessOrFail("Invalid response structure", false, context);
         }
       }
     } catch (e) {
@@ -214,7 +219,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (emailController.text.isEmpty || passwordController.text.isEmpty) {
                         return Fluttertoast.showToast(msg: L10n.current.login_empty_credentials_message);
                       }
-                      if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailController.text)) {
+                      if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(emailController.text)) {
                         return Fluttertoast.showToast(msg: L10n.current.email_not_valid_error_message);
                       }
                       callLoginApi(scaffoldKey);

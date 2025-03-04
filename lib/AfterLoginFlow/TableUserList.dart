@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/TableListModel.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/TableListModel.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 
 import 'chat/ChatScreen.dart';
 
@@ -73,11 +73,11 @@ class _TableUserListState extends State<TableUserList> {
           });
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {
@@ -162,11 +162,15 @@ class _TableUserListState extends State<TableUserList> {
                           UserResult userInfo = UserResult.fromJson(data);
                           TableUsers user = widget.userList[index];
                           if (userInfo.userId == user.userDetail?.sId.toString()) {
-                            showSuccessOrFail(L10n.current.table_user_list_chat_with_yourself_error_message, 000, context);
+                            showSuccessOrFail(
+                              L10n.current.table_user_list_chat_with_yourself_error_message,
+                              false,
+                              context,
+                            );
                             return;
                           }
-                          bool isResponseSuccess =
-                              await callCreateOrGetChatApi(scaffoldKey, user.userDetail?.sId ?? '', widget.restaurant?.sId ?? '');
+                          bool isResponseSuccess = await callCreateOrGetChatApi(
+                              scaffoldKey, user.userDetail?.sId ?? '', widget.restaurant?.sId ?? '');
 
                           if (isResponseSuccess) {
                             Navigator.push(

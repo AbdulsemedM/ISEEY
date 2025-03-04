@@ -1,9 +1,9 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:ISEEY/Models/google_review.dart';
-import 'package:ISEEY/Models/restaurant_image.dart';
-import 'package:ISEEY/Models/restaurant_list_state_details.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:iseey/Models/google_review.dart';
+import 'package:iseey/Models/restaurant_image.dart';
+import 'package:iseey/Models/restaurant_list_state_details.dart';
 
 part 'restaurant_list_result.freezed.dart';
 part 'restaurant_list_result.g.dart';
@@ -21,11 +21,11 @@ class RestaurantListResult with _$RestaurantListResult {
     @JsonKey(name: 'name') required String name,
     @JsonKey(name: 'phoneNumber') required String phoneNumber,
     @JsonKey(name: 'email') required String email,
-    @JsonKey(name: 'updated') required int updated,
-    @JsonKey(name: 'created') required int created,
+    @JsonKey(name: 'updated') int? updated,
+    @JsonKey(name: 'created') int? created,
     @JsonKey(name: 'number_of_tables') required int numberOfTables,
     @JsonKey(name: 'address') required String address,
-    @JsonKey(name: 'menu_type') required String menuType,
+    @JsonKey(name: 'menu_type') String? menuType,
     @JsonKey(name: 'drink_menu_type') String? drinkMenuType,
     @JsonKey(name: 'menu') String? menu,
     @JsonKey(name: 'drinkMenu') String? drinkMenu,

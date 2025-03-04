@@ -1,7 +1,7 @@
-import 'package:ISEEY/AuthFlow/LoaderScreen.dart';
-import 'package:ISEEY/Services/SocketUtils.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:iseey/AuthFlow/LoaderScreen.dart';
+import 'package:iseey/Services/SocketUtils.dart';
+import 'package:iseey/generated/l10n.dart';
 
 import 'AppColors.dart';
 import 'GlobalVariables.dart';
@@ -251,7 +251,6 @@ class GlobalWidgets {
     Widget? customIcon,
     String? titleMessage,
     String message = "",
-    
     String iconAssetPath = "assets/successIcon.png",
     bool conditionButtonEnable = false,
     bool withTextField = false,

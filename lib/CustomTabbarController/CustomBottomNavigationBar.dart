@@ -1,9 +1,9 @@
 library bottom_navy_bar;
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/Services/assets_constant.dart';
 
 class CustomBottomNavyBar extends StatelessWidget {
   final int selectedIndex;

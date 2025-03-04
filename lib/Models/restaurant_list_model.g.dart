@@ -9,7 +9,7 @@ part of 'restaurant_list_model.dart';
 _$RestaurantListModelImpl _$$RestaurantListModelImplFromJson(
         Map<String, dynamic> json) =>
     _$RestaurantListModelImpl(
-      success: (json['success'] as num).toInt(),
+      success: json['success'] as bool,
       message: json['message'] as String,
       result: (json['result'] as List<dynamic>)
           .map((e) => RestaurantListResult.fromJson(e as Map<String, dynamic>))

@@ -1,9 +1,9 @@
-import 'package:ISEEY/AuthFlow/LoaderScreen.dart';
-import 'package:ISEEY/Services/notification_utils.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:iseey/AuthFlow/LoaderScreen.dart';
+import 'package:iseey/Services/notification_utils.dart';
+import 'package:iseey/generated/l10n.dart';
 
 import 'AfterLoginFlow/Abc.dart';
 import 'GlobalFiles/AppColors.dart';

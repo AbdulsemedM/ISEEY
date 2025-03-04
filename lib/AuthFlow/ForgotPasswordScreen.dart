@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -22,7 +22,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/forgotPassword', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: false);
+        url: 'users/forgotPassword',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: false);
     var response;
     var x = GlobalWidgets();
     try {
@@ -44,7 +49,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           showSuccessOrFail(jsonRes["message"], jsonRes["success"], context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -134,7 +139,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             return Fluttertoast.showToast(msg: 'Email not valid');
                           }
                           if (emailController.text.isEmpty) {
-                            GlobalWidgets.showSnackBarWithText(scaffoldKey.currentState!, "Email Field Should Not Be Empty.", "");
+                            GlobalWidgets.showSnackBarWithText(
+                                scaffoldKey.currentState!, "Email Field Should Not Be Empty.", "");
                           } else {
                             callForgotPasswordApi();
                           }

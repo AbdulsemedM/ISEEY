@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/Models/BlockedUserListModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/StateManagement.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/Models/BlockedUserListModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/StateManagement.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class BlockedUserScreen extends StatefulWidget {
@@ -36,7 +36,12 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
     GlobalKey<ScaffoldState> scaffoldKey,
   ) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/blockedList', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
+        url: 'users/blockedList',
+        method: RequestMethodType.GET,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -54,10 +59,10 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
             blockedUserList = modelData.result;
           });
         } else {
-          showSuccessOrFail(modelData.message, modelData.success, context);
+          showSuccessOrFail(modelData.message, false, context);
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       }
     } catch (e) {
       debugPrint("EXCEPTION $e");
@@ -211,7 +216,12 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
 
     var body = json.encode(data);
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/unblock', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: true);
+        url: 'users/unblock',
+        method: RequestMethodType.POST,
+        body: body,
+        params: '',
+        headerType: "json",
+        authMethod: true);
     var response;
     var x = GlobalWidgets();
     try {
@@ -230,7 +240,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
           callGetBlockedUserListApi(scaffoldKey);
           showSuccessOrFail(
             message,
-            success,
+            true,
             context,
             isCustom: true,
             isTitleEnable: false,
@@ -238,11 +248,11 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
           );
           return true;
         } else {
-          showSuccessOrFail(message, success, context);
+          showSuccessOrFail(message, false, context);
           return false;
         }
       } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, 000, context);
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
         return false;
       }
     } catch (e) {

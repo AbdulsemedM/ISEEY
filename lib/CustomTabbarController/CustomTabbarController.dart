@@ -1,12 +1,12 @@
-import 'package:ISEEY/AfterLoginFlow/AfterLoginFlow.dart';
-import 'package:ISEEY/CustomTabbarController/CustomBottomNavigationBar.dart';
-import 'package:ISEEY/Drawer/DrawerScreen.dart';
-import 'package:ISEEY/GlobalFiles/GlobalFiles.dart';
-import 'package:ISEEY/Services/StateManagement.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:iseey/AfterLoginFlow/AfterLoginFlow.dart';
+import 'package:iseey/CustomTabbarController/CustomBottomNavigationBar.dart';
+import 'package:iseey/Drawer/DrawerScreen.dart';
+import 'package:iseey/GlobalFiles/GlobalFiles.dart';
+import 'package:iseey/Services/StateManagement.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 import 'CustomNavigator.dart';
@@ -217,11 +217,18 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
       }
       if (!isConditionTrue()) {
         currentSelectedTab = 1;
-        showSuccessOrFail(L10n.current.no_restaurant_selected_error_message, 000, context);
+        showSuccessOrFail(
+          L10n.current.no_restaurant_selected_error_message,
+          false,
+          context,
+          isCustom: true,
+          onCustomOkPress: () => setState(() => currentSelectedTab = 1),
+        );
         return;
       } else {
         if (index == 0) {
-          Provider.of<StateManagement>(mainTabsScaffoldKey.currentContext ?? context, listen: false).reloadRestaurantBuild();
+          Provider.of<StateManagement>(mainTabsScaffoldKey.currentContext ?? context, listen: false)
+              .reloadRestaurantBuild();
         }
       }
       if (currentSelectedTab == 1) {

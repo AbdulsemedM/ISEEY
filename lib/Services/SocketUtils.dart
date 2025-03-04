@@ -1,9 +1,9 @@
-import 'package:ISEEY/Models/ChatMessageModel.dart';
-import 'package:ISEEY/Models/TableListModel.dart';
-import 'package:ISEEY/Models/UserModel.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:iseey/Models/ChatMessageModel.dart';
+import 'package:iseey/Models/TableListModel.dart';
+import 'package:iseey/Models/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
@@ -39,7 +39,7 @@ class SocketUtils {
 
   initSocket(UserResult? fromUser, String chatId) async {
     this._chatID = chatId;
-    debugPrint("Yie yie  ===> ${this._chatID}");
+    debugPrint("🟢 socket init: $fromUser");
 
     await onConnect();
   }
@@ -79,11 +79,9 @@ class SocketUtils {
     });
   }
 
-  sendJoinRoom(
-      {bool? isChatId = false, UserResult? toChatUser, String? chatId}) {
-    socket.emit(JOIN_ROOM,
-        {"room_id": isChatId ?? false ? chatId : toChatUser?.userId});
-    debugPrint("Yie yie ====> $isChatId ===> $toChatUser ===> $chatId");
+  sendJoinRoom({bool? isChatId = false, UserResult? toChatUser, String? chatId}) {
+    socket.emit(JOIN_ROOM, {"room_id": isChatId ?? false ? chatId : toChatUser?.userId});
+    debugPrint("🟢 socket emit JOIN_ROOM: $toChatUser");
   }
 
   sendClearChat(String chatId) async {
@@ -114,8 +112,7 @@ class SocketUtils {
     String token = pref.getString("token") ?? "";
     String languageCode = pref.getString("languageCode") ?? "en";
     var headers = {'Authorization': 'Bearer $token', 'language': languageCode};
-    var request = http.Request('DELETE',
-        Uri.parse('https://iseey.app/api/app/socket/deleteChatMessage/$msgID'));
+    var request = http.Request('DELETE', Uri.parse('https://iseey.app/api/app/socket/deleteChatMessage/$msgID'));
     request.bodyFields = {};
     request.headers.addAll(headers);
 
@@ -133,8 +130,7 @@ class SocketUtils {
     String token = pref.getString("token") ?? "";
     String languageCode = pref.getString("languageCode") ?? "en";
     var headers = {'Authorization': 'Bearer $token', 'language': languageCode};
-    var request = http.Request('DELETE',
-        Uri.parse('https://iseey.app/api/app/socket/deleteChat/$chatID'));
+    var request = http.Request('DELETE', Uri.parse('https://iseey.app/api/app/socket/deleteChat/$chatID'));
     request.bodyFields = {};
     request.headers.addAll(headers);
 

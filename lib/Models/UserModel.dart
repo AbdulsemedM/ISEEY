@@ -6,9 +6,16 @@ class UserModel {
   UserModel({required this.success, required this.message, this.result});
 
   UserModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'] ?? 0;
+    final statusCode = json['success'] ?? 0;
+    success = statusCode is int
+        ? statusCode
+        : statusCode == true
+            ? 200
+            : 0;
     message = json['message'] ?? '';
-    result = json['result'] != null ? new UserResult.fromJson(json['result'] as Map<String, dynamic>) : null;
+    final userData =
+        json['data']['user'] != null ? new UserResult.fromJson(json['data']['user'] as Map<String, dynamic>) : null;
+    result = userData?.copyWith(token: json['data']['token'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -64,7 +71,7 @@ class UserResult {
   });
 
   UserResult.fromJson(Map<String, dynamic> json) {
-    userId = json['user_id'] ?? '';
+    userId = json['_id'] ?? '';
     email = json['email'] ?? '';
     firstName = json['first_name'] ?? '';
     lastName = json['last_name'] ?? '';
@@ -104,6 +111,49 @@ class UserResult {
     data['description'] = this.description;
     data['facebookURL'] = this.facebookUrl;
     data['instagramURL'] = this.instagramUrl;
+
     return data;
+  }
+
+  UserResult copyWith({
+    String? userId,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? address,
+    String? lat,
+    String? lng,
+    String? gender,
+    String? dob,
+    String? city,
+    String? state,
+    String? country,
+    String? postalCode,
+    String? image,
+    String? token,
+    String? description,
+    String? facebookUrl,
+    String? instagramUrl,
+  }) {
+    return UserResult(
+      userId: userId ?? this.userId,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      address: address ?? this.address,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+      gender: gender ?? this.gender,
+      dob: dob ?? this.dob,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      country: country ?? this.country,
+      postalCode: postalCode ?? this.postalCode,
+      image: image ?? this.image,
+      token: token ?? this.token,
+      description: description ?? this.description,
+      facebookUrl: facebookUrl ?? this.facebookUrl,
+      instagramUrl: instagramUrl ?? this.instagramUrl,
+    );
   }
 }

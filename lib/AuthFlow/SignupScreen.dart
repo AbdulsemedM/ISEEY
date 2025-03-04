@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ISEEY/GlobalFiles/AppColors.dart';
-import 'package:ISEEY/GlobalFiles/GlobalMethods.dart';
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/GlobalFiles/GlobalWidgets.dart';
-import 'package:ISEEY/GlobalFiles/transitions/slide_route.dart';
-import 'package:ISEEY/Models/UserModel.dart';
-import 'package:ISEEY/Services/ApiService.dart';
-import 'package:ISEEY/Services/assets_constant.dart';
-import 'package:ISEEY/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'EditProfileScreen.dart';
@@ -26,24 +26,22 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void validateAndSave() {
+  void validateAndSave() async {
     final FormState form = _formKey.currentState!;
     if (form.validate()) {
-      callSignupApi();
+      await callSignupApi();
     } else {
       debugPrint('Form is invalid');
     }
   }
 
-  callSignupApi() async {
+  Future<void> callSignupApi() async {
     if (!isAgree) {
       return globalWidget.showPopUpWithMessage(
         context: context,
         titleMessage: L10n.current.sign_up_terms_agreement_warning_title,
         message: L10n.current.sign_up_terms_agreement_warning_message,
-        onPressOKButton: () {
-          debugPrint("OK Pressed");
-        },
+        onPressOKButton: () => debugPrint("OK Pressed"),
       );
     }
 
@@ -58,7 +56,13 @@ class _SignupScreenState extends State<SignupScreen> {
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/signup', method: RequestMethodType.POST, body: body, params: '', headerType: "json", authMethod: false);
+      url: 'users/signup',
+      method: RequestMethodType.POST,
+      body: body,
+      params: '',
+      headerType: "json",
+      authMethod: false,
+    );
     var response;
     var x = GlobalWidgets();
     try {
@@ -66,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
       response = await HttpService().init(req, scaffoldKey);
       x.hideLoading();
 
-      if (response is String && response != '') {
+      if (response is String && response != "") {
         var jsonRes = jsonDecode(response);
 
         UserModel user = UserModel.fromJson(jsonRes);
@@ -104,10 +108,8 @@ class _SignupScreenState extends State<SignupScreen> {
           Navigator.push(
               context,
               SlideLeftRoute(
-                page: EditProfileScreen(
-                  isFromSignUp: true,
-                ),
                 routeName: '/editProfile',
+                page: EditProfileScreen(isFromSignUp: true),
               ));
         },
       );
@@ -117,9 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
         titleMessage: L10n.current.sign_up_failure_message_title,
         iconAssetPath: AssetsConstant.errorIcon,
         message: message,
-        onPressOKButton: () {
-          print("OK Pressed");
-        },
+        onPressOKButton: () => print("OK Pressed"),
       );
     }
   }
@@ -345,7 +345,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       padding: EdgeInsets.only(right: 35, left: 35, top: 15, bottom: 15),
                       onPressButton: () {
                         if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-                          return Fluttertoast.showToast(msg: L10n.current.sign_up_email_and_password_is_empty_error_message);
+                          return Fluttertoast.showToast(
+                              msg: L10n.current.sign_up_email_and_password_is_empty_error_message);
                         }
                         if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             .hasMatch(emailController.text)) {

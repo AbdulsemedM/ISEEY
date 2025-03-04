@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
-import 'package:ISEEY/Services/notification_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/Services/notification_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'NavigationRouteScreen.dart';
@@ -14,25 +14,20 @@ Future<void> main() async {
 
   await NotificationUtils().initializeFirebaseApp();
   FirebaseMessaging.onBackgroundMessage(
-    (message) async {
-      await _firebaseMessagingBackgroundHandler(message);
-    },
+    (message) async => await _firebaseMessagingBackgroundHandler(message),
   );
 
   await NotificationUtils().setupFlutterNotifications();
-
   HttpOverrides.global = MyHttpOverrides();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (BuildContext context) => StateManagement(),
-        ),
+        ChangeNotifierProvider(create: (BuildContext context) => StateManagement()),
       ],
       child: MaterialApp(
         navigatorKey: globalNavigatorKey,
         home: NavigationRouteScreen(),
-        debugShowCheckedModeBanner: false,
       ),
     ),
   );
@@ -46,7 +41,11 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback = (
+        X509Certificate cert,
+        String host,
+        int port,
+      ) =>
+          true;
   }
 }

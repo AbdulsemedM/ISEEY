@@ -1,6 +1,6 @@
-import 'package:ISEEY/Models/restaurant_list_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:iseey/Models/restaurant_list_result.dart';
 
 class StateManagement extends ChangeNotifier {
   RestaurantListResult? selectedRestaurant;

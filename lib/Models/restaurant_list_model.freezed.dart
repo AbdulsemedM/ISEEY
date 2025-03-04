@@ -20,12 +20,16 @@ RestaurantListModel _$RestaurantListModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RestaurantListModel {
-  int get success => throw _privateConstructorUsedError;
+  bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
   List<RestaurantListResult> get result => throw _privateConstructorUsedError;
 
+  /// Serializes this RestaurantListModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RestaurantListModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RestaurantListModelCopyWith<RestaurantListModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -36,7 +40,7 @@ abstract class $RestaurantListModelCopyWith<$Res> {
           RestaurantListModel value, $Res Function(RestaurantListModel) then) =
       _$RestaurantListModelCopyWithImpl<$Res, RestaurantListModel>;
   @useResult
-  $Res call({int success, String message, List<RestaurantListResult> result});
+  $Res call({bool success, String message, List<RestaurantListResult> result});
 }
 
 /// @nodoc
@@ -49,6 +53,8 @@ class _$RestaurantListModelCopyWithImpl<$Res, $Val extends RestaurantListModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RestaurantListModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -60,7 +66,7 @@ class _$RestaurantListModelCopyWithImpl<$Res, $Val extends RestaurantListModel>
       success: null == success
           ? _value.success
           : success // ignore: cast_nullable_to_non_nullable
-              as int,
+              as bool,
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -81,7 +87,7 @@ abstract class _$$RestaurantListModelImplCopyWith<$Res>
       __$$RestaurantListModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int success, String message, List<RestaurantListResult> result});
+  $Res call({bool success, String message, List<RestaurantListResult> result});
 }
 
 /// @nodoc
@@ -92,6 +98,8 @@ class __$$RestaurantListModelImplCopyWithImpl<$Res>
       $Res Function(_$RestaurantListModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RestaurantListModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -103,7 +111,7 @@ class __$$RestaurantListModelImplCopyWithImpl<$Res>
       success: null == success
           ? _value.success
           : success // ignore: cast_nullable_to_non_nullable
-              as int,
+              as bool,
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -129,7 +137,7 @@ class _$RestaurantListModelImpl implements _RestaurantListModel {
       _$$RestaurantListModelImplFromJson(json);
 
   @override
-  final int success;
+  final bool success;
   @override
   final String message;
   final List<RestaurantListResult> _result;
@@ -155,12 +163,14 @@ class _$RestaurantListModelImpl implements _RestaurantListModel {
             const DeepCollectionEquality().equals(other._result, _result));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, success, message,
       const DeepCollectionEquality().hash(_result));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RestaurantListModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RestaurantListModelImplCopyWith<_$RestaurantListModelImpl> get copyWith =>
@@ -177,7 +187,7 @@ class _$RestaurantListModelImpl implements _RestaurantListModel {
 
 abstract class _RestaurantListModel implements RestaurantListModel {
   const factory _RestaurantListModel(
-          {required final int success,
+          {required final bool success,
           required final String message,
           required final List<RestaurantListResult> result}) =
       _$RestaurantListModelImpl;
@@ -186,13 +196,16 @@ abstract class _RestaurantListModel implements RestaurantListModel {
       _$RestaurantListModelImpl.fromJson;
 
   @override
-  int get success;
+  bool get success;
   @override
   String get message;
   @override
   List<RestaurantListResult> get result;
+
+  /// Create a copy of RestaurantListModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RestaurantListModelImplCopyWith<_$RestaurantListModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

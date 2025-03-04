@@ -1,5 +1,5 @@
-import 'package:ISEEY/GlobalFiles/GlobalVariables.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 
 part 'restaurant_image.freezed.dart';
 part 'restaurant_image.g.dart';
@@ -18,7 +18,8 @@ class RestaurantImage with _$RestaurantImage {
     return model.source == RestaurantImageSource.local
         ? model
         : model.copyWith(
-            location: "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${model.location}&key=$googleApiKey",
+            location:
+                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${model.location}&key=$googleApiKey",
           );
   }
 }
