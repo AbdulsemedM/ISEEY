@@ -1,16 +1,16 @@
 class OfferModel {
-  late int success;
+  late bool success; 
   late String message;
   List<OfferListResult> result = [];
 
-  OfferModel({required this.success,required this.message,required this.result});
+  OfferModel({required this.success, required this.message, required this.result});
 
   OfferModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'] as int;
+    success = json['success'] as bool;
     message = json['message'] ?? '';
-    if (json['result'] != null) {
+    if (json['data'] != null) { 
       result = [];
-      json['result'].forEach((v) {
+      json['data'].forEach((v) {
         result.add(new OfferListResult.fromJson(v as Map<String, dynamic>));
       });
     }
@@ -20,7 +20,7 @@ class OfferModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     data['message'] = this.message;
-    data['result'] = this.result.map((v) => v.toJson()).toList();
+    data['data'] = this.result.map((v) => v.toJson()).toList(); // Changed from 'result' to 'data'
     return data;
   }
 }

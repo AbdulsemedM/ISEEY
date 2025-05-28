@@ -2,25 +2,22 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:http/http.dart' as http;
+import 'package:iseey/AfterLoginFlow/chat/view/chat_screen.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
 import 'package:iseey/Models/ChatUserModel.dart';
-import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
 import 'package:iseey/Services/ApiService.dart';
 import 'package:iseey/Services/StateManagement.dart';
 import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'chat/ChatScreen.dart';
 
 class ChatPartnerScreen extends StatefulWidget {
   @override
@@ -58,47 +55,52 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
   List<ChatUserResult> chatUserListResult = [];
 
   callGetFriendListApi(GlobalKey<ScaffoldState> scaffoldKey, {required bool showLoader}) async {
-    HttpRequestModel req = new HttpRequestModel(
-      url: 'socket/getChats',
-      method: RequestMethodType.GET,
-      body: '',
-      params: '',
-      headerType: "json",
-      authMethod: true,
-    );
+  HttpRequestModel req = new HttpRequestModel(
+    url: 'socket/getChats',
+    method: RequestMethodType.GET,
+    body: '',
+    params: '',
+    headerType: "json",
+    authMethod: true,
+  );
 
-    var response;
-    var x = GlobalWidgets();
+  var response;
+  var x = GlobalWidgets();
 
-    try {
-      if (showLoader) {
-        x.showLoading(scaffoldKey.currentContext ?? context);
-      }
-      response = await HttpService().init(req, scaffoldKey);
-      x.hideLoading();
-
-      if (response is String && response != '') {
-        var jsonRes = jsonDecode(response);
-
-        ChatUserModel modelData = ChatUserModel.fromJson(jsonRes);
-
-        if (modelData.success) {
-          setState(() {
-            chatUserListResult = modelData.result;
-          });
-        } else {
-          showSuccessOrFail(modelData.message, false, context);
-        }
-      } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-      }
-    } catch (e) {
-      debugPrint("EXCEPTION $e");
+  try {
+    if (showLoader) {
+      x.showLoading(scaffoldKey.currentContext ?? context);
     }
-
+    response = await HttpService().init(req, scaffoldKey);
     x.hideLoading();
+
+    if (response is String && response != '') {
+      var jsonRes = jsonDecode(response);
+
+      // Check if response has 'success' field
+      if (jsonRes["success"] == true) {
+        // Get the data array from response
+        List<dynamic> data = jsonRes["data"];
+        
+        // Map each item to ChatUserResult
+        List<ChatUserResult> results = data.map((item) => ChatUserResult.fromJson(item)).toList();
+
+        setState(() {
+          chatUserListResult = results;
+        });
+      } else {
+        showSuccessOrFail(jsonRes["message"] ?? "Failed to load chats", false, context);
+      }
+    } else {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
+    }
+  } catch (e) {
+    debugPrint("EXCEPTION $e");
+    showSuccessOrFail("Error parsing response", false, context);
   }
 
+  x.hideLoading();
+}
   callRebuild() {
     Provider.of<StateManagement>(context).isReload = false;
     Future.delayed(Duration(milliseconds: 1), () {
@@ -106,22 +108,61 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
     });
   }
 
-  Future<void> sendDeleteChat(String? chatID) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String token = pref.getString("token") ?? "";
-    var headers = {'Authorization': 'Bearer $token'};
-    var request = http.Request('DELETE', Uri.parse('https://iseey.app/api/app/socket/deleteChat/$chatID'));
-    request.bodyFields = {};
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      debugPrint(await response.stream.bytesToString());
-    } else {
-      debugPrint(response.reasonPhrase);
-    }
+  Future<bool> sendDeleteChat(String? chatID) async {
+  if (chatID == null || chatID.isEmpty) {
+    showSuccessOrFail("Invalid chat ID", false, context);
+    return false;
   }
+
+  var x = GlobalWidgets();
+  try {
+    x.showLoading(scaffoldKey.currentContext ?? context);
+    
+    HttpRequestModel req = HttpRequestModel(
+      url: 'socket/deleteChat/$chatID',
+      method: RequestMethodType.DELETE,
+      body: '',
+      params: '',
+      headerType: "json",
+      authMethod: true,
+    );
+
+    var response = await HttpService().init(req, scaffoldKey);
+    x.hideLoading();
+
+    if (response is String && response.isNotEmpty) {
+      var jsonRes = jsonDecode(response);
+      
+      if (jsonRes["success"] == true) {
+        showSuccessOrFail(
+          jsonRes["message"] ?? "Chat deleted successfully", 
+          true, 
+          context
+        );
+        return true;
+      } else {
+        showSuccessOrFail(
+          jsonRes["message"] ?? "Failed to delete chat",
+          false,
+          context
+        );
+        return false;
+      }
+    } else {
+      showSuccessOrFail(
+        L10n.current.something_went_wrong,
+        false,
+        context
+      );
+      return false;
+    }
+  } catch (e) {
+    x.hideLoading();
+    debugPrint("Error deleting chat: $e");
+    showSuccessOrFail("Error deleting chat", false, context);
+    return false;
+  }
+}
 
   Future<bool>? callUnFriendUser(GlobalKey<ScaffoldState> scaffoldKey, String strId) async {
     HttpRequestModel req = new HttpRequestModel(
@@ -175,11 +216,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            AssetsConstant.chatBackground2,
-            fit: BoxFit.cover,
-          ),
-          ColoredBox(color: Colors.black87),
+          
+          ColoredBox(color: AppColors.screensBackgroundsColor),
           SafeArea(
             child: isReload
                 ? SizedBox.shrink()

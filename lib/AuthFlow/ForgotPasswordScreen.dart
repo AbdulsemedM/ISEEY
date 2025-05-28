@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/AuthFlow/view/LoginScreen.dart';
 import 'package:iseey/CustomTabbarController/CustomTabbarController.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';

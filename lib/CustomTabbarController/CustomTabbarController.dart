@@ -1,18 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:iseey/AfterLoginFlow/AfterLoginFlow.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:iseey/AfterLoginFlow/Restaurant/view/restaurant_screen.dart';
+import 'package:iseey/AfterLoginFlow/RestaurantList/view/screens/RestaurantList.dart';
+import 'package:iseey/GlobalFiles/AppColors.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/Services/menu.dart';
+import 'package:iseey/generated/l10n.dart';
 import 'package:iseey/CustomTabbarController/CustomBottomNavigationBar.dart';
 import 'package:iseey/Drawer/DrawerScreen.dart';
-import 'package:iseey/GlobalFiles/GlobalFiles.dart';
-import 'package:iseey/Services/StateManagement.dart';
-import 'package:iseey/Services/assets_constant.dart';
-import 'package:iseey/generated/l10n.dart';
+import 'package:iseey/AfterLoginFlow/ChatPartnerScreen.dart';
 import 'package:provider/provider.dart';
-
+import 'package:iseey/Services/StateManagement.dart';
 import 'CustomNavigator.dart';
 
 class CustomTabBarController extends StatefulWidget {
-  late final int? fromChat;
+  final int? fromChat;
 
   CustomTabBarController({
     Key? key,
@@ -118,85 +122,11 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   }
 
   setBottomBar() {
-    return Container(
-        color: AppColors.screensBackgroundsColor,
-        child: Container(
-          color: AppColors.screensBackgroundsColor,
-          margin: EdgeInsets.only(
-            bottom: 10,
-            top: 0,
-          ),
-          height: 90,
-          child: Stack(
-            children: [
-              Neumorphic(
-                  margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-                  style: NeumorphicStyle(
-                    shape: NeumorphicShape.flat,
-                    boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.circular(90 / 2),
-                    ),
-                    depth: -2,
-                    color: AppColors.tabBarBoxBackgroundColor,
-                    border: NeumorphicBorder(
-                      color: AppColors.innerShadowColor,
-                      width: 0.2,
-                    ),
-                    shadowDarkColor: AppColors.innerShadowColor,
-                    intensity: 0.7,
-                    shadowLightColorEmboss: Colors.transparent,
-                    shadowDarkColorEmboss: AppColors.innerShadowColor,
-                  ),
-                  child: Container()),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () => onBottomTabClick(0),
-                        child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.tab1Icon, 0),
-                          iconSize: 30,
-                          isSelected: 0 == selectedIndex,
-                          backgroundColor: AppColors.screensBackgroundsColor,
-                          itemCornerRadius: 50,
-                          animationDuration: Duration(milliseconds: 270),
-                          curve: Curves.linear,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => onBottomTabClick(1),
-                        child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.tab2Icon, 1),
-                          iconSize: 30,
-                          isSelected: 1 == selectedIndex,
-                          backgroundColor: AppColors.screensBackgroundsColor,
-                          itemCornerRadius: 50,
-                          animationDuration: Duration(milliseconds: 270),
-                          curve: Curves.linear,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => onBottomTabClick(2),
-                        child: ItemWidget(
-                          item: addTabBardItems("", AssetsConstant.tab3Icon, 2),
-                          iconSize: 30,
-                          isSelected: 2 == selectedIndex,
-                          backgroundColor: AppColors.screensBackgroundsColor,
-                          itemCornerRadius: 50,
-                          animationDuration: Duration(milliseconds: 270),
-                          curve: Curves.linear,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
+    return CustomBottomNavyBar(
+      selectedIndex: currentSelectedTab,
+      items: bottomNavItems,
+      onItemSelected: (index) => onBottomTabClick(index),
+    );
   }
 
   openChat() {
@@ -204,17 +134,17 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
       selectedMenuItemIndex = 0;
       onBottomTabClick(2);
     });
-    // CustomBottomNavyBar(items: [], onItemSelected: (int value) {  },).onClick(2);
   }
 
   onBottomTabClick(index) {
-    currentSelectedTab = index;
-    selectedIndex = index;
-
     setState(() {
+      currentSelectedTab = index;
+      selectedIndex = index;
+
       if (index == 2) {
         Provider.of<StateManagement>(mainTabsScaffoldKey.currentContext ?? context, listen: false).reloadBuild();
       }
+
       if (!isConditionTrue()) {
         currentSelectedTab = 1;
         showSuccessOrFail(
@@ -231,6 +161,7 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
               .reloadRestaurantBuild();
         }
       }
+
       if (currentSelectedTab == 1) {
         selectedMenuItemIndex = 0;
       } else {

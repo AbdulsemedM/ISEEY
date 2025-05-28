@@ -1,22 +1,22 @@
 class TableListModel {
-  late int success;
+  late bool success;
   late String message;
-  TableListResult? result;
+  TableListResult? data;
 
-  TableListModel({required this.success, required this.message, this.result});
+  TableListModel({required this.success, required this.message, this.data});
 
   TableListModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'] ?? 0;
+    success = json['success'] ?? false;
     message = json['message'] ?? '';
-    result = json['result'] != null ? new TableListResult.fromJson(json['result'] as Map<String, dynamic>) : null;
+    data = json['data'] != null ? TableListResult.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result?.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['success'] = success;
+    data['message'] = message;
+    if (this.data != null) {
+      data['data'] = this.data?.toJson();
     }
     return data;
   }
@@ -32,43 +32,43 @@ class TableListResult {
     if (json['checkIns'] != null) {
       checkIns = [];
       json['checkIns'].forEach((v) {
-        checkIns.add(new CheckIns.fromJson(v as Map<String, dynamic>));
+        checkIns.add(CheckIns.fromJson(v));
       });
     }
     restaurant =
-        json['restaurant'] != null ? new Restaurant.fromJson(json['restaurant'] as Map<String, dynamic>) : null;
+        json['restaurant'] != null ? Restaurant.fromJson(json['restaurant']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['checkIns'] = this.checkIns.map((v) => v.toJson()).toList();
-    if (this.restaurant != null) {
-      data['restaurant'] = this.restaurant?.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['checkIns'] = checkIns.map((v) => v.toJson()).toList();
+    if (restaurant != null) {
+      data['restaurant'] = restaurant?.toJson();
     }
     return data;
   }
 }
 
 class CheckIns {
-  late int iId;
+  late int iId; // Change from String to int
   List<TableUsers> users = [];
 
   CheckIns({required this.iId, required this.users});
 
   CheckIns.fromJson(Map<String, dynamic> json) {
-    iId = json['_id'] ?? 0;
+    iId = json['_id'] ?? 0; // Parse as int
     if (json['users'] != null) {
       users = [];
       json['users'].forEach((v) {
-        users.add(new TableUsers.fromJson(v as Map<String, dynamic>));
+        users.add(TableUsers.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.iId;
-    data['users'] = this.users.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = iId;
+    data['users'] = users.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -82,18 +82,18 @@ class TableUsers {
 
   TableUsers.fromJson(Map<String, dynamic> json) {
     userDetail =
-        json['userDetail'] != null ? new UserDetail.fromJson(json['userDetail'] as Map<String, dynamic>) : null;
+        json['userDetail'] != null ? UserDetail.fromJson(json['userDetail']) : null;
     checkInId = json['checkInId'] ?? '';
     restaurantId = json['restaurant_id'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.userDetail != null) {
-      data['userDetail'] = this.userDetail?.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (userDetail != null) {
+      data['userDetail'] = userDetail?.toJson();
     }
-    data['checkInId'] = this.checkInId;
-    data['restaurant_id'] = this.restaurantId;
+    data['checkInId'] = checkInId;
+    data['restaurant_id'] = restaurantId;
     return data;
   }
 }
@@ -118,57 +118,50 @@ class UserDetail {
   late int stateExists;
   StateDetails? cityDetails;
   late int cityExists;
-
-  // List<Null> friend;
   late bool isFriend;
   late int friendsCount;
   late bool isBlocked;
   late bool isBlockedYou;
-
   late String userId;
   late String address;
   late String lat;
   late String lng;
   late String postalCode;
 
-  UserDetail(
-      {required this.sId,
-      required this.userId,
-      required this.address,
-      required this.lat,
-      required this.lng,
-      required this.postalCode,
-      required this.lastName,
-      required this.email,
-      required this.image,
-      required this.gender,
-      required this.dob,
-      required this.city,
-      required this.state,
-      required this.country,
-      required this.firstName,
-      required this.description,
-      required this.facebookUrl,
-      required this.instagramUrl,
-      required this.countryDetails,
-      required this.countryDetailsIndex,
-      required this.stateDetails,
-      required this.stateExists,
-      required this.cityDetails,
-      // this.friend,
-      required this.isFriend,
-      required this.friendsCount,
-      required this.cityExists,
-      required this.isBlocked,
-      required this.isBlockedYou});
+  UserDetail({
+    required this.sId,
+    required this.lastName,
+    required this.email,
+    required this.image,
+    required this.gender,
+    required this.dob,
+    required this.city,
+    required this.state,
+    required this.country,
+    required this.firstName,
+    required this.description,
+    required this.facebookUrl,
+    required this.instagramUrl,
+    required this.countryDetails,
+    required this.countryDetailsIndex,
+    required this.stateDetails,
+    required this.stateExists,
+    required this.cityDetails,
+    required this.cityExists,
+    required this.isFriend,
+    required this.friendsCount,
+    required this.isBlocked,
+    required this.isBlockedYou,
+    required this.userId,
+    required this.address,
+    required this.lat,
+    required this.lng,
+    required this.postalCode,
+  });
 
   UserDetail.fromJson(Map<String, dynamic> json) {
     sId = json['_id'] ?? '';
     userId = json['user_id'] ?? '';
-    address = json['address'] ?? '';
-    lat = json['lat'] ?? '';
-    lng = json['lng'] ?? '';
-    postalCode = json['postal_code'] ?? '';
     lastName = json['last_name'] ?? '';
     email = json['email'] ?? '';
     image = json['image'] ?? '';
@@ -183,58 +176,62 @@ class UserDetail {
     instagramUrl = json['instagramURL'] ?? '';
     friendsCount = json['friendsCount'] ?? 0;
     countryDetails = json['countryDetails'] != null
-        ? new CountryDetails.fromJson(json['countryDetails'] as Map<String, dynamic>)
+        ? CountryDetails.fromJson(json['countryDetails'])
         : null;
     countryDetailsIndex = json['countryDetailsIndex'] ?? 0;
     stateDetails =
-        json['stateDetails'] != null ? new StateDetails.fromJson(json['stateDetails'] as Map<String, dynamic>) : null;
+        json['stateDetails'] != null ? StateDetails.fromJson(json['stateDetails']) : null;
     stateExists = json['stateExists'] ?? 0;
     cityDetails =
-        json['cityDetails'] != null ? new StateDetails.fromJson(json['cityDetails'] as Map<String, dynamic>) : null;
+        json['cityDetails'] != null ? StateDetails.fromJson(json['cityDetails']) : null;
     cityExists = json['cityExists'] ?? 0;
     isFriend = json['isFriend'] ?? false;
     isBlocked = json['is_blocked'] ?? false;
     isBlockedYou = json['is_blocked_you'] ?? false;
+    
+    address = json['address'] ?? '';
+    lat = json['lat'] ?? '';
+    lng = json['lng'] ?? '';
+    postalCode = json['postal_code'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['user_id'] = this.userId;
-    data['address'] = this.address;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['postal_code'] = this.postalCode;
-    data['last_name'] = this.lastName;
-    data['email'] = this.email;
-    data['image'] = this.image;
-    data['gender'] = this.gender;
-    data['dob'] = this.dob;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['country'] = this.country;
-    data['description'] = this.description;
-    data['facebookURL'] = this.facebookUrl;
-    data['instagramURL'] = this.instagramUrl;
-    data['friendsCount'] = this.friendsCount;
-    data['first_name'] = this.firstName;
-    data['countryDetailsIndex'] = this.countryDetailsIndex;
-    data['stateExists'] = this.stateExists;
-    data['cityExists'] = this.cityExists;
-    data['isFriend'] = this.isFriend;
-    data['is_blocked'] = this.isBlocked;
-    data['is_blocked_you'] = this.isBlockedYou;
-    if (this.stateDetails != null) {
-      data['stateDetails'] = this.stateDetails?.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['user_id'] = userId;
+    data['last_name'] = lastName;
+    data['email'] = email;
+    data['image'] = image;
+    data['gender'] = gender;
+    data['dob'] = dob;
+    data['city'] = city;
+    data['state'] = state;
+    data['country'] = country;
+    data['first_name'] = firstName;
+    data['description'] = description;
+    data['facebookURL'] = facebookUrl;
+    data['instagramURL'] = instagramUrl;
+    data['friendsCount'] = friendsCount;
+    if (countryDetails != null) {
+      data['countryDetails'] = countryDetails?.toJson();
     }
-    if (this.cityDetails != null) {
-      data['cityDetails'] = this.cityDetails?.toJson();
+    data['countryDetailsIndex'] = countryDetailsIndex;
+    if (stateDetails != null) {
+      data['stateDetails'] = stateDetails?.toJson();
     }
-
-    if (this.countryDetails != null) {
-      data['countryDetails'] = this.countryDetails?.toJson();
+    data['stateExists'] = stateExists;
+    if (cityDetails != null) {
+      data['cityDetails'] = cityDetails?.toJson();
     }
-
+    data['cityExists'] = cityExists;
+    data['isFriend'] = isFriend;
+    data['is_blocked'] = isBlocked;
+    data['is_blocked_you'] = isBlockedYou;
+    
+    data['address'] = address;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['postal_code'] = postalCode;
     return data;
   }
 }
@@ -275,16 +272,16 @@ class CountryDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['iso3'] = this.iso3;
-    data['iso2'] = this.iso2;
-    data['phone_code'] = this.phoneCode;
-    data['currency'] = this.currency;
-    data['capital'] = this.capital;
-    data['emoji'] = this.emoji;
-    data['emojiU'] = this.emojiU;
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['iso3'] = iso3;
+    data['iso2'] = iso2;
+    data['phone_code'] = phoneCode;
+    data['currency'] = currency;
+    data['capital'] = capital;
+    data['emoji'] = emoji;
+    data['emojiU'] = emojiU;
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -303,10 +300,10 @@ class StateDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -393,52 +390,52 @@ class Restaurant {
     facebook = json['facebook'] ?? '';
     bio = json['bio'] ?? '';
     countyDetails = json['countyDetails'] != null
-        ? new CountryDetails.fromJson(json['countyDetails'] as Map<String, dynamic>)
+        ? CountryDetails.fromJson(json['countyDetails'])
         : null;
     countyExists = json['countyExists'] ?? 0;
     stateDetails =
-        json['stateDetails'] != null ? new StateDetails.fromJson(json['stateDetails'] as Map<String, dynamic>) : null;
+        json['stateDetails'] != null ? StateDetails.fromJson(json['stateDetails']) : null;
     stateExists = json['stateExists'] ?? 0;
     cityDetails =
-        json['cityDetails'] != null ? new StateDetails.fromJson(json['cityDetails'] as Map<String, dynamic>) : null;
+        json['cityDetails'] != null ? StateDetails.fromJson(json['cityDetails']) : null;
     cityExists = json['cityExists'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['email_verified'] = this.emailVerified;
-    data['image'] = this.image;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['active'] = this.active;
-    data['deleted'] = this.deleted;
-    data['name'] = this.name;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['country'] = this.country;
-    data['phoneNumber'] = this.phoneNumber;
-    data['email'] = this.email;
-    data['updated'] = this.updated;
-    data['created'] = this.created;
-    data['number_of_tables'] = this.numberOfTables;
-    data['address'] = this.address;
-    data['menu'] = this.menu;
-    data['menu_type'] = this.menuType;
-    data['facebook'] = this.facebook;
-    data['bio'] = this.bio;
-    if (this.countyDetails != null) {
-      data['countyDetails'] = this.countyDetails?.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['email_verified'] = emailVerified;
+    data['image'] = image;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['active'] = active;
+    data['deleted'] = deleted;
+    data['name'] = name;
+    data['city'] = city;
+    data['state'] = state;
+    data['country'] = country;
+    data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
+    data['updated'] = updated;
+    data['created'] = created;
+    data['number_of_tables'] = numberOfTables;
+    data['address'] = address;
+    data['menu'] = menu;
+    data['menu_type'] = menuType;
+    data['facebook'] = facebook;
+    data['bio'] = bio;
+    if (countyDetails != null) {
+      data['countyDetails'] = countyDetails?.toJson();
     }
-    data['countyExists'] = this.countyExists;
-    if (this.stateDetails != null) {
-      data['stateDetails'] = this.stateDetails?.toJson();
+    data['countyExists'] = countyExists;
+    if (stateDetails != null) {
+      data['stateDetails'] = stateDetails?.toJson();
     }
-    data['stateExists'] = this.stateExists;
-    if (this.cityDetails != null) {
-      data['cityDetails'] = this.cityDetails?.toJson();
+    data['stateExists'] = stateExists;
+    if (cityDetails != null) {
+      data['cityDetails'] = cityDetails?.toJson();
     }
-    data['cityExists'] = this.cityExists;
+    data['cityExists'] = cityExists;
     return data;
   }
 }

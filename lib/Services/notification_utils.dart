@@ -77,7 +77,7 @@ class NotificationUtils {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
-      onDidReceiveLocalNotification: null,
+      
       // Disable foreground notifications
       defaultPresentAlert: true,
     );

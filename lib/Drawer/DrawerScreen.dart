@@ -1,24 +1,26 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:iseey/AfterLoginFlow/BlockedUserScreen.dart';
-import 'package:iseey/AfterLoginFlow/FriendsListScreen.dart';
+import 'package:iseey/AfterLoginFlow/Friend/Friend_List/view/screens/friends_list_screen.dart';
 import 'package:iseey/AfterLoginFlow/NewsLetterScreen.dart';
-import 'package:iseey/AuthFlow/EditProfileScreen.dart';
-import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/AfterLoginFlow/Edit_profile/view/screens/EditProfileScreen.dart';
+import 'package:iseey/AuthFlow/view/LoginScreen.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
-import 'package:iseey/Models/UserModel.dart';
+import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
 import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/Services/StateManagement.dart';
 import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/Services/notification_utils.dart';
 import 'package:iseey/generated/l10n.dart';
+import 'package:iseey/AfterLoginFlow/user_block/view/screens/blocked_user_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -553,63 +555,37 @@ class _DrawerScreenState extends State<DrawerScreen> {
   }
 
   _logoutNavigateToLogin(GlobalKey<ScaffoldState> scaffoldKey) async {
-    HttpRequestModel req = new HttpRequestModel(
-        url: 'users/logout', method: RequestMethodType.GET, body: '', params: '', headerType: "json", authMethod: true);
-    var response;
-    try {
-      var x = GlobalWidgets();
-      x.showLoading(scaffoldKey.currentContext ?? context);
-
-      response = await HttpService().init(req, scaffoldKey);
-
-      Future.delayed(const Duration(milliseconds: 800), () {
-        x.hideLoading();
-        if (mounted) setState(() {});
-      });
-      if (response is String && response != '') {
-        var jsonRes = jsonDecode(response);
-        int success = jsonRes["success"];
-
-        if (success == 200) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.clear();
-          prefs.setBool("isFromLogin", false);
-          NotificationUtils().clearAllNotifications();
-
-          Navigator.pushReplacement(
-            mainTabsScaffoldKey.currentContext ?? context,
-            SlideRightRoute(
-              page: LoginScreen(),
-              routeName: "/login",
-            ),
-          );
-          if (mounted) {
-            setState(() {});
-          }
-        } else {
-          showSuccessOrFail(L10n.current.blocked_user_sorry_title, false, context);
-        }
-      } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-      }
-    } catch (e) {
-      debugPrint("EXCEPTION $e");
-    }
-
+  try {
+    Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    prefs.setBool("isFromLogin", false);
+    await prefs.setBool("isFromLogin", false);
     NotificationUtils().clearAllNotifications();
-
-    Navigator.pushReplacement(
-      mainTabsScaffoldKey.currentContext ?? context,
+    final stateManagement = Provider.of<StateManagement>(context, listen: false);
+    await stateManagement.clearCurrentUserId();
+    
+    Navigator.of(mainTabsScaffoldKey.currentContext ?? context, rootNavigator: true).pushAndRemoveUntil(
       SlideRightRoute(
         page: LoginScreen(),
         routeName: "/login",
       ),
+      (Route<dynamic> route) => false, 
     );
-    if (mounted) {
-      setState(() {});
-    }
+    
+    // Alternative if above doesn't work:
+    // Navigator.pushAndRemoveUntil(
+    //   mainTabsScaffoldKey.currentContext ?? context,
+    //   SlideRightRoute(
+    //     page: LoginScreen(),
+    //     routeName: "/login",
+    //   ),
+    //   (route) => false,
+    // );
+  } catch (e) {
+    debugPrint("Logout error: $e");
+    Navigator.of(mainTabsScaffoldKey.currentContext ?? context, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
-}
+}}

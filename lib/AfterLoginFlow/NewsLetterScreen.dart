@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
@@ -76,7 +76,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
 
   callPatchNewsLetterApi(GlobalKey<ScaffoldState> scaffoldKey, String restaurantId, bool newsletterEnable) async {
     HttpRequestModel req = new HttpRequestModel(
-        url: 'newsletters/subscribe/$restaurantId/$newsletterEnable',
+        url: 'newsLetter/subscribe/$restaurantId/true',
         method: RequestMethodType.PATCH,
         body: '',
         params: '',
@@ -519,7 +519,6 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
       }
     } catch (e) {
       showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-      debugPrint("EXCEPTION $e");
     }
     x.hideLoading();
     return false;

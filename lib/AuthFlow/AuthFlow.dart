@@ -1,5 +1,5 @@
-export 'EditProfileScreen.dart';
+export '../AfterLoginFlow/Edit_profile/view/screens/EditProfileScreen.dart';
 export 'ForgotPasswordScreen.dart';
 export 'LoaderScreen.dart';
-export 'LoginScreen.dart';
-export 'SignupScreen.dart';
+export 'view/LoginScreen.dart';
+export 'view/SignupScreen.dart';

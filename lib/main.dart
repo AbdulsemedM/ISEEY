@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:iseey/AuthFlow/domain/auth_repository.dart';
+import 'package:iseey/AfterLoginFlow/Edit_profile/domain/Edit_profile_repository.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/Services/notification_utils.dart';
 import 'package:provider/provider.dart';
-
+import 'package:iseey/Services/ApiService.dart';
 import 'NavigationRouteScreen.dart';
 import 'Services/StateManagement.dart';
 
@@ -20,12 +22,24 @@ Future<void> main() async {
   await NotificationUtils().setupFlutterNotifications();
   HttpOverrides.global = MyHttpOverrides();
 
+  final apiService = HttpService();
+  final authRepository = AuthRepository(apiService);
+  final profileRepository = EditProfileRepository(apiService);
+
+  final stateManagement = StateManagement();
+  await stateManagement.loadCurrentUserId();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (BuildContext context) => StateManagement()),
+        ChangeNotifierProvider<StateManagement>(
+          create: (BuildContext context) => stateManagement,
+        ),
+        Provider<AuthRepository>(create: (_) => authRepository),
+        Provider<EditProfileRepository>(create: (_) => profileRepository),
+        Provider<HttpService>(create: (_) => apiService),
       ],
-      child: MaterialApp(
+      child: MaterialApp(debugShowCheckedModeBanner: false,
         navigatorKey: globalNavigatorKey,
         home: NavigationRouteScreen(),
       ),

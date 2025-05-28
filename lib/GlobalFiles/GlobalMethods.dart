@@ -211,28 +211,45 @@ showSuccessOrFail(
   bool isTitleEnable = true,
   VoidCallback? onCustomOkPress,
 }) {
-  if (success != null && context != null) {
+  if (context == null || !Navigator.of(context, rootNavigator: true).mounted) {
+    return;
+  }
+  if (success == true) {
     return globalWidget.showPopUpWithMessage(
       isTitleEnable: isTitleEnable,
       context: context,
+      titleMessage: "Success",
+      iconAssetPath: AssetsConstant.successIcon, 
       message: message,
       onPressOKButton: () {
-        return isCustom ? onCustomOkPress!() : (Navigator.canPop(context) ? Navigator.pop(context) : null);
+        if (isCustom) {
+          onCustomOkPress?.call();
+        } else if (Navigator.of(context, rootNavigator: true).canPop()) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
       },
     );
-  } else {
-    if (context != null)
-      return globalWidget.showPopUpWithMessage(
-        isTitleEnable: isTitleEnable,
-        context: context,
-        titleMessage: L10n.current.sign_up_failure_message_title,
-        iconAssetPath: AssetsConstant.errorIcon,
-        message: message,
-        onPressOKButton: () {
-          debugPrint("OK Pressed");
-          // Navigator.pop(context);
-        },
-      );
+  }
+  else if (success == false) {
+    if (message.toLowerCase().contains("retrieved successfully")) {
+      debugPrint("Suppressed non-critical error: $message");
+      return;
+    }
+
+    return globalWidget.showPopUpWithMessage(
+      isTitleEnable: isTitleEnable,
+      context: context,
+      titleMessage: L10n.current.sign_up_failure_message_title,
+      iconAssetPath: AssetsConstant.errorIcon,
+      message: message,
+      onPressOKButton: () {
+        if (isCustom) {
+          onCustomOkPress?.call();
+        } else if (Navigator.of(context, rootNavigator: true).canPop()) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      },
+    );
   }
 }
 

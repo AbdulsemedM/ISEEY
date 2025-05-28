@@ -1,4 +1,4 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AuthFlow/LoaderScreen.dart';
 import 'package:iseey/Services/SocketUtils.dart';
 import 'package:iseey/generated/l10n.dart';
@@ -30,7 +30,6 @@ class GlobalWidgets {
       action: SnackBarAction(
         label: labelText ?? '',
         onPressed: () {
-          // Some code to undo the change.
         },
       ),
       duration: Duration(seconds: displayDuration),
@@ -251,7 +250,7 @@ class GlobalWidgets {
     Widget? customIcon,
     String? titleMessage,
     String message = "",
-    String iconAssetPath = "assets/successIcon.png",
+    String iconAssetPath = "assets/SuccessIcon.png",
     bool conditionButtonEnable = false,
     bool withTextField = false,
     VoidCallback? onPressOKButton,

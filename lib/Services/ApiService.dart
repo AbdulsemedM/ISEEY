@@ -5,11 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:iseey/AuthFlow/LoginScreen.dart';
+import 'package:iseey/AuthFlow/view/LoginScreen.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http_parser/http_parser.dart';
 import 'ConnectionStatusSingleton.dart';
 
 String baseUrl = 'https://iseey.app/app/api/';
@@ -29,6 +29,7 @@ class HttpRequestModel {
   final String headerType;
   final bool authMethod;
   File? file;
+  String? fileFieldName; 
 
   HttpRequestModel({
     required this.url,
@@ -39,6 +40,7 @@ class HttpRequestModel {
     this.params,
     this.multipartBody,
     this.file,
+    this.fileFieldName = 'file', // Default value
   });
 }
 
@@ -76,103 +78,76 @@ class HttpService {
   void connectionChanged(dynamic hasConnection) {
     isNetworkConnected = hasConnection;
   }
+Future<dynamic> init(HttpRequestModel httpRequestModel, GlobalKey<ScaffoldState> context, [callback]) async {
+  if (connectionChangeStream != null) {
+    connectionChangeStream?.cancel();
+    connectionChangeStream = null;
+  }
+  ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+  connectionChangeStream = connectionStatus.connectionChange.listen(connectionChanged);
+  await this.setHeaders(httpRequestModel);
 
-  Future<String> init(HttpRequestModel httpRequestModel, GlobalKey<ScaffoldState> context, [callback]) async {
-    if (connectionChangeStream != null) {
-      connectionChangeStream?.cancel();
-      connectionChangeStream = null;
-    }
-    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
-    connectionChangeStream = connectionStatus.connectionChange.listen(connectionChanged);
-    await this.setHeaders(httpRequestModel);
+  isNetworkConnected = await connectionStatus.checkConnection();
 
-    isNetworkConnected = await connectionStatus.checkConnection();
+  if (isNetworkConnected == false) {
+    GlobalWidgets.showSnackBarWithText(
+      context.currentState!,
+      L10n.current.no_internet_connection,
+      "",
+    );
+    return '';
+  }
 
-    if (isNetworkConnected == false) {
-      GlobalWidgets.showSnackBarWithText(
-        context.currentState!,
-        L10n.current.no_internet_connection,
-        "",
+  try {
+    if (httpRequestModel.method == RequestMethodType.MULTIPART) {
+      var url = multipartURL + httpRequestModel.url.replaceAll(baseUrl, "");
+      print('Multipart request URL: $url');
+      File file = httpRequestModel.file!;
+      var response = await doMultipartFile(
+        url,
+        this.headers,
+        file,
+        httpRequestModel.multipartBody ?? {},
+        httpRequestModel.fileFieldName ?? 'file',
       );
-
-      return new Future(() => "");
+      return response; // Returns Map for multipart requests
     }
-
-    try {
-      if (httpRequestModel.method == RequestMethodType.PATCH) {
-        var url = baseUrl + httpRequestModel.url;
-
-        Future<http.Response> response = doPatch(
-          url,
-          httpRequestModel.body,
-          this.headers,
-        );
-
-        return await response.then((res) => handleResponse(res, context, callback));
-      }
-
-      if (httpRequestModel.method == RequestMethodType.POST) {
-        var url = baseUrl + httpRequestModel.url;
-
-        Future<http.Response> response = doPost(
-          url,
-          httpRequestModel.body,
-          this.headers,
-        );
-
-        return await response.then((res) => handleResponse(res, context, callback));
-      }
-
-      if (httpRequestModel.method == RequestMethodType.GET) {
-        var url = baseUrl + httpRequestModel.url;
-
-        Future<http.Response> response = callGetMethod(url, this.headers);
-        return await response.then((res) => handleResponse(res, context, callback));
-      }
-
-      if (httpRequestModel.method == RequestMethodType.DELETE) {
-        var url = baseUrl + httpRequestModel.url;
-
-        Future<http.Response> response = doDelete(url, this.headers);
-        return await response.then((res) => handleResponse(res, context, callback));
-      }
-
-      if (httpRequestModel.method == RequestMethodType.PUT) {
-        var url = baseUrl + httpRequestModel.url;
-
-        Future<http.Response> response = http.put(
+    
+    // Handle other request types (returning String)
+    String url = baseUrl + httpRequestModel.url;
+    http.Response response;
+    
+    switch (httpRequestModel.method) {
+      case RequestMethodType.PATCH:
+        response = await doPatch(url, httpRequestModel.body, this.headers);
+        break;
+      case RequestMethodType.POST:
+        response = await doPost(url, httpRequestModel.body, this.headers);
+        break;
+      case RequestMethodType.GET:
+        response = await callGetMethod(url, this.headers);
+        break;
+      case RequestMethodType.DELETE:
+        response = await doDelete(url, this.headers);
+        break;
+      case RequestMethodType.PUT:
+        response = await http.put(
           Uri.parse(url),
           headers: this.headers,
           body: httpRequestModel.body,
         );
-
-        return await response.then((res) => handleResponse(res, context, callback));
-      }
-
-      // if (httpRequestModel.method == RequestMethodType.MULTIPART) {
-      //   var url = multipartURL + httpRequestModel.url.replaceAll(baseUrl, "");
-      //   File file = httpRequestModel.file!;
-      //   http.StreamedResponse responseState = await doMultipartFile(
-      //     url,
-      //     this.headers,
-      //     file,
-      //     httpRequestModel.multipartBody!,
-      //   );
-      //   var respStr = "";
-
-      //   if (responseState.statusCode == 200 || responseState.statusCode == 201) {
-      //     respStr = await responseState.stream.bytesToString();
-      //   } else {
-      //     respStr = await responseState.stream.bytesToString();
-      //   }
-      //   return respStr;
-      // }
-    } catch (e) {
-      debugPrint(e.toString());
+        break;
+      default:
+        return '';
     }
-
+    
+    return handleResponse(response, context, callback);
+    
+  } catch (e) {
+    debugPrint(e.toString());
     return '';
   }
+}
 
   showServerConnectionRefuseError(GlobalKey<ScaffoldState> context) {
     GlobalWidgets.showSnackBarWithText(
@@ -289,29 +264,47 @@ class HttpService {
     return http.delete(Uri.parse(Uri.encodeFull(subUrl)), headers: headerType);
   }
 
-  Future<StreamedResponse> doMultipartFile(
-    String subUrl,
-    Map<String, String> headerType,
-    File file,
-    Map<String, String> body,
-  ) async {
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse(subUrl),
-    );
+ Future<Map<String, dynamic>> doMultipartFile(
+  String subUrl,
+  Map<String, String> headerType,
+  File file,
+  Map<String, String> body,
+  String fileFieldName,
+) async {
+  print('[DEBUG] Preparing multipart request to $subUrl');
+  
+  var request = http.MultipartRequest('POST', Uri.parse(subUrl));
 
-    request.headers.addAll(headerType);
+  // Add headers
+  request.headers.addAll({
+    'Authorization': headerType['Authorization'] ?? '',
+    'language': headerType['language'] ?? 'en',
+  });
+
+  // Add the file
+  var multipartFile = await http.MultipartFile.fromPath(
+    fileFieldName,
+    file.path,
+    filename: 'profile_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    contentType: MediaType('image', 'jpeg'),
+  );
+  request.files.add(multipartFile);
+
+  // Add any additional fields
+  if (body.isNotEmpty) {
     request.fields.addAll(body);
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'image',
-        file.readAsBytesSync(),
-        filename: file.path.split("/").last,
-      ),
-    );
-
-    var res = await request.send();
-
-    return res;
   }
-}
+
+  print('[DEBUG] Sending multipart request...');
+  var response = await request.send();
+  
+  // Read the response only once
+  final responseBody = await response.stream.bytesToString();
+  print('[DEBUG] Response status: ${response.statusCode}');
+  print('[DEBUG] Response body: $responseBody');
+
+  return {
+    'statusCode': response.statusCode,
+    'body': responseBody,
+  };
+}}

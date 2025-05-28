@@ -1,219 +1,144 @@
-library bottom_navy_bar;
-
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
-import 'package:iseey/GlobalFiles/GlobalVariables.dart';
-import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/Services/menu.dart';
+import 'package:iseey/Services/rive_utils.dart';
+import 'package:rive/rive.dart';
 
 class CustomBottomNavyBar extends StatelessWidget {
   final int selectedIndex;
-  final double iconSize;
-  final Color? backgroundColor;
-  final bool? showElevation;
-  final Duration animationDuration;
-  final List<CustomBottomNavyBarItem> items;
+  final List<Menu> items;
   final ValueChanged<int> onItemSelected;
-  final MainAxisAlignment? mainAxisAlignment;
-  final double itemCornerRadius;
-  final double containerHeight;
-  final Curve curve;
 
-  CustomBottomNavyBar({
+  const CustomBottomNavyBar({
     Key? key,
-    this.selectedIndex = 0,
-    this.showElevation = true,
-    this.iconSize = 24,
-    this.backgroundColor,
-    this.itemCornerRadius = 50,
-    this.containerHeight = 56,
-    this.animationDuration = const Duration(milliseconds: 270),
-    this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
+    required this.selectedIndex,
     required this.items,
     required this.onItemSelected,
-    this.curve = Curves.linear,
-  }) {
-    assert(items.length >= 2 && items.length <= 5);
-  }
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = (backgroundColor == null) ? Theme.of(context).bottomAppBarTheme.color : backgroundColor;
-
-    return Container(
-      child: Container(
-        child: Row(
-          mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
-          children: items.map((item) {
-            var index = items.indexOf(item);
-            return InkWell(
-              onTap: () => onClick(index),
-              child: ItemWidget(
-                item: item,
-                iconSize: iconSize,
-                isSelected: index == selectedIndex,
-                backgroundColor: bgColor,
-                itemCornerRadius: itemCornerRadius,
-                animationDuration: animationDuration,
-                curve: curve,
+    return Transform.translate(
+      offset: const Offset(0, 0),
+      child: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
+          decoration: BoxDecoration(
+            color: AppColors.listBoxBackgroundColor.withOpacity(0.8),
+            borderRadius: const BorderRadius.all(Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.innerShadowColor.withOpacity(0.2),
+                offset: const Offset(0, -10),
+                blurRadius: 20,
+                spreadRadius: -5,
               ),
-            );
-          }).toList(),
+              BoxShadow(
+                color: AppColors.innerShadowColor.withOpacity(0.3),
+                offset: const Offset(0, 20),
+                blurRadius: 20,
+                spreadRadius: -5,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                final isFoodIcon = item.title == "food";
+                final iconSize = isFoodIcon ? 50.0 : 36.0;
+                
+                return GestureDetector(
+                  onTap: () {
+                    if (item.rive.status != null) {
+                      RiveUtils.chnageSMIBoolState(item.rive.status!);
+                    }
+                    onItemSelected(index);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: SizedBox(
+                    width: 60,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedBar(isActive: selectedIndex == index),
+                        SizedBox(height: isFoodIcon ? 0 : 8),
+                        SizedBox(
+                          height: iconSize,
+                          width: iconSize,
+                          child: Opacity(
+                            opacity: selectedIndex == index ? 1 : 0.5,
+                            child: isFoodIcon 
+                                ? ColorFiltered(
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                    child: RiveAnimation.asset(
+                                      item.rive.src,
+                                      artboard: item.rive.artboard,
+                                      onInit: (artboard) {
+                                        item.rive.status = RiveUtils.getRiveInput(
+                                          artboard,
+                                          stateMachineName: item.rive.stateMachineName,
+                                        );
+                                        if (selectedIndex == index) {
+                                          item.rive.status?.value = true;
+                                        }
+                                      },
+                                    ),
+                                  )
+                                : RiveAnimation.asset(
+                                    item.rive.src,
+                                    artboard: item.rive.artboard,
+                                    onInit: (artboard) {
+                                      item.rive.status = RiveUtils.getRiveInput(
+                                        artboard,
+                                        stateMachineName: item.rive.stateMachineName,
+                                      );
+                                      if (selectedIndex == index) {
+                                        item.rive.status?.value = true;
+                                      }
+                                    },
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
   }
-
-  onClick(int index) {
-    onItemSelected(index);
-  }
 }
 
-class ItemWidget extends StatelessWidget {
-  final double? iconSize;
-  final bool isSelected;
-  final CustomBottomNavyBarItem item;
-  final Color? backgroundColor;
-  final double? itemCornerRadius;
-  final Duration animationDuration;
-  final Curve curve;
+class AnimatedBar extends StatelessWidget {
+  final bool isActive;
 
-  const ItemWidget({
+  const AnimatedBar({
     Key? key,
-    required this.item,
-    required this.isSelected,
-    required this.backgroundColor,
-    this.animationDuration = const Duration(milliseconds: 270),
-    required this.itemCornerRadius,
-    required this.iconSize,
-    this.curve = Curves.linear,
-  })  : assert(backgroundColor != null),
-        assert(itemCornerRadius != null),
-        assert(iconSize != null),
-        super(key: key);
+    required this.isActive,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      width: 80,
-      height: double.maxFinite,
-      duration: animationDuration,
-      curve: curve,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          isSelected
-              ? Neumorphic(
-                  padding: EdgeInsets.fromLTRB(25, 22, 25, 22),
-                  style: NeumorphicStyle(
-                    shape: NeumorphicShape.flat,
-                    boxShape: NeumorphicBoxShape.circle(),
-                    depth: -3,
-                    lightSource: LightSource(-0.3, -1),
-                    color: AppColors.tabBarBoxBackgroundColor,
-                    border: NeumorphicBorder(
-                      color: AppColors.innerShadowColor,
-                      width: 0.1,
-                    ),
-                    intensity: 0.7,
-                    shadowDarkColor: AppColors.innerShadowColor,
-                    shadowLightColorEmboss: Colors.transparent,
-                    shadowDarkColorEmboss: AppColors.innerShadowColor,
-                  ),
-                  child: item.icon,
-                )
-              : item.icon,
-        ],
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 2),
+      height: 4,
+      width: isActive ? 20 : 0,
+      decoration: BoxDecoration(
+        color: AppColors.mainBackgroundColorOrange,
+        borderRadius: const BorderRadius.all(Radius.circular(2)),
       ),
     );
   }
-}
-
-class CustomBottomNavyBarItem {
-  final Widget icon;
-  final Widget? title;
-  final Color? activeColor;
-  final Color? inactiveColor;
-  final TextAlign? textAlign;
-  final FontWeight? fontWeight;
-
-  CustomBottomNavyBarItem({
-    required this.icon,
-    @required this.title,
-    this.activeColor = Colors.blue,
-    this.textAlign,
-    this.inactiveColor,
-    this.fontWeight,
-  }) {
-    assert(title != null);
-  }
-}
-
-Widget createBottomTabBar({required Function(int) onTabPressed}) {
-  return Container(
-    color: AppColors.screensBackgroundsColor,
-    margin: EdgeInsets.only(
-      bottom: 10,
-      top: 0,
-    ),
-    height: 90,
-    child: Stack(
-      children: [
-        Neumorphic(
-            margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-            style: NeumorphicStyle(
-              shape: NeumorphicShape.flat,
-              boxShape: NeumorphicBoxShape.roundRect(
-                BorderRadius.circular(90 / 2),
-              ),
-              depth: -2,
-              color: AppColors.tabBarBoxBackgroundColor,
-              border: NeumorphicBorder(
-                color: AppColors.innerShadowColor,
-                width: 0.2,
-              ),
-              shadowDarkColor: AppColors.innerShadowColor,
-              intensity: 0.7,
-              shadowLightColorEmboss: Colors.transparent,
-              shadowDarkColorEmboss: AppColors.innerShadowColor,
-            ),
-            child: Container()),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-          child: CustomBottomNavyBar(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            backgroundColor: AppColors.screensBackgroundsColor,
-            selectedIndex: inActivateBottomBar ? -1 : currentSelectedTab,
-            showElevation: false,
-            iconSize: 30,
-            items: [
-              addTabBardItems("", AssetsConstant.tab1Icon, 0),
-              addTabBardItems("", AssetsConstant.tab2Icon, 1),
-              addTabBardItems("", AssetsConstant.tab3Icon, 2),
-            ],
-            onItemSelected: (index) => onTabPressed(index),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-addTabBardItems(String title, String imagePath, int selectedIndex) {
-  return CustomBottomNavyBarItem(
-    icon: Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Image.asset(
-        imagePath,
-        width: 30.0,
-        color: currentSelectedTab == selectedIndex ? AppColors.mainBackgroundColorOrange : AppColors.mainTextColorWhite,
-        fit: BoxFit.contain,
-        alignment: Alignment.center,
-      ),
-    ),
-    title: SizedBox(),
-    activeColor: AppColors.mainBackgroundColorOrange,
-    inactiveColor: AppColors.mainTextColorWhite,
-    fontWeight: FontWeight.w600,
-  );
 }

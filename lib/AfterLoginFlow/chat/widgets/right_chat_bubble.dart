@@ -1,20 +1,18 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
-import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
-import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 
 class RightChatBubble extends StatelessWidget {
   final String imgPath;
   final String nameText;
-  final int timestamp;
+  final int timestamp; 
   final String chatText;
 
   const RightChatBubble({
     Key? key,
     required this.imgPath,
     required this.nameText,
-    required this.timestamp,
+    required this.timestamp, 
     required this.chatText,
   }) : super(key: key);
 
@@ -36,6 +34,14 @@ class RightChatBubble extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    Text(
+                      nameText,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 4),
                     Neumorphic(
                       style: NeumorphicStyle(
                         shape: NeumorphicShape.flat,
@@ -60,19 +66,18 @@ class RightChatBubble extends StatelessWidget {
                       child: Container(
                         constraints: BoxConstraints(maxWidth: (screenSize.width / 1.5)),
                         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        child: GlobalWidgets.buildChatMsgContent(chatText.trim()),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      alignment: Alignment.centerRight,
-                      child: GlobalWidgets.setText(
-                        getTimeStampToFormattedTime(timestamp: timestamp),
-                        strTextColor: Colors.grey[400],
-                        fontSize: 10,
+                        child: Text(
+                          chatText,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
+                ),
+                SizedBox(width: 8),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(imgPath),
+                  radius: 16,
                 ),
               ],
             ),

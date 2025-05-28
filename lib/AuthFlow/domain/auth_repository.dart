@@ -1,0 +1,153 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
+import 'package:iseey/GlobalFiles/GlobalMethods.dart';
+import 'package:iseey/Services/ApiService.dart';
+import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
+import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/generated/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:iseey/Services/StateManagement.dart';
+
+class AuthRepository {
+  final HttpService httpService;
+
+  AuthRepository(this.httpService);
+
+  Future<void> login(String email, String password, GlobalKey<ScaffoldState> scaffoldKey, BuildContext context) async {
+    if (email.isEmpty) {
+      GlobalWidgets.showSnackBarWithText(
+        scaffoldKey.currentState!,
+        L10n.current.empty_email_adress_error_message,
+        "",
+      );
+      return;
+    }
+
+    if (!isValidateEmail(email)) {
+      GlobalWidgets.showSnackBarWithText(
+        scaffoldKey.currentState!,
+        L10n.current.invalid_email_adress_error_message,
+        "",
+      );
+      return;
+    }
+
+    if (password.isEmpty || password.length < 8) {
+      GlobalWidgets.showSnackBarWithText(
+        scaffoldKey.currentState!,
+        password.isEmpty
+            ? L10n.current.incorrect_email_adress_error_message
+            : L10n.current.password_length_error_message,
+        "",
+      );
+      return;
+    }
+
+    final data = {
+      'email': email,
+      'password': password,
+      'device_token': fcmRegistrationToken,
+      'device_type': Platform.isIOS ? 'ios' : 'android',
+    };
+
+    final req = HttpRequestModel(
+      url: 'users/login',
+      method: RequestMethodType.POST,
+      params: '',
+      body: json.encode(data),
+      headerType: "json",
+      authMethod: false,
+    );
+
+    final x = GlobalWidgets();
+    try {
+      x.showLoading(scaffoldKey.currentContext!);
+      final response = await httpService.init(req, scaffoldKey);
+      x.hideLoading();
+
+      if (response.isNotEmpty) {
+        final jsonRes = jsonDecode(response);
+        if (jsonRes['data'] != null && jsonRes['data']['user'] != null) {
+          final user = UserModel.fromJson(jsonRes);
+          if (user.success == 200) {
+            Provider.of<StateManagement>(context, listen: false).setCurrentUserId(user.result?.userId ?? '');
+
+            await _saveUserData(user.result?.token ?? '', user.result);
+          } else {
+            throw Exception(user.message);
+          }
+        } else {
+          throw Exception("Invalid response structure");
+        }
+      }
+    } catch (e) {
+      x.hideLoading();
+      rethrow;
+    }
+  }
+
+  Future<void> _saveUserData(String token, UserResult? userInfo) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("isFromLogin", true);
+    await prefs.setString("token", token);
+    debugPrint("Token saved: $token");
+    await _storeMapData("userdata", userInfo);
+  }
+
+  Future<void> _storeMapData(String key, UserResult? userInfo) async {
+    if (userInfo != null) {
+      final userData = userInfo.toJson();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, json.encode(userData));
+    }
+  }
+
+  Future<void> signup({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required GlobalKey<ScaffoldState> scaffoldKey,
+    required BuildContext context
+  }) async {
+    final data = <String, dynamic>{
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'password': password,
+      'device_token': fcmRegistrationToken,
+      'device_type': Platform.isIOS ? 'ios' : 'android',
+    };
+
+    final req = HttpRequestModel(
+      url: 'users/signup',
+      method: RequestMethodType.POST,
+      body: json.encode(data),
+      headerType: "json",
+      authMethod: false,
+    );
+
+    final x = GlobalWidgets();
+    try {
+      x.showLoading(scaffoldKey.currentContext!);
+      final response = await httpService.init(req, scaffoldKey);
+      x.hideLoading();
+      debugPrint("Signup API Response: $response");
+      final jsonRes = jsonDecode(response);
+      debugPrint("Decoded JSON: $jsonRes");
+      final user = UserModel.fromJson(jsonRes);
+      if (user.success == 200) {
+        Provider.of<StateManagement>(context, listen: false).setCurrentUserId(user.result?.userId ?? '');
+        await login(email, password, scaffoldKey, context);
+      } else {
+        throw Exception(user.message);
+      }
+    } catch (e) {
+      x.hideLoading();
+      rethrow;
+    }
+  }
+}
