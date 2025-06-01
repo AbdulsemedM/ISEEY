@@ -1,7 +1,8 @@
 import 'dart:io'; //InternetAddress utility
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart'; //For StreamController/Stream
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 
 
 class ConnectionStatusSingleton {
@@ -24,7 +25,7 @@ class ConnectionStatusSingleton {
     //Hook into flutter_connectivity's Stream to listen for changes
     //And check the connection status out of the gate
     void initialize() {
-        _connectivity.onConnectivityChanged.listen(_connectionChange);
+        _connectivity.onConnectivityChanged.listen(_connectionChangeList);
         checkConnection();
     }
 
@@ -37,8 +38,8 @@ class ConnectionStatusSingleton {
         connectionChangeController.close();
     }
 
-    //flutter_connectivity's listener
-    void _connectionChange(ConnectivityResult result) {
+    //flutter_connectivity's listener for List<ConnectivityResult>
+    void _connectionChangeList(List<ConnectivityResult> results) {
         checkConnection();
     }
 

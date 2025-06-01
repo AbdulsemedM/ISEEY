@@ -169,7 +169,7 @@ class _ProfileScreenState extends State<FriendProfileScreen> {
       Navigator.pop(context);
     } else {
       String? chatId = await _repository.createOrGetChat(widget.userDetail.userId);
-      if (chatId != null && mounted) {
+      if (mounted && chatId != null) {
         _navigateToChatScreen(chatId);
       }
     }

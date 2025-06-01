@@ -1,4 +1,4 @@
-package com.example.ISEEY
+package de.iseey.com
 
 import io.flutter.embedding.android.FlutterActivity
 
