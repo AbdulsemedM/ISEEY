@@ -959,10 +959,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       if (response is String && response != '') {
         var jsonRes = jsonDecode(response);
 
-        int success = jsonRes["success"];
+        bool success = jsonRes["success"];
         String message = jsonRes["message"];
 
-        if (success == 200) {
+        if (success) {
           showSuccessOrFail(message, true, context);
           return true;
         } else {
