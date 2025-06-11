@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/domain/restaurant_list_repository.dart';
@@ -37,13 +39,14 @@ class _RestaurantListState extends State<RestaurantList> {
   @override
   void initState() {
     _getUserDetail();
-    super.initState();
     _loadRestaurants();
+    super.initState();
     _onConnect();
   }
 
   Future<void> _loadRestaurants() async {
     final results = await _repository.getRestaurants(context, scaffoldKey);
+    log("Restaurant List: ${results.length} restaurants loaded");
     setState(() {
       restaurants = results;
       filteredRestaurants = results;
@@ -125,19 +128,23 @@ class _RestaurantListState extends State<RestaurantList> {
                                   fit: BoxFit.contain,
                                 ),
                               ),
-                              onPressed: () => mainTabsScaffoldKey.currentState?.openDrawer(),
+                              onPressed: () => mainTabsScaffoldKey.currentState
+                                  ?.openDrawer(),
                               style: NeumorphicStyle(
                                 shape: NeumorphicShape.concave,
                                 depth: 1,
                                 lightSource: LightSource.top,
-                                color: AppColors.mainTextColorBlack.withOpacity(0.7),
+                                color: AppColors.mainTextColorBlack
+                                    .withOpacity(0.7),
                                 border: NeumorphicBorder(
                                   color: AppColors.innerShadowColor,
                                   width: 2,
                                 ),
-                                shadowDarkColor: AppColors.mainBackgroundColorOrange,
+                                shadowDarkColor:
+                                    AppColors.mainBackgroundColorOrange,
                                 shadowLightColorEmboss: Colors.transparent,
-                                shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss:
+                                    AppColors.innerShadowColor,
                               ),
                             ),
                           ),
@@ -158,7 +165,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                     borderRadius: BorderRadius.circular(5),
                                     child: CachedNetworkImage(
                                       imageUrl: userInfo!.image!,
-                                      imageBuilder: (context, imageProvider) => Container(
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
                                         decoration: BoxDecoration(
                                           color: HexColor("F3F3F3"),
                                           image: DecorationImage(
@@ -167,9 +175,12 @@ class _RestaurantListState extends State<RestaurantList> {
                                           ),
                                         ),
                                       ),
-                                      placeholder: (context, url) => CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) => Container(
-                                        color: Colors.white.withOpacity(0.5), // Same as FriendAvatar
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                        color: Colors.white.withOpacity(
+                                            0.5), // Same as FriendAvatar
                                         child: Image.asset(
                                           AssetsConstant.manPlaceholder,
                                           fit: BoxFit.cover,
@@ -219,21 +230,27 @@ class _RestaurantListState extends State<RestaurantList> {
                         onRefresh: _loadRestaurants,
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          alignment: restaurants.isEmpty ? Alignment.center : Alignment.topCenter,
+                          alignment: restaurants.isEmpty
+                              ? Alignment.center
+                              : Alignment.topCenter,
                           child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: restaurants.isEmpty
                                 ? Container(
-                                    height: MediaQuery.of(context).size.height * 0.7,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.7,
                                     child: Center(
                                       child: Text(
-                                        L10n.current.restaurant_list_empty_state_text,
-                                        style: const TextStyle(color: Colors.white),
+                                        L10n.current
+                                            .restaurant_list_empty_state_text,
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ),
                                   )
                                 : GridView.builder(
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 6.0,
                                       mainAxisSpacing: 3.0,
@@ -245,16 +262,20 @@ class _RestaurantListState extends State<RestaurantList> {
                                             ? 0
                                             : filteredRestaurants.length,
                                     shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (BuildContext context, int index) {
-                                      final restaurant = searchController.text.isEmpty
-                                          ? restaurants[index]
-                                          : filteredRestaurants.isEmpty
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      final restaurant =
+                                          searchController.text.isEmpty
                                               ? restaurants[index]
-                                              : filteredRestaurants[index];
+                                              : filteredRestaurants.isEmpty
+                                                  ? restaurants[index]
+                                                  : filteredRestaurants[index];
                                       return RestaurantListItem(
                                         restaurant: restaurant,
-                                        onTap: () => _handleRestaurantTap(restaurant),
+                                        onTap: () =>
+                                            _handleRestaurantTap(restaurant),
                                       );
                                     },
                                   ),
@@ -276,14 +297,16 @@ class _RestaurantListState extends State<RestaurantList> {
   void _handleRestaurantTap(RestaurantListResult restaurant) {
     FocusScope.of(context).unfocus();
     restaurantId = restaurant.sId;
-    Provider.of<StateManagement>(context, listen: false).setSelectedRestaurant(restaurant);
+    Provider.of<StateManagement>(context, listen: false)
+        .setSelectedRestaurant(restaurant);
     isNewLetterSelected = restaurant.newsletter;
     isAgree = false;
     _checkIfUserCheckInTable();
   }
 
   void _checkIfUserCheckInTable() async {
-    final currentUserId = Provider.of<StateManagement>(context, listen: false).currentUserId;
+    final currentUserId =
+        Provider.of<StateManagement>(context, listen: false).currentUserId;
     if (currentUserId == null || restaurantId.isEmpty) {
       showSuccessOrFail('User not logged in', false, context);
       return;
@@ -302,8 +325,8 @@ class _RestaurantListState extends State<RestaurantList> {
         final checkIns = data['checkIns'] as List;
         final restaurant = data['restaurant'] as Map<String, dynamic>;
 
-        bool exists = checkIns
-            .any((checkIn) => (checkIn['users'] as List).any((user) => user['userDetail']['_id'] == currentUserId));
+        bool exists = checkIns.any((checkIn) => (checkIn['users'] as List)
+            .any((user) => user['userDetail']['_id'] == currentUserId));
 
         isNewLetterSelected = restaurant['newsletter'] ?? false;
 
@@ -313,7 +336,8 @@ class _RestaurantListState extends State<RestaurantList> {
           _showTablePopup();
         }
       } else {
-        showSuccessOrFail(response['message'] ?? 'Check-in failed', false, context);
+        showSuccessOrFail(
+            response['message'] ?? 'Check-in failed', false, context);
       }
     } catch (e) {
       showSuccessOrFail('Network error', false, context);
@@ -357,7 +381,8 @@ class _RestaurantListState extends State<RestaurantList> {
       if (response['success'] == true) {
         _navigateToTableList(restaurantId);
       } else {
-        showSuccessOrFail(response['message'] ?? 'Check-in failed', false, context);
+        showSuccessOrFail(
+            response['message'] ?? 'Check-in failed', false, context);
       }
     } catch (e) {
       showSuccessOrFail('Network error', false, context);

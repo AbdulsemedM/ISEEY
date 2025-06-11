@@ -145,7 +145,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       var croppedFile = await ImageCropper().cropImage(
         sourcePath: image.path,
         aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        compressFormat: ImageCompressFormat.png,
+        // aspectRatioPresets: [
+        //   CropAspectRatioPreset.square,
+        //   CropAspectRatioPreset.ratio3x2,
+        //   CropAspectRatioPreset.original,
+        //   CropAspectRatioPreset.ratio4x3,
+        //   CropAspectRatioPreset.ratio16x9
+        // ],
         maxWidth: 720,
         maxHeight: 720,
         compressQuality: 80,

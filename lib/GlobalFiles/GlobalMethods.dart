@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -48,7 +49,8 @@ void launchURL(String link, [bool shouldOpenNewTab = true]) async {
       final intent = AndroidIntent(action: "action_view", data: url.toString());
       return intent.launch();
     } else {
-      await launchUrl(url, webOnlyWindowName: shouldOpenNewTab ? null : '_self');
+      await launchUrl(url,
+          webOnlyWindowName: shouldOpenNewTab ? null : '_self');
     }
   } else {
     Fluttertoast.showToast(msg: 'Invalid url: $link');
@@ -86,7 +88,8 @@ removePrefForKey(String key) async {
 }
 
 bool validatePasswordStructureContainAllType(String value) {
-  String? pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String? pattern =
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   RegExp? regExp = new RegExp(pattern);
   return regExp.hasMatch(value);
 }
@@ -135,21 +138,24 @@ calculateAge(DateTime birthDate) {
   return age;
 }
 
-DateTime? convertDateFromString({required String strDate, String dateComingFormat = "yyyy-MM-dd"}) {
+DateTime? convertDateFromString(
+    {required String strDate, String dateComingFormat = "yyyy-MM-dd"}) {
   var formatter = new DateFormat(dateComingFormat);
   DateTime? giveDate = formatter.parse(strDate);
 
   return giveDate;
 }
 
-String convertStringFromDate({required DateTime date, String? dateWantInFormat = "yyyy-MM-dd"}) {
+String convertStringFromDate(
+    {required DateTime date, String? dateWantInFormat = "yyyy-MM-dd"}) {
   var formatter = new DateFormat(dateWantInFormat);
   String? strFormattedDate = formatter.format(date);
 
   return strFormattedDate;
 }
 
-String? convertFormattedDateStringFromString(String strDate, String dateFormat) {
+String? convertFormattedDateStringFromString(
+    String strDate, String dateFormat) {
   var formatter = new DateFormat('yyyy-MM-dd');
   DateTime giveDate = formatter.parse(strDate);
 
@@ -164,7 +170,8 @@ DateTime getDateFromTimeStamp(int timeStamp) {
   return date;
 }
 
-String? getTimeStampToFormattedTime({String timeFormat = 'dd.MM.yyyy hh:mm a', required int timestamp}) {
+String? getTimeStampToFormattedTime(
+    {String timeFormat = 'dd.MM.yyyy hh:mm a', required int timestamp}) {
   var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   var format = DateFormat(timeFormat);
   String? currentTime = format.format(date);
@@ -219,7 +226,7 @@ showSuccessOrFail(
       isTitleEnable: isTitleEnable,
       context: context,
       titleMessage: "Success",
-      iconAssetPath: AssetsConstant.successIcon, 
+      iconAssetPath: AssetsConstant.successIcon,
       message: message,
       onPressOKButton: () {
         if (isCustom) {
@@ -229,8 +236,7 @@ showSuccessOrFail(
         }
       },
     );
-  }
-  else if (success == false) {
+  } else if (success == false) {
     if (message.toLowerCase().contains("retrieved successfully")) {
       debugPrint("Suppressed non-critical error: $message");
       return;
@@ -305,23 +311,38 @@ Future<dynamic> callUpdateLatLong(GlobalKey<ScaffoldState> scaffoldKey) async {
 }
 
 Future<Position> determinePosition() async {
-  if (!await Geolocator.isLocationServiceEnabled()) {
-    throw Exception('Location services are disabled.');
-  }
-
-  LocationPermission permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      throw Exception('Location permissions are denied');
+  try {
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      throw Exception('Location services are disabled.');
     }
-  }
 
-  if (permission == LocationPermission.deniedForever) {
-    throw Exception('Location permissions are permanently denied, we cannot request permissions.');
-  }
+    LocationPermission permission = await Geolocator.checkPermission();
+    log("Location permission status: $permission");
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception('Location permissions are denied');
+      }
+    }
 
-  return await Geolocator.getCurrentPosition();
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    final results = await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
+      ),
+    );
+    log("Current position: ${results.latitude}, ${results.longitude}");
+    return results;
+  } catch (e) {
+    throw Exception(
+      'Error determining position: $e',
+    );
+  }
 }
 
 String getCSString(List<String> list) => list.join(", ");

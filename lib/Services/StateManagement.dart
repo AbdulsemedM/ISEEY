@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:iseey/Models/restaurant_list_result.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:iseey/Services/local_storage_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class StateManagement extends ChangeNotifier {
@@ -25,10 +25,10 @@ class StateManagement extends ChangeNotifier {
       _socket = IO.io(
         'ws://iseey.app:5002',
         IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .enableAutoConnect()
-          .setQuery({'token': token})
-          .build(),
+            .setTransports(['websocket'])
+            .enableAutoConnect()
+            .setQuery({'token': token})
+            .build(),
       );
 
       _socket?.onConnect((_) {
@@ -54,6 +54,8 @@ class StateManagement extends ChangeNotifier {
       debugPrint('Socket initialization error: $e');
     }
   }
+
+  LocalStorageService localStorageService = LocalStorageService.instance;
 
   void _attemptReconnect() {
     Future.delayed(const Duration(seconds: 5), () {
@@ -87,9 +89,9 @@ class StateManagement extends ChangeNotifier {
   }
 
   void sendMessage({required String message, required String receiverId}) {
-    if (_socket != null && 
-        _isSocketConnected && 
-        _currentChatId != null && 
+    if (_socket != null &&
+        _isSocketConnected &&
+        _currentChatId != null &&
         message.isNotEmpty) {
       _socket?.emit('sendMessage', {
         'message': message,
@@ -123,21 +125,20 @@ class StateManagement extends ChangeNotifier {
 
   Future<void> setCurrentUserId(String userId) async {
     _currentUserId = userId;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('currentUserId', userId);
+    await localStorageService.saveString('currentUserId', userId);
     notifyListeners();
   }
 
   Future<void> loadCurrentUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    _currentUserId = prefs.getString('currentUserId');
-    notifyListeners();
+    if (_currentUserId == null) {
+      _currentUserId = await localStorageService.getString('currentUserId');
+      notifyListeners();
+    }
   }
 
   Future<void> clearCurrentUserId() async {
     _currentUserId = null;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('currentUserId');
+    await localStorageService.remove('currentUserId');
     notifyListeners();
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -17,6 +18,7 @@ import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
 import 'package:iseey/Services/ApiService.dart';
 import 'package:iseey/Services/StateManagement.dart';
 import 'package:iseey/Services/assets_constant.dart';
+import 'package:iseey/Services/local_storage_service.dart';
 import 'package:iseey/Services/notification_utils.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:iseey/AfterLoginFlow/user_block/view/screens/blocked_user_screen.dart';
@@ -41,6 +43,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
     L10n.current.menu_blocked_users_title,
     L10n.current.menu_logout_title,
   ];
+
+  LocalStorageService localStorageService = LocalStorageService.instance;
 
   @override
   void initState() {
@@ -77,14 +81,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   _getLocation() async {
     debugPrint('location: ${_currentPosition.latitude}');
-    List<Placemark>? placeMarks = await placemarkFromCoordinates(_currentPosition.latitude, _currentPosition.longitude);
+    List<Placemark>? placeMarks = await placemarkFromCoordinates(
+        _currentPosition.latitude, _currentPosition.longitude);
 
     if (placeMarks.isNotEmpty) {
       try {
         var subLocality = placeMarks[0].subLocality ?? '';
         var locality = placeMarks[0].locality ?? '';
         var administrativeArea = placeMarks[0].administrativeArea ?? '';
-        if (subLocality.isNotEmpty && locality.isNotEmpty && administrativeArea.isNotEmpty) {
+        if (subLocality.isNotEmpty &&
+            locality.isNotEmpty &&
+            administrativeArea.isNotEmpty) {
           address = "$subLocality, $locality, $administrativeArea";
         } else if (locality.isNotEmpty && administrativeArea.isNotEmpty) {
           address = "$locality, $administrativeArea";
@@ -124,7 +131,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
             friendsCount = result['friendsCount'];
           });
         } else {
-          showSuccessOrFail(L10n.current.blocked_user_sorry_title, false, context);
+          showSuccessOrFail(
+              L10n.current.blocked_user_sorry_title, false, context);
         }
       } else {
         showSuccessOrFail(L10n.current.something_went_wrong, false, context);
@@ -163,7 +171,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         routeName: '/editProfile',
                       )).then(
                     (value) {
-                      if (mainTabsScaffoldKey.currentState?.isDrawerOpen ?? false) {
+                      if (mainTabsScaffoldKey.currentState?.isDrawerOpen ??
+                          false) {
                         Navigator.pop(context);
                       }
                     },
@@ -177,8 +186,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           backgroundColor: Colors.transparent,
                           child: CircleAvatar(
                             radius: 70.0,
-                            backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
-                            backgroundColor: AppColors.mainBackgroundColorOrange,
+                            backgroundImage:
+                                AssetImage(AssetsConstant.manPlaceholder),
+                            backgroundColor:
+                                AppColors.mainBackgroundColorOrange,
                           ),
                         )
                       : userInfo?.image != null
@@ -189,8 +200,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 child: CachedNetworkImage(
                                   imageUrl: userInfo?.image ?? '',
                                   fit: BoxFit.cover,
-                                  placeholder: (context, url) => const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                 ),
                               ),
                             )
@@ -200,7 +213,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 child: GlobalWidgets.setText(
-                  userInfo == null ? '' : "${userInfo?.firstName} ${userInfo?.lastName}",
+                  userInfo == null
+                      ? ''
+                      : "${userInfo?.firstName} ${userInfo?.lastName}",
                   strTextColor: AppColors.strMainTextColorWhite,
                   fontSize: 22,
                 ),
@@ -255,7 +270,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
                                 shadowLightColorEmboss: Colors.transparent,
-                                shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss:
+                                    AppColors.innerShadowColor,
                               ),
                               child: SizedBox(
                                 width: 18,
@@ -276,7 +292,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 Container(
                                   child: GlobalWidgets.setText(
                                     L10n.current.menu_locations_count_title,
-                                    strTextColor: AppColors.strMainTextColorWhite,
+                                    strTextColor:
+                                        AppColors.strMainTextColorWhite,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -284,7 +301,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   margin: EdgeInsets.only(top: 7),
                                   child: GlobalWidgets.setText(
                                     locationCount.toString(),
-                                    strTextColor: AppColors.strMainTextColorWhite,
+                                    strTextColor:
+                                        AppColors.strMainTextColorWhite,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -331,7 +349,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 ),
                                 shadowDarkColor: AppColors.innerShadowColor,
                                 shadowLightColorEmboss: Colors.transparent,
-                                shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                shadowDarkColorEmboss:
+                                    AppColors.innerShadowColor,
                               ),
                               child: SizedBox(
                                 width: 18,
@@ -352,7 +371,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 Container(
                                   child: GlobalWidgets.setText(
                                     L10n.current.menu_friends_count_title,
-                                    strTextColor: AppColors.strMainTextColorWhite,
+                                    strTextColor:
+                                        AppColors.strMainTextColorWhite,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -360,7 +380,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   margin: EdgeInsets.only(top: 7),
                                   child: GlobalWidgets.setText(
                                     friendsCount.toString(),
-                                    strTextColor: AppColors.strMainTextColorWhite,
+                                    strTextColor:
+                                        AppColors.strMainTextColorWhite,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -519,7 +540,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               child: GlobalWidgets.setText(items[index],
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                  strTextColor: AppColors.strMainTextColorWhite),
+                                  strTextColor:
+                                      AppColors.strMainTextColorWhite),
                             ),
                           ),
                         ],
@@ -533,7 +555,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   margin: EdgeInsets.only(bottom: 0),
                   alignment: Alignment.center,
                   child: GlobalWidgets.setText(items[index],
-                      fontSize: 18, fontWeight: FontWeight.w500, strTextColor: AppColors.strMainTextColorWhite),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      strTextColor: AppColors.strMainTextColorWhite),
                 ),
           Container(
             decoration: BoxDecoration(
@@ -554,38 +578,45 @@ class _DrawerScreenState extends State<DrawerScreen> {
     );
   }
 
-  _logoutNavigateToLogin(GlobalKey<ScaffoldState> scaffoldKey) async {
-  try {
-    Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    await prefs.setBool("isFromLogin", false);
-    NotificationUtils().clearAllNotifications();
-    final stateManagement = Provider.of<StateManagement>(context, listen: false);
-    await stateManagement.clearCurrentUserId();
-    
-    Navigator.of(mainTabsScaffoldKey.currentContext ?? context, rootNavigator: true).pushAndRemoveUntil(
-      SlideRightRoute(
-        page: LoginScreen(),
-        routeName: "/login",
-      ),
-      (Route<dynamic> route) => false, 
-    );
-    
-    // Alternative if above doesn't work:
-    // Navigator.pushAndRemoveUntil(
-    //   mainTabsScaffoldKey.currentContext ?? context,
-    //   SlideRightRoute(
-    //     page: LoginScreen(),
-    //     routeName: "/login",
-    //   ),
-    //   (route) => false,
-    // );
-  } catch (e) {
-    debugPrint("Logout error: $e");
-    Navigator.of(mainTabsScaffoldKey.currentContext ?? context, rootNavigator: true).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (Route<dynamic> route) => false,
-    );
+  Future<void> _logoutNavigateToLogin(
+    GlobalKey<ScaffoldState> scaffoldKey,
+  ) async {
+    try {
+      await localStorageService.clear();
+      Navigator.of(context, rootNavigator: true)
+          .popUntil((route) => route.isFirst);
+      NotificationUtils().clearAllNotifications();
+      final stateManagement =
+          Provider.of<StateManagement>(context, listen: false);
+      await stateManagement.clearCurrentUserId();
+
+      Navigator.of(mainTabsScaffoldKey.currentContext ?? context,
+              rootNavigator: true)
+          .pushAndRemoveUntil(
+        SlideRightRoute(
+          page: LoginScreen(),
+          routeName: "/login",
+        ),
+        (Route<dynamic> route) => false,
+      );
+
+      // Alternative if above doesn't work:
+      // Navigator.pushAndRemoveUntil(
+      //   mainTabsScaffoldKey.currentContext ?? context,
+      //   SlideRightRoute(
+      //     page: LoginScreen(),
+      //     routeName: "/login",
+      //   ),
+      //   (route) => false,
+      // );
+    } catch (e) {
+      debugPrint("Logout error: $e");
+      Navigator.of(mainTabsScaffoldKey.currentContext ?? context,
+              rootNavigator: true)
+          .pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (Route<dynamic> route) => false,
+      );
+    }
   }
-}}
+}

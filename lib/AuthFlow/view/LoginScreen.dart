@@ -13,7 +13,6 @@ import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
-
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -127,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
       margin: EdgeInsets.fromLTRB(30, 0, 20, 40),
       child: GlobalWidgets.setButton(
         padding: EdgeInsets.only(right: 35, left: 35, top: 15, bottom: 15),
-        onPressButton: () => _validateAndLogin(authRepository),
+        onPressButton: () {
+          _validateAndLogin(authRepository);
+        },
         textWidget: GlobalWidgets.setText(
           L10n.current.login_button_title,
           textAlign: TextAlign.center,
@@ -168,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: L10n.current.login_empty_credentials_message);
       return;
     }
-    if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(emailController.text)) {
       Fluttertoast.showToast(msg: L10n.current.email_not_valid_error_message);
       return;

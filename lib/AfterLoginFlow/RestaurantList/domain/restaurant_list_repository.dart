@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iseey/Models/restaurant_list_model.dart';
@@ -8,10 +9,15 @@ import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 
 class RestaurantListRepository {
   Future<List<RestaurantListResult>> getRestaurants(
-      BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) async {
-    Position _currentPosition = await determinePosition();
-    final latitude = _currentPosition.latitude;
-    final longitude = _currentPosition.longitude;
+    BuildContext context,
+    GlobalKey<ScaffoldState> scaffoldKey,
+  ) async {
+    log("Fetching restaurants...");
+    // Position _currentPosition = await determinePosition();
+    final latitude = 52.51913; // Replace with actual latitude
+    final longitude = 13.40017; // Replace with actual longitude
+
+    log("Latitude: $latitude, Longitude: $longitude");
 
     HttpRequestModel req = HttpRequestModel(
       url: 'restaurants/list?lat=$latitude&lng=$longitude',
@@ -25,7 +31,8 @@ class RestaurantListRepository {
     try {
       final response = await HttpService().init(req, scaffoldKey);
       if (response != '') {
-        RestaurantListModel modelData = RestaurantListModel.fromJson(jsonDecode(response));
+        RestaurantListModel modelData =
+            RestaurantListModel.fromJson(jsonDecode(response));
         if (modelData.success) {
           return modelData.result;
         } else {
@@ -35,14 +42,16 @@ class RestaurantListRepository {
       }
       return [];
     } catch (error) {
-      debugPrint("EXCEPTION $error");
+      log("EXCEPTION $error");
       return [];
     }
   }
 
   Future<Map<String, dynamic>> checkIfUserCheckInTable(
-      BuildContext context, GlobalKey<ScaffoldState> scaffoldKey,
-      String restaurantId, String currentUserId) async {
+      BuildContext context,
+      GlobalKey<ScaffoldState> scaffoldKey,
+      String restaurantId,
+      String currentUserId) async {
     HttpRequestModel req = HttpRequestModel(
       url: 'checkIn/getTables/$restaurantId',
       method: RequestMethodType.GET,
@@ -65,8 +74,11 @@ class RestaurantListRepository {
   }
 
   Future<Map<String, dynamic>> checkIntoTable(
-      BuildContext context, GlobalKey<ScaffoldState> scaffoldKey,
-      String restaurantId, String tableNumber, bool newsLetter) async {
+      BuildContext context,
+      GlobalKey<ScaffoldState> scaffoldKey,
+      String restaurantId,
+      String tableNumber,
+      bool newsLetter) async {
     var data = {
       'table_number': tableNumber,
       'newsLetter': newsLetter,

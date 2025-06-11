@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,21 +8,24 @@ import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
+import 'package:iseey/Services/local_storage_service.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:progress_indicators/progress_indicators.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoaderScreen extends StatefulWidget {
   final bool isInitial;
   final bool? notify;
 
-  LoaderScreen({Key? key, required this.isInitial, this.notify = false}) : super(key: key);
+  LoaderScreen({Key? key, required this.isInitial, this.notify = false})
+      : super(key: key);
 
   @override
   _LoaderScreenState createState() => _LoaderScreenState();
 }
 
 class _LoaderScreenState extends State<LoaderScreen> {
+  LocalStorageService localStorageService = LocalStorageService.instance;
+
   @override
   void initState() {
     super.initState();
@@ -32,11 +36,12 @@ class _LoaderScreenState extends State<LoaderScreen> {
     }
   }
 
-  sendLoginScreen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _isFromLogin = prefs.getBool("isFromLogin") ?? false;
+  Future<void> sendLoginScreen() async {
+    bool _isFromLogin =
+        await localStorageService.getBool('isFromLogin') ?? false;
     String? languageCode = Platform.localeName.split('_')[0];
-    prefs.setString("languageCode", languageCode);
+    localStorageService.saveString("languageCode", languageCode);
+    log("isFromLogin: $_isFromLogin");
 
     Future.delayed(const Duration(milliseconds: 300), () {
       if (_isFromLogin) {
