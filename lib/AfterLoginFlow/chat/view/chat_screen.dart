@@ -402,7 +402,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         items: [
                           PopupMenuItem(
                             onTap: () {
-                              Navigator.of(context).pop();
                               toUser.isFriend
                                   ? Navigator.push(
                                       context,
@@ -430,15 +429,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                           PopupMenuItem(
                             onTap: () {
-                              Navigator.of(context).pop();
                               globalWidget.showPopUpWithMessage(
-                                  context: mainTabsScaffoldKey.currentContext ??
-                                      context,
-                                  conditionButtonEnable: true,
-                                  titleMessage: "ISEEY",
-                                  onPressOKButton: () => callBlockUserApi(),
-                                  message: L10n.current
-                                      .chat_page_block_user_warning_message);
+                                context: mainTabsScaffoldKey.currentContext ??
+                                    context,
+                                conditionButtonEnable: true,
+                                titleMessage: "ISEEY",
+                                onPressOKButton: () => callBlockUserApi(),
+                                message: L10n.current
+                                    .chat_page_block_user_warning_message,
+                              );
                             },
                             child: Container(
                               height: 20,
@@ -452,16 +451,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                           PopupMenuItem(
                             onTap: () {
-                              Navigator.of(context).pop();
                               globalWidget.showPopUpWithMessage(
-                                  context: mainTabsScaffoldKey.currentContext ??
-                                      context,
-                                  conditionButtonEnable: true,
-                                  titleMessage: "ISEEY",
-                                  withTextField: true,
-                                  onPressOKButton: () => callBlockUserApi(),
-                                  message: L10n.current
-                                      .chat_page_flag_user_warning_message);
+                                context: mainTabsScaffoldKey.currentContext ??
+                                    context,
+                                conditionButtonEnable: true,
+                                titleMessage: "ISEEY",
+                                withTextField: true,
+                                onPressOKButton: () => callBlockUserApi(),
+                                message: L10n.current
+                                    .chat_page_flag_user_warning_message,
+                              );
                             },
                             child: Container(
                               height: 20,
@@ -475,21 +474,20 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                           PopupMenuItem(
                             onTap: () {
-                              Navigator.of(context).pop();
-
                               globalWidget.showPopUpWithMessage(
-                                  context: mainTabsScaffoldKey.currentContext ??
-                                      context,
-                                  conditionButtonEnable: true,
-                                  titleMessage: "ISEEY",
-                                  onPressOKButton: () {
-                                    GlobalWidgets.socketUtils
-                                        .sendClearChat(widget.chatId);
-                                    _chatListController.clearChat();
-                                    clearChatDataList();
-                                  },
-                                  message: L10n.current
-                                      .chat_page_clear_chat_warning_message);
+                                context: mainTabsScaffoldKey.currentContext ??
+                                    context,
+                                conditionButtonEnable: true,
+                                titleMessage: "ISEEY",
+                                onPressOKButton: () {
+                                  GlobalWidgets.socketUtils
+                                      .sendClearChat(widget.chatId);
+                                  _chatListController.clearChat();
+                                  clearChatDataList();
+                                },
+                                message: L10n.current
+                                    .chat_page_clear_chat_warning_message,
+                              );
                             },
                             child: Container(
                               height: 20,

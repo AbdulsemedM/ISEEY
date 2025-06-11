@@ -29,8 +29,7 @@ class GlobalWidgets {
       ),
       action: SnackBarAction(
         label: labelText ?? '',
-        onPressed: () {
-        },
+        onPressed: () {},
       ),
       duration: Duration(seconds: displayDuration),
     );
@@ -57,7 +56,9 @@ class GlobalWidgets {
       softWrap: true,
       overflow: overflow,
       style: TextStyle(
-        color: strTextColor.runtimeType == String ? HexColor(strTextColor) : strTextColor,
+        color: strTextColor.runtimeType == String
+            ? HexColor(strTextColor)
+            : strTextColor,
         fontFamily: strTextFontFamily,
         fontSize: fontSize,
         fontWeight: fontWeight,
@@ -256,7 +257,8 @@ class GlobalWidgets {
     VoidCallback? onPressOKButton,
     String? btnName = "Ok",
   }) {
-    titleMessage = titleMessage == null ? L10n.current.login_success_title : titleMessage;
+    titleMessage =
+        titleMessage == null ? L10n.current.login_success_title : titleMessage;
     OverlayState? overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -270,7 +272,9 @@ class GlobalWidgets {
             child: Center(
                 child: Container(
               width: screenSize.width - 40,
-              height: screenSize.height * 0.56,
+              height: withTextField
+                  ? screenSize.height * 0.66
+                  : screenSize.height * 0.56,
               child: Neumorphic(
                 style: NeumorphicStyle(
                   shape: NeumorphicShape.flat,
@@ -347,7 +351,8 @@ class GlobalWidgets {
                                   intensity: 0.75,
                                   shadowDarkColor: AppColors.innerShadowColor,
                                   shadowLightColorEmboss: Colors.transparent,
-                                  shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                  shadowDarkColorEmboss:
+                                      AppColors.innerShadowColor,
                                 ),
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(10, 0, 5, 1),
@@ -365,7 +370,8 @@ class GlobalWidgets {
                                       decoration: InputDecoration(
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: AppColors.mainBackgroundColorOrange,
+                                            color: AppColors
+                                                .mainBackgroundColorOrange,
                                             width: 1.5,
                                           ),
                                         ),
@@ -396,10 +402,12 @@ class GlobalWidgets {
                                             textWidget: Padding(
                                               padding: EdgeInsets.only(top: 3),
                                               child: GlobalWidgets.setText(
-                                                L10n.current.accept_button_title,
+                                                L10n.current
+                                                    .accept_button_title,
                                                 textAlign: TextAlign.center,
                                                 fontSize: 16,
-                                                strTextColor: AppColors.strMainTextColorWhite,
+                                                strTextColor: AppColors
+                                                    .strMainTextColorWhite,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -421,10 +429,12 @@ class GlobalWidgets {
                                             textWidget: Padding(
                                               padding: EdgeInsets.only(top: 3),
                                               child: GlobalWidgets.setText(
-                                                L10n.current.cancel_button_title,
+                                                L10n.current
+                                                    .cancel_button_title,
                                                 textAlign: TextAlign.center,
                                                 fontSize: 16,
-                                                strTextColor: HexColor("1c1c1c"),
+                                                strTextColor:
+                                                    HexColor("1c1c1c"),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -456,7 +466,8 @@ class GlobalWidgets {
                                           btnName,
                                           textAlign: TextAlign.center,
                                           fontSize: 20,
-                                          strTextColor: AppColors.strMainTextColorWhite,
+                                          strTextColor:
+                                              AppColors.strMainTextColorWhite,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
