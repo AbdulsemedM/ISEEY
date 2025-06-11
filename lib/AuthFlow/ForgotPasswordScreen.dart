@@ -10,48 +10,48 @@ import 'package:iseey/Services/ApiService.dart';
 import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/generated/l10n.dart';
 
+import 'domain/reset_password_model/reset_password_response.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  callForgotPasswordApi() async {
+  Future<void> callForgotPasswordApi() async {
     var data = new Map<String, dynamic>();
     data['email'] = emailController.text;
     var body = json.encode(data);
 
     HttpRequestModel req = new HttpRequestModel(
-        url: 'users/forgotPassword',
-        method: RequestMethodType.POST,
-        body: body,
-        params: '',
-        headerType: "json",
-        authMethod: false);
+      url: 'users/forgotPassword',
+      method: RequestMethodType.POST,
+      body: body,
+      params: '',
+      headerType: "json",
+      authMethod: false,
+    );
     var response;
     var x = GlobalWidgets();
     try {
       x.showLoading(scaffoldKey.currentContext ?? context);
       response = await HttpService().init(req, scaffoldKey);
       x.hideLoading();
+      var jsonRes = jsonDecode(response);
+      final forgotPasswordResponse = ResetPasswordResponse.fromJson(jsonRes);
 
-      if (response is String && response != '') {
-        var jsonRes = jsonDecode(response);
-
-        if (jsonRes["success"] == 200) {
-          showSuccessOrFail(
-            jsonRes["message"],
-            jsonRes["success"],
-            context,
-            isTitleEnable: false,
-          );
-        } else {
-          showSuccessOrFail(jsonRes["message"], jsonRes["success"], context);
-        }
-      } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
+      if (forgotPasswordResponse.success) {
+        showSuccessOrFail(
+          forgotPasswordResponse.message,
+          forgotPasswordResponse.success,
+          context,
+        );
+        return;
       }
+
+      throw Exception(forgotPasswordResponse.message);
     } catch (e) {
+      showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       debugPrint("EXCEPTION $e");
     }
     x.hideLoading();
@@ -78,7 +78,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      margin: EdgeInsets.fromLTRB(0, screenSize.width * 0.30, 0, 0),
+                      margin:
+                          EdgeInsets.fromLTRB(0, screenSize.width * 0.30, 0, 0),
                       width: screenSize.width * 0.6,
                       child: AspectRatio(
                         aspectRatio: 223 / 58,
@@ -100,8 +101,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: GlobalWidgets.setText(L10n.current.forgot_password_button_title,
-                          fontSize: 22, strTextColor: AppColors.mainTextColorWhite),
+                      child: GlobalWidgets.setText(
+                          L10n.current.forgot_password_button_title,
+                          fontSize: 22,
+                          strTextColor: AppColors.mainTextColorWhite),
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -119,7 +122,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         onTap: () {},
                         controller: emailController,
                         textCapitalization: TextCapitalization.none,
-                        txtFieldHintText: L10n.current.edit_profile_example_email,
+                        txtFieldHintText:
+                            L10n.current.edit_profile_example_email,
                         fontColor: AppColors.mainTextColorWhite,
                         cursorColor: AppColors.mainBackgroundColorOrange,
                         inputType: TextInputType.emailAddress,
@@ -129,23 +133,25 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       alignment: Alignment.topLeft,
                       margin: EdgeInsets.fromLTRB(30, 40, 20, 0),
                       child: GlobalWidgets.setButton(
-                        padding: EdgeInsets.only(right: 35, left: 35, top: 15, bottom: 15),
-                        onPressButton: () {
+                        padding: EdgeInsets.only(
+                            right: 35, left: 35, top: 15, bottom: 15),
+                        onPressButton: () async {
                           if (emailController.text.isEmpty) {
-                            return Fluttertoast.showToast(msg: L10n.current.login_empty_credentials_message);
+                            return Fluttertoast.showToast(
+                                msg: L10n
+                                    .current.login_empty_credentials_message);
                           }
-                          if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          if (!RegExp(
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                               .hasMatch(emailController.text)) {
-                            return Fluttertoast.showToast(msg: 'Email not valid');
-                          }
-                          if (emailController.text.isEmpty) {
-                            GlobalWidgets.showSnackBarWithText(
-                                scaffoldKey.currentState!, "Email Field Should Not Be Empty.", "");
+                            return Fluttertoast.showToast(
+                                msg: 'Email not valid');
                           } else {
-                            callForgotPasswordApi();
+                            await callForgotPasswordApi();
                           }
                         },
-                        textWidget: GlobalWidgets.setText(L10n.current.forgot_password_page_button_title,
+                        textWidget: GlobalWidgets.setText(
+                            L10n.current.forgot_password_page_button_title,
                             textAlign: TextAlign.center,
                             fontSize: 20,
                             strTextColor: AppColors.strMainTextColorWhite,
