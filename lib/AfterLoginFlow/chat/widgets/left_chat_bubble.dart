@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
@@ -30,9 +31,36 @@ class LeftChatBubble extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(imgPath),
-                  radius: 16,
+               CachedNetworkImage(
+                  imageUrl: imgPath,
+                  useOldImageOnUrlChange: true,
+                  fadeInDuration: Duration(milliseconds: 300),
+                  imageBuilder: (context, imageProvider) {
+                    return CircleAvatar(
+                      backgroundImage: imageProvider,
+                      radius: 16,
+                    );
+                  },
+                  placeholder: (context, url) {
+                    return CircleAvatar(
+                      radius: 16,
+                      child: Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return CircleAvatar(
+                      radius: 16,
+                      child: Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(width: 8),
                 Column(
