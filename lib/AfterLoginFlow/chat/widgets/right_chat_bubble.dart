@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
@@ -5,14 +6,14 @@ import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 class RightChatBubble extends StatelessWidget {
   final String imgPath;
   final String nameText;
-  final int timestamp; 
+  final int timestamp;
   final String chatText;
 
   const RightChatBubble({
     Key? key,
     required this.imgPath,
     required this.nameText,
-    required this.timestamp, 
+    required this.timestamp,
     required this.chatText,
   }) : super(key: key);
 
@@ -64,8 +65,10 @@ class RightChatBubble extends StatelessWidget {
                         shadowDarkColorEmboss: AppColors.innerShadowColor,
                       ),
                       child: Container(
-                        constraints: BoxConstraints(maxWidth: (screenSize.width / 1.5)),
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        constraints:
+                            BoxConstraints(maxWidth: (screenSize.width / 1.5)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         child: Text(
                           chatText,
                           style: TextStyle(color: Colors.white),
@@ -75,9 +78,28 @@ class RightChatBubble extends StatelessWidget {
                   ],
                 ),
                 SizedBox(width: 8),
-                CircleAvatar(
-                  backgroundImage: NetworkImage(imgPath),
-                  radius: 16,
+                CachedNetworkImage(
+                  imageUrl: imgPath,
+                  useOldImageOnUrlChange: true,
+                  fadeInDuration: Duration(milliseconds: 300),
+                  imageBuilder: (context, imageProvider) {
+                    return CircleAvatar(
+                      backgroundImage: imageProvider,
+                      radius: 16,
+                    );
+                  },
+                  placeholder: (context, url) {
+                    return CircleAvatar(
+                      radius: 16,
+                      child: Icon(Icons.person, size: 16, color: Colors.grey),
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return CircleAvatar(
+                      radius: 16,
+                      child: Icon(Icons.person, size: 16, color: Colors.grey),
+                    );
+                  },
                 ),
               ],
             ),

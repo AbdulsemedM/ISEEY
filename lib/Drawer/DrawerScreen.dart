@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -23,7 +22,6 @@ import 'package:iseey/Services/notification_utils.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:iseey/AfterLoginFlow/user_block/view/screens/blocked_user_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
