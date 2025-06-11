@@ -91,13 +91,21 @@ class RightChatBubble extends StatelessWidget {
                   placeholder: (context, url) {
                     return CircleAvatar(
                       radius: 16,
-                      child: Icon(Icons.person, size: 16, color: Colors.grey),
+                      child: Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                     );
                   },
                   errorWidget: (context, url, error) {
                     return CircleAvatar(
                       radius: 16,
-                      child: Icon(Icons.person, size: 16, color: Colors.grey),
+                      child: Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                     );
                   },
                 ),
