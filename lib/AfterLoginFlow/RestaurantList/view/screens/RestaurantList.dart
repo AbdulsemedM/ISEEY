@@ -46,7 +46,7 @@ class _RestaurantListState extends State<RestaurantList> {
 
   Future<void> _loadRestaurants() async {
     final results = await _repository.getRestaurants(context, scaffoldKey);
-    log("Restaurant List: ${results.length} restaurants loaded");
+    log("Restaurant List: ${results} restaurants loaded");
     setState(() {
       restaurants = results;
       filteredRestaurants = results;

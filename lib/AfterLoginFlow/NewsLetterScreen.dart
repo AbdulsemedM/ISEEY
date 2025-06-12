@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -32,9 +33,10 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
   bool loading = false;
   List<NewsletterResult> newsletterListResult = [];
 
-  callGetNewsLetterApi() async {
+  Future<void> callGetNewsLetterApi() async {
+    log('message');
     HttpRequestModel req = new HttpRequestModel(
-        url: 'newsletters/list',
+        url: 'newsLetter/list',
         method: RequestMethodType.GET,
         body: '',
         params: '',
@@ -49,6 +51,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
 
       if (response is String && response != '') {
         var jsonRes = jsonDecode(response);
+        log("NEWSLETTER RESPONSE: $jsonRes");
 
         NewsletterModel modelData = NewsletterModel.fromJson(jsonRes);
 
@@ -66,15 +69,25 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
       setState(() {
         loading = false;
       });
+    } on Exception catch (e) {
+      log("gg ${e.runtimeType} ${e.toString()}");
+
+      setState(() {
+        loading = false;
+      });
     } catch (e) {
-      debugPrint("EXCEPTION $e");
+      log("EXCEPTION ${e.runtimeType}");
       setState(() {
         loading = false;
       });
     }
   }
 
-  callPatchNewsLetterApi(GlobalKey<ScaffoldState> scaffoldKey, String restaurantId, bool newsletterEnable) async {
+  Future<void> callPatchNewsLetterApi(
+    GlobalKey<ScaffoldState> scaffoldKey,
+    String restaurantId,
+    bool newsletterEnable,
+  ) async {
     HttpRequestModel req = new HttpRequestModel(
         url: 'newsLetter/subscribe/$restaurantId/true',
         method: RequestMethodType.PATCH,
@@ -104,7 +117,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
       }
     } catch (e) {
       showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-      debugPrint("EXCEPTION $e");
+      debugPrint("EXCEPTION ${e.toString()}");
     }
     setState(() {
       loading = false;
@@ -181,8 +194,11 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                             children: [
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                                child: GlobalWidgets.setText(L10n.current.loading_title,
-                                    strTextColor: AppColors.strMainTextColorWhite, fontSize: 16),
+                                child: GlobalWidgets.setText(
+                                    L10n.current.loading_title,
+                                    strTextColor:
+                                        AppColors.strMainTextColorWhite,
+                                    fontSize: 16),
                               ),
                               CollectionSlideTransition(
                                 children: <Widget>[
@@ -191,7 +207,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color: AppColors.mainBackgroundColorOrange,
+                                      color:
+                                          AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -199,7 +216,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color: AppColors.mainBackgroundColorOrange,
+                                      color:
+                                          AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -207,7 +225,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 8, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color: AppColors.mainBackgroundColorOrange,
+                                      color:
+                                          AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -215,7 +234,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                     child: Icon(
                                       Icons.circle,
-                                      color: AppColors.mainBackgroundColorOrange,
+                                      color:
+                                          AppColors.mainBackgroundColorOrange,
                                       size: 15,
                                     ),
                                   ),
@@ -231,7 +251,9 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                       child: Container(
                         child: ListView.builder(
                           padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                          itemCount: newsletterListResult.length == 0 ? 1 : newsletterListResult.length,
+                          itemCount: newsletterListResult.length == 0
+                              ? 1
+                              : newsletterListResult.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return GestureDetector(
@@ -247,46 +269,69 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                               shape: NeumorphicShape.flat,
                                               depth: -3,
                                               lightSource: LightSource.top,
-                                              color: AppColors.tabBarBoxBackgroundColor,
+                                              color: AppColors
+                                                  .tabBarBoxBackgroundColor,
                                               border: NeumorphicBorder(
-                                                color: AppColors.innerShadowColor,
+                                                color:
+                                                    AppColors.innerShadowColor,
                                                 width: 1,
                                               ),
-                                              shadowDarkColor: AppColors.innerShadowColor,
-                                              shadowLightColorEmboss: Colors.transparent,
-                                              shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                              shadowDarkColor:
+                                                  AppColors.innerShadowColor,
+                                              shadowLightColorEmboss:
+                                                  Colors.transparent,
+                                              shadowDarkColorEmboss:
+                                                  AppColors.innerShadowColor,
                                             ),
                                             child: Stack(
                                               children: [
                                                 Container(
                                                   width: double.infinity,
                                                   height: double.infinity,
-                                                  padding: EdgeInsets.fromLTRB(0, 40, 0, 40),
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 40, 0, 40),
                                                   child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Container(
-                                                        padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                0, 0, 0, 40),
                                                         child: Image.asset(
-                                                          AssetsConstant.errorIcon,
+                                                          AssetsConstant
+                                                              .errorIcon,
                                                           fit: BoxFit.contain,
                                                         ),
                                                       ),
                                                       Container(
-                                                        padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                                                        child: GlobalWidgets.setText(
-                                                          L10n.current.blocked_user_sorry_title,
-                                                          strTextColor: AppColors.strMainTextColorWhite,
-                                                          textAlign: TextAlign.center,
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                0, 0, 0, 15),
+                                                        child: GlobalWidgets
+                                                            .setText(
+                                                          L10n.current
+                                                              .blocked_user_sorry_title,
+                                                          strTextColor: AppColors
+                                                              .strMainTextColorWhite,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           fontSize: 26,
                                                         ),
                                                       ),
                                                       Container(
-                                                        child: GlobalWidgets.setText(
-                                                          L10n.current.blocked_user_no_data_title,
-                                                          strTextColor: AppColors.strMainTextColorWhite,
-                                                          textAlign: TextAlign.center,
+                                                        child: GlobalWidgets
+                                                            .setText(
+                                                          L10n.current
+                                                              .blocked_user_no_data_title,
+                                                          strTextColor: AppColors
+                                                              .strMainTextColorWhite,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           fontSize: 20,
                                                         ),
                                                       ),
@@ -299,7 +344,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                                         ),
                                       ),
                                     )
-                                  : setListItem(newsletterListResult[index], index),
+                                  : setListItem(
+                                      newsletterListResult[index], index),
                             );
                           },
                         ),
@@ -358,13 +404,16 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                     ),
                     onPressed: () {
                       globalWidget.showPopUpWithMessage(
-                          context: mainTabsScaffoldKey.currentContext ?? context,
+                          context:
+                              mainTabsScaffoldKey.currentContext ?? context,
                           conditionButtonEnable: true,
                           titleMessage: L10n.current.app_name,
                           onPressOKButton: () {
-                            callDeleteNewsLetter(scaffoldKey, result.restaurantId, index);
+                            callDeleteNewsLetter(
+                                scaffoldKey, result.restaurantId, index);
                           },
-                          message: L10n.current.newsletter_page_delete_newsletter_warning_message);
+                          message: L10n.current
+                              .newsletter_page_delete_newsletter_warning_message);
                     },
                     style: NeumorphicStyle(
                       shape: NeumorphicShape.flat,
@@ -404,7 +453,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                     padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
                     width: 250,
                     child: GlobalWidgets.setText(
-                      result.restaurantDetail?.cityDetails != null && result.restaurantDetail?.countryDetails != null
+                      result.restaurantDetail?.cityDetails != null &&
+                              result.restaurantDetail?.countryDetails != null
                           ? "${result.restaurantDetail?.cityDetails?.name} - ${result.restaurantDetail?.countryDetails?.name}"
                           : "",
                       maxLine: 4,
@@ -443,7 +493,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                             value: result.enabled,
                             onToggle: (value) {
                               setState(() {
-                                callPatchNewsLetterApi(scaffoldKey, result.restaurantId, !result.enabled);
+                                callPatchNewsLetterApi(scaffoldKey,
+                                    result.restaurantId, !result.enabled);
                                 result.enabled = !result.enabled;
                               });
                             },
@@ -482,7 +533,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
     );
   }
 
-  Future<bool> callDeleteNewsLetter(GlobalKey<ScaffoldState> scaffoldKey, String restaurantId, int index) async {
+  Future<bool> callDeleteNewsLetter(GlobalKey<ScaffoldState> scaffoldKey,
+      String restaurantId, int index) async {
     HttpRequestModel req = new HttpRequestModel(
         url: 'newsletters/delete/$restaurantId',
         method: RequestMethodType.DELETE,
