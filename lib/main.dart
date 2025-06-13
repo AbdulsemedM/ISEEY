@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
+import 'package:iseey/AfterLoginFlow/RestaurantList/domain/restaurant_list_repository.dart';
 import 'package:iseey/AuthFlow/domain/auth_repository.dart';
 import 'package:iseey/AfterLoginFlow/Edit_profile/domain/Edit_profile_repository.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
@@ -38,8 +40,14 @@ Future<void> main() async {
         Provider<AuthRepository>(create: (_) => authRepository),
         Provider<EditProfileRepository>(create: (_) => profileRepository),
         Provider<HttpService>(create: (_) => apiService),
+        ChangeNotifierProvider<RestaurantListController>(
+          create: (_) => RestaurantListController(
+            restaurantRepository: RestaurantListRepository(),
+          ),
+        ),
       ],
-      child: MaterialApp(debugShowCheckedModeBanner: false,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: globalNavigatorKey,
         home: NavigationRouteScreen(),
       ),

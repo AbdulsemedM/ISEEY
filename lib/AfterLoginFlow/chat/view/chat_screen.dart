@@ -74,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        if (!GlobalWidgets.socketUtils.socket.connected) {
+        if (!SocketUtils.instance.socket.connected) {
           Navigator.pop(context);
           _chatListController.chatData.clear();
           globalChatUserId = null;
@@ -186,23 +186,24 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _connectSocket() async {
-    await GlobalWidgets.initSocket();
-    await GlobalWidgets.socketUtils.initSocket(widget.fromUser, widget.chatId);
-    GlobalWidgets.socketUtils.connectToSocket();
-    GlobalWidgets.socketUtils.setConnectListener(onConnect);
-    GlobalWidgets.socketUtils.setOnDisconnectListener(onDisconnect);
-    GlobalWidgets.socketUtils.setOnCustomErrorListener(onCustomError);
-    GlobalWidgets.socketUtils
-        .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
+    // await GlobalWidgets.initSocket();
+    SocketUtils.instance.initChatSocket(widget.fromUser, widget.chatId);
+    // await GlobalWidgets.socketUtils.initSocket(widget.fromUser, widget.chatId);
+    // GlobalWidgets.socketUtils.connectToSocket();
+    // GlobalWidgets.socketUtils.setConnectListener(onConnect);
+    // GlobalWidgets.socketUtils.setOnDisconnectListener(onDisconnect);
+    // GlobalWidgets.socketUtils.setOnCustomErrorListener(onCustomError);
+    // GlobalWidgets.socketUtils
+    //     .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
 
-    GlobalWidgets.socketUtils.sendJoinRoom(
+    SocketUtils.instance.sendJoinRoom(
       isChatId: true,
       chatId: widget.chatId,
     );
 
-    GlobalWidgets.socketUtils.setOnConnectionErrorListener(onConnectError);
+    // GlobalWidgets.socketUtils.setOnConnectionErrorListener(onConnectError);
     checkISSocketConnected();
-    GlobalWidgets.socketUtils.updateSeenCounts(widget.chatId);
+    SocketUtils.instance.updateSeenCounts(widget.chatId);
   }
 
   void setOnChatMessageReceivedListener(data) {
@@ -274,13 +275,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void checkISSocketConnected() {
-    bool isConnected = GlobalWidgets.socketUtils.socket.connected;
+    bool isConnected = SocketUtils.instance.socket.connected;
     debugPrint('checkISSocketConnected $isConnected');
   }
 
   void sendMessage() async {
     if (!mounted && messageBoxController.text.isEmpty) return;
-    GlobalWidgets.socketUtils.sendSingleChatMessage(
+    SocketUtils.instance.sendSingleChatMessage(
       messageBoxController.text.trim(),
       toUser,
     );
@@ -341,7 +342,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                         ),
                         onPressed: () {
-                          GlobalWidgets.socketUtils
+                          SocketUtils.instance
                               .updateSeenCounts(widget.chatId);
                           Navigator.pop(context);
                           _chatListController.chatData.clear();
@@ -480,7 +481,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 conditionButtonEnable: true,
                                 titleMessage: "ISEEY",
                                 onPressOKButton: () {
-                                  GlobalWidgets.socketUtils
+                                  SocketUtils.instance
                                       .sendClearChat(widget.chatId);
                                   _chatListController.clearChat();
                                   clearChatDataList();
@@ -795,7 +796,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop("Delete");
-                SocketUtils().sendDeleteMessage(id ?? '');
+                SocketUtils.instance.sendDeleteMessage(id ?? '');
                 _chatListController.chatData.forEach((element) {
                   if (element["id"] == id) {
                     _chatListController.chatData.remove(element);

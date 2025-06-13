@@ -37,6 +37,11 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
 
     firebaseNotificationListen();
   }
+  //       void connectSocket() {
+  // GlobalWidgets.socketUtils
+  //       .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
+
+  //       }
 
   void firebaseNotificationListen() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

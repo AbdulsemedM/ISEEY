@@ -15,6 +15,7 @@ import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
 import 'package:iseey/Models/TableListModel.dart';
+import 'package:iseey/Services/SocketUtils.dart';
 import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/generated/l10n.dart';
 
@@ -116,7 +117,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
 
     Future.delayed(const Duration(seconds: 4), () {
       _runTimeLock(true);
-      _connectSocket();
+      // _connectSocket();
     });
 
     _firebaseNotificationListen();
@@ -160,16 +161,16 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
   }
 
   Future<void> _updateLocation() async {
-    GlobalWidgets.socketUtils.updateLatLng(lat, lng, widget.restaurantId ?? '');
+    SocketUtils.instance.updateLatLng(lat, lng, widget.restaurantId ?? '');
   }
 
-  Future<void> _connectSocket() async {
-    await GlobalWidgets.initSocket();
-    await GlobalWidgets.socketUtils.onConnect();
-    GlobalWidgets.socketUtils.connectToSocket();
-    GlobalWidgets.socketUtils.setConnectListener(_onConnect);
-    GlobalWidgets.socketUtils.setOnDisconnectListener(_onDisconnect);
-  }
+  // Future<void> _connectSocket() async {
+  //   await GlobalWidgets.initSocket();
+  //   await GlobalWidgets.socketUtils.onConnect();
+  //   GlobalWidgets.socketUtils.connectToSocket();
+  //   GlobalWidgets.socketUtils.setConnectListener(_onConnect);
+  //   GlobalWidgets.socketUtils.setOnDisconnectListener(_onDisconnect);
+  // }
 
   void _onConnect(dynamic data) => debugPrint('Connected $data');
   void _onDisconnect(dynamic data) => debugPrint('onDisconnect $data');

@@ -1,7 +1,7 @@
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/domain/restaurant_list_repository.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/view/widgets/RestaurantListItem.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/view/widgets/SearchBar.dart';
@@ -29,8 +29,8 @@ class _RestaurantListState extends State<RestaurantList> {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController tableNumberController = TextEditingController();
   final RestaurantListRepository _repository = RestaurantListRepository();
-  List<RestaurantListResult> restaurants = [];
-  List<RestaurantListResult> filteredRestaurants = [];
+  // List<RestaurantListResult> restaurants = [];
+  // List<RestaurantListResult> filteredRestaurants = [];
   OverlayEntry? overlayEntry;
   bool isAgree = false;
   bool isNewLetterSelected = false;
@@ -39,51 +39,36 @@ class _RestaurantListState extends State<RestaurantList> {
   @override
   void initState() {
     _getUserDetail();
-    _loadRestaurants();
+    // _loadRestaurants();
     super.initState();
     _onConnect();
   }
 
-  Future<void> _loadRestaurants() async {
-    final results = await _repository.getRestaurants(context, scaffoldKey);
-    log("Restaurant List: ${results} restaurants loaded");
-    setState(() {
-      restaurants = results;
-      filteredRestaurants = results;
-    });
-  }
+  // Future<void> _loadRestaurants() async {
+  //   final results = await _repository.getRestaurants(context, scaffoldKey);
+  //   log("Restaurant List: ${results} restaurants loaded");
+  //   setState(() {
+  //     restaurants = results;
+  //     filteredRestaurants = results;
+  //   });
+  // }
 
-  void _searchRestaurants(String query) {
-    setState(() {
-      filteredRestaurants = restaurants.where((restaurant) {
-        return restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
-            restaurant.address.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    });
-  }
+  // void _searchRestaurants(String query) {
+  //   setState(() {
+  //     filteredRestaurants = restaurants.where((restaurant) {
+  //       return restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
+  //           restaurant.address.toLowerCase().contains(query.toLowerCase());
+  //     }).toList();
+  //   });
+  // }
 
   _onConnect() async {
-    await GlobalWidgets.initSocket();
-    await GlobalWidgets.socketUtils.initSocket(null, '');
-    GlobalWidgets.socketUtils.connectToSocket();
-    GlobalWidgets.socketUtils.setOnCheckedInListener(onCheckedInReceived);
+    // await GlobalWidgets.initSocket();
+    // await GlobalWidgets.socketUtils.initSocket(null, '');
+    // GlobalWidgets.socketUtils.connectToSocket();
+    // SocketUtils.instance.setOnCheckedInListener(onCheckedInReceived);
   }
 
-  onCheckedInReceived(data) {
-    int index = restaurants.indexWhere(
-      (restaurant) => restaurant.sId == data['restaurant_id'],
-    );
-
-    if (index != -1) {
-      final restaurant = restaurants[index];
-      int count = restaurant.checkedInCount;
-      final updatedRestaurants = List.of(restaurants);
-      updatedRestaurants[index] = updatedRestaurants[index].copyWith(
-        checkedInCount: count + 1,
-      );
-      setState(() => restaurants = updatedRestaurants);
-    }
-  }
 
   Future<void> _getUserDetail() async {
     Map<String, dynamic> data = await getMapData("userdata");
@@ -209,7 +194,9 @@ class _RestaurantListState extends State<RestaurantList> {
                       padding: const EdgeInsets.only(top: 16),
                       child: Searchbar(
                         controller: searchController,
-                        onSearch: _searchRestaurants,
+                        onSearch: context
+                            .read<RestaurantListController>()
+                            .searchRestaurants,
                       ),
                     ),
 
@@ -227,59 +214,78 @@ class _RestaurantListState extends State<RestaurantList> {
                     Expanded(
                       child: RefreshIndicator(
                         backgroundColor: AppColors.fieldsBackgroundColor,
-                        onRefresh: _loadRestaurants,
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          alignment: restaurants.isEmpty
-                              ? Alignment.center
-                              : Alignment.topCenter,
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: restaurants.isEmpty
-                                ? Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.7,
-                                    child: Center(
-                                      child: Text(
-                                        L10n.current
-                                            .restaurant_list_empty_state_text,
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                        onRefresh: () async {
+                         await context
+                              .read<RestaurantListController>()
+                              .loadRestaurantList(
+                                context: context,
+                                scaffoldKey: scaffoldKey,
+                              );
+                        },
+                        child: Consumer<RestaurantListController>(
+                          builder: (context, controller, child) {
+                            return Container(
+                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              alignment: controller.restaurants.isEmpty
+                                  ? Alignment.center
+                                  : Alignment.topCenter,
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: controller.restaurants.isEmpty
+                                    ? Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.7,
+                                        child: Center(
+                                          child: Text(
+                                            L10n.current
+                                                .restaurant_list_empty_state_text,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      )
+                                    : GridView.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 6.0,
+                                          mainAxisSpacing: 3.0,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        itemCount: searchController.text.isEmpty
+                                            ? controller.restaurants.length
+                                            : controller
+                                                    .filteredRestaurants.isEmpty
+                                                ? 0
+                                                : controller
+                                                    .filteredRestaurants.length,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          final restaurant = searchController
+                                                  .text.isEmpty
+                                              ? controller.restaurants[index]
+                                              : controller.filteredRestaurants
+                                                      .isEmpty
+                                                  ? controller
+                                                      .restaurants[index]
+                                                  : controller
+                                                          .filteredRestaurants[
+                                                      index];
+                                          return RestaurantListItem(
+                                            restaurant: restaurant,
+                                            onTap: () {
+                                              _handleRestaurantTap(restaurant);
+                                            },
+                                          );
+                                        },
                                       ),
-                                    ),
-                                  )
-                                : GridView.builder(
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 6.0,
-                                      mainAxisSpacing: 3.0,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    itemCount: searchController.text.isEmpty
-                                        ? restaurants.length
-                                        : filteredRestaurants.isEmpty
-                                            ? 0
-                                            : filteredRestaurants.length,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      final restaurant =
-                                          searchController.text.isEmpty
-                                              ? restaurants[index]
-                                              : filteredRestaurants.isEmpty
-                                                  ? restaurants[index]
-                                                  : filteredRestaurants[index];
-                                      return RestaurantListItem(
-                                        restaurant: restaurant,
-                                        onTap: () =>
-                                            _handleRestaurantTap(restaurant),
-                                      );
-                                    },
-                                  ),
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     )

@@ -6,6 +6,7 @@ import 'package:iseey/AfterLoginFlow/RestaurantList/view/screens/RestaurantList.
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
+import 'package:iseey/Services/SocketUtils.dart';
 import 'package:iseey/Services/menu.dart';
 import 'package:iseey/generated/l10n.dart';
 import 'package:iseey/CustomTabbarController/CustomBottomNavigationBar.dart';
@@ -30,9 +31,11 @@ class CustomTabBarController extends StatefulWidget {
 class CustomTabBarControllerState extends State<CustomTabBarController> {
   int? selectedIndex = inActivateBottomBar ? -1 : currentSelectedTab;
   List<String> bottomTabs = ["/tab1", "/tab2", "/tab3"];
+  SocketUtils socketUtils = SocketUtils.instance;
 
   @override
   void initState() {
+    initSocket();
     if (widget.fromChat == 2) {
       currentSelectedTab = 2;
       selectedMenuItemIndex = 0;
@@ -41,6 +44,14 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
       selectedMenuItemIndex = 0;
     }
     super.initState();
+  }
+
+  Future<void> initSocket() async {
+    await socketUtils.connectSocket();
+    await socketUtils.setConnectListener((value) {});
+    await socketUtils.setOnDisconnectListener((value) {});
+    await socketUtils.setOnCustomErrorListener((value) {});
+    await socketUtils.setOnConnectionErrorListener((value) {});
   }
 
   @override
@@ -142,7 +153,10 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
       selectedIndex = index;
 
       if (index == 2) {
-        Provider.of<StateManagement>(mainTabsScaffoldKey.currentContext ?? context, listen: false).reloadBuild();
+        Provider.of<StateManagement>(
+                mainTabsScaffoldKey.currentContext ?? context,
+                listen: false)
+            .reloadBuild();
       }
 
       if (!isConditionTrue()) {
@@ -157,7 +171,9 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
         return;
       } else {
         if (index == 0) {
-          Provider.of<StateManagement>(mainTabsScaffoldKey.currentContext ?? context, listen: false)
+          Provider.of<StateManagement>(
+                  mainTabsScaffoldKey.currentContext ?? context,
+                  listen: false)
               .reloadRestaurantBuild();
         }
       }

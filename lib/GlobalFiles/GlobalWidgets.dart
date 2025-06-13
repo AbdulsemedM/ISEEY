@@ -1,17 +1,11 @@
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AuthFlow/LoaderScreen.dart';
-import 'package:iseey/Services/SocketUtils.dart';
 import 'package:iseey/generated/l10n.dart';
 
 import 'AppColors.dart';
 import 'GlobalVariables.dart';
 
 class GlobalWidgets {
-  static SocketUtils socketUtils = SocketUtils();
-
-  static initSocket() {
-    socketUtils = SocketUtils();
-  }
 
   static showSnackBarWithText(
     ScaffoldState scaffoldState,

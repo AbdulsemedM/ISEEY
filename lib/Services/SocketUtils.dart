@@ -13,6 +13,11 @@ import 'package:socket_io_client/socket_io_client.dart';
 const String socketUrlString = 'ws://iseey.app:5003';
 
 class SocketUtils {
+  SocketUtils._privateConstructor();
+  static final SocketUtils _instance = SocketUtils._privateConstructor();
+
+  static SocketUtils get instance => _instance;
+
   // Events
   static const String JOIN_ROOM = 'joinRoom';
   static const String LEAVE_ROOM = 'leaveRoom';
@@ -39,22 +44,15 @@ class SocketUtils {
   String _chatID = "";
   late IO.Socket socket;
 
-  initSocket(UserResult? fromUser, String chatId) async {
+  void initChatSocket(UserResult? fromUser, String chatId) async {
     this._chatID = chatId;
     debugPrint("🟢 socket init: $fromUser");
- final uri = Uri.parse(socketUrlString);
-    if (uri.host.isEmpty) {
-      debugPrint("🔴 Invalid socket URL: No host specified");
-      return;
-    }
-
-    await onConnect();
   }
 
-   Future<void> onConnect() async {
+  Future<void> connectSocket() async {
     try {
       final token = await _getToken();
-      
+
       socket = IO.io(
         socketUrlString,
         OptionBuilder()
@@ -114,128 +112,138 @@ class SocketUtils {
     }
   }
 
- 
-void sendJoinRoom({bool? isChatId = false, UserResult? toChatUser, String? chatId}) {
-  if (socket.connected) {
-    final roomId = isChatId ?? false ? chatId : toChatUser?.userId;
-    if (roomId != null) {
-      socket.emit(JOIN_ROOM, {"room_id": roomId});
-      debugPrint("🟢 socket emit JOIN_ROOM: $roomId");
+  void sendJoinRoom(
+      {bool? isChatId = false, UserResult? toChatUser, String? chatId}) {
+    if (socket.connected) {
+      final roomId = isChatId ?? false ? chatId : toChatUser?.userId;
+      if (roomId != null) {
+        socket.emit(JOIN_ROOM, {"room_id": roomId});
+        debugPrint("🟢 socket emit JOIN_ROOM: $roomId");
+      } else {
+        debugPrint("🔴 Room ID is null. Cannot emit JOIN_ROOM.");
+      }
     } else {
-      debugPrint("🔴 Room ID is null. Cannot emit JOIN_ROOM.");
+      debugPrint("🔴 Socket is not connected. Cannot emit JOIN_ROOM.");
+      socket.connect();
     }
-  } else {
-    debugPrint("🔴 Socket is not connected. Cannot emit JOIN_ROOM.");
-    socket.connect();
   }
-}
 
   Future<bool> sendDeleteChat(String chatID) async {
-  try {
-    HttpRequestModel req = HttpRequestModel(
-      url: 'socket/deleteChat/$chatID',
-      method: RequestMethodType.DELETE,
-      body: '',
-      params: '',
-      headerType: "json",
-      authMethod: true,
-    );
+    try {
+      HttpRequestModel req = HttpRequestModel(
+        url: 'socket/deleteChat/$chatID',
+        method: RequestMethodType.DELETE,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true,
+      );
 
-    var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
-    
-    if (response is String && response.isNotEmpty) {
-      var jsonRes = jsonDecode(response);
-      if (jsonRes["success"] == true) {
-        debugPrint("🟢 Chat deleted successfully: ${jsonRes["message"]}");
-        return true;
-      } else {
-        debugPrint("🔴 Failed to delete chat: ${jsonRes["message"]}");
-        return false;
+      var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
+
+      if (response is String && response.isNotEmpty) {
+        var jsonRes = jsonDecode(response);
+        if (jsonRes["success"] == true) {
+          debugPrint("🟢 Chat deleted successfully: ${jsonRes["message"]}");
+          return true;
+        } else {
+          debugPrint("🔴 Failed to delete chat: ${jsonRes["message"]}");
+          return false;
+        }
       }
-    }
-    debugPrint("🔴 Empty or invalid response");
-    return false;
-  } catch (e) {
-    debugPrint("🔴 Error deleting chat: $e");
-    return false;
-  }
-}
-
-Future<bool> sendDeleteMessage(String msgID) async {
-  try {
-    debugPrint("🟡 [DELETE MESSAGE] Attempting to delete message ID: $msgID");
-    
-    HttpRequestModel req = HttpRequestModel(
-      url: 'socket/deleteChatMessage/$msgID',
-      method: RequestMethodType.DELETE,
-      body: '',
-      params: '',
-      headerType: "json",
-      authMethod: true,
-    );
-
-    debugPrint("🟡 [DELETE MESSAGE] Sending request to: ${req.url}");
-    debugPrint("🟡 [DELETE MESSAGE] Request method: ${req.method.toString()}");
-
-    var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
-    
-    debugPrint("🟡 [DELETE MESSAGE] Raw response received: ${response.toString()}");
-
-    if (response is String && response.isNotEmpty) {
-      var jsonRes = jsonDecode(response);
-      debugPrint("🟡 [DELETE MESSAGE] Parsed JSON response: $jsonRes");
-
-      if (jsonRes["success"] == true) {
-        debugPrint("🟢 [DELETE MESSAGE SUCCESS] Message deleted successfully: ${jsonRes["message"]}");
-        debugPrint("🟢 [DELETE MESSAGE SUCCESS] Deleted message ID: $msgID");
-        return true;
-      } else {
-        debugPrint("🔴 [DELETE MESSAGE FAILED] Server response: ${jsonRes["message"]}");
-        debugPrint("🔴 [DELETE MESSAGE FAILED] Error details: ${jsonRes["error"] ?? 'No error details'}");
-        return false;
-      }
-    } else {
-      debugPrint("🔴 [DELETE MESSAGE ERROR] Empty or invalid response format");
-      debugPrint("🔴 [DELETE MESSAGE ERROR] Expected String, got: ${response.runtimeType}");
+      debugPrint("🔴 Empty or invalid response");
+      return false;
+    } catch (e) {
+      debugPrint("🔴 Error deleting chat: $e");
       return false;
     }
-  } catch (e, stackTrace) {
-    debugPrint("🔴 [DELETE MESSAGE EXCEPTION] Error: ${e.toString()}");
-    debugPrint("🔴 [DELETE MESSAGE EXCEPTION] Stack trace: $stackTrace");
-    debugPrint("🔴 [DELETE MESSAGE EXCEPTION] Failed to delete message ID: $msgID");
-    return false;
   }
-}
-Future<bool> sendClearChat(String chatId) async {
-  try {
-    HttpRequestModel req = HttpRequestModel(
-      url: 'socket/clearChatMessages/$chatId',
-      method: RequestMethodType.DELETE,
-      body: '',
-      params: '',
-      headerType: "json",
-      authMethod: true,
-    );
 
-    var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
-    
-    if (response is String && response.isNotEmpty) {
-      var jsonRes = jsonDecode(response);
-      if (jsonRes["success"] == true) {
-        debugPrint("🟢 Chat cleared successfully: ${jsonRes["message"]}");
-        return true;
+  Future<bool> sendDeleteMessage(String msgID) async {
+    try {
+      debugPrint("🟡 [DELETE MESSAGE] Attempting to delete message ID: $msgID");
+
+      HttpRequestModel req = HttpRequestModel(
+        url: 'socket/deleteChatMessage/$msgID',
+        method: RequestMethodType.DELETE,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true,
+      );
+
+      debugPrint("🟡 [DELETE MESSAGE] Sending request to: ${req.url}");
+      debugPrint(
+          "🟡 [DELETE MESSAGE] Request method: ${req.method.toString()}");
+
+      var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
+
+      debugPrint(
+          "🟡 [DELETE MESSAGE] Raw response received: ${response.toString()}");
+
+      if (response is String && response.isNotEmpty) {
+        var jsonRes = jsonDecode(response);
+        debugPrint("🟡 [DELETE MESSAGE] Parsed JSON response: $jsonRes");
+
+        if (jsonRes["success"] == true) {
+          debugPrint(
+              "🟢 [DELETE MESSAGE SUCCESS] Message deleted successfully: ${jsonRes["message"]}");
+          debugPrint("🟢 [DELETE MESSAGE SUCCESS] Deleted message ID: $msgID");
+          return true;
+        } else {
+          debugPrint(
+              "🔴 [DELETE MESSAGE FAILED] Server response: ${jsonRes["message"]}");
+          debugPrint(
+              "🔴 [DELETE MESSAGE FAILED] Error details: ${jsonRes["error"] ?? 'No error details'}");
+          return false;
+        }
       } else {
-        debugPrint("🔴 Failed to clear chat: ${jsonRes["message"]}");
+        debugPrint(
+            "🔴 [DELETE MESSAGE ERROR] Empty or invalid response format");
+        debugPrint(
+            "🔴 [DELETE MESSAGE ERROR] Expected String, got: ${response.runtimeType}");
         return false;
       }
+    } catch (e, stackTrace) {
+      debugPrint("🔴 [DELETE MESSAGE EXCEPTION] Error: ${e.toString()}");
+      debugPrint("🔴 [DELETE MESSAGE EXCEPTION] Stack trace: $stackTrace");
+      debugPrint(
+          "🔴 [DELETE MESSAGE EXCEPTION] Failed to delete message ID: $msgID");
+      return false;
     }
-    debugPrint("🔴 Empty or invalid response");
-    return false;
-  } catch (e) {
-    debugPrint("🔴 Error clearing chat: $e");
-    return false;
   }
-}
+
+  Future<bool> sendClearChat(String chatId) async {
+    try {
+      HttpRequestModel req = HttpRequestModel(
+        url: 'socket/clearChatMessages/$chatId',
+        method: RequestMethodType.DELETE,
+        body: '',
+        params: '',
+        headerType: "json",
+        authMethod: true,
+      );
+
+      var response = await HttpService().init(req, GlobalKey<ScaffoldState>());
+
+      if (response is String && response.isNotEmpty) {
+        var jsonRes = jsonDecode(response);
+        if (jsonRes["success"] == true) {
+          debugPrint("🟢 Chat cleared successfully: ${jsonRes["message"]}");
+          return true;
+        } else {
+          debugPrint("🔴 Failed to clear chat: ${jsonRes["message"]}");
+          return false;
+        }
+      }
+      debugPrint("🔴 Empty or invalid response");
+      return false;
+    } catch (e) {
+      debugPrint("🔴 Error clearing chat: $e");
+      return false;
+    }
+  }
+
   sendLeaveRoomMessage(
     ChatMessageResult chatMessageModel,
     UserResult toChatUser,
@@ -260,27 +268,29 @@ Future<bool> sendClearChat(String chatId) async {
     );
   }
 
- void sendSingleChatMessage(String? txtMessage, UserDetail? toChatUser) {
-  if (socket.connected) {
-    if (txtMessage != null && txtMessage.isNotEmpty && toChatUser != null) {
-      socket.emit(
-        SEND_MESSAGE,
-        {
-          "message": txtMessage,
-          "chat_id": _chatID,
-          "receiver_id": toChatUser.sId,
-        },
-      );
-      debugPrint("🟢 socket emit SEND_MESSAGE: $txtMessage");
+  void sendSingleChatMessage(String? txtMessage, UserDetail? toChatUser) {
+    if (socket.connected) {
+      if (txtMessage != null && txtMessage.isNotEmpty && toChatUser != null) {
+        socket.emit(
+          SEND_MESSAGE,
+          {
+            "message": txtMessage,
+            "chat_id": _chatID,
+            "receiver_id": toChatUser.sId,
+          },
+        );
+        debugPrint("🟢 socket emit SEND_MESSAGE: $txtMessage");
+      } else {
+        debugPrint(
+            "🔴 Message or receiver is null/empty. Cannot send message.");
+      }
     } else {
-      debugPrint("🔴 Message or receiver is null/empty. Cannot send message.");
+      debugPrint("🔴 Socket is not connected. Cannot send message.");
+      // Optionally, attempt to reconnect the socket here
+      socket.connect();
     }
-  } else {
-    debugPrint("🔴 Socket is not connected. Cannot send message.");
-    // Optionally, attempt to reconnect the socket here
-    socket.connect();
   }
-}
+
   setConnectListener(Function onConnect) {
     socket.onConnect((data) {
       debugPrint("🟢 socket onConnect: $data ?? ''");
@@ -317,12 +327,12 @@ Future<bool> sendClearChat(String chatId) async {
     });
   }
 
- setOnChatMessageReceivedListener(Function onChatMessageReceived) {
-  socket.on(ON_MESSAGE_RECEIVED, (data) {
-    debugPrint('🟡 ON_MESSAGE_RECEIVED: $data');
-    onChatMessageReceived(data);
-  });
-}
+  setOnChatMessageReceivedListener(Function onChatMessageReceived) {
+    socket.on(ON_MESSAGE_RECEIVED, (data) {
+      debugPrint('🟡 ON_MESSAGE_RECEIVED: $data');
+      onChatMessageReceived(data);
+    });
+  }
 
   setOnCheckedInListener(Function onCheckedInReceived) {
     socket.on(NEW_CHECK_IN_CREATED, (event) {
@@ -350,4 +360,4 @@ Future<bool> sendClearChat(String chatId) async {
     socket.io.cleanup();
     socket.io.close();
   }
-} 
+}
