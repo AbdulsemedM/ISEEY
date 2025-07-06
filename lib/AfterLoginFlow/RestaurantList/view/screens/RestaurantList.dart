@@ -149,7 +149,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: CachedNetworkImage(
-                                      imageUrl: userInfo!.image!,
+                                      imageUrl: userInfo!.image,
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         decoration: BoxDecoration(
