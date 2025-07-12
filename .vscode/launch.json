@@ -5,6 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Flutter: Attach to Device",
+            "type": "dart",
+            "request": "launch"
+        },
+        {
             "name": "ISEEY",
             "request": "launch",
             "type": "dart"

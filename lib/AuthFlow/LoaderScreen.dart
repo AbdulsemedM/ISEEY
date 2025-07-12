@@ -41,7 +41,6 @@ class _LoaderScreenState extends State<LoaderScreen> {
         await localStorageService.getBool('isFromLogin') ?? false;
     String? languageCode = Platform.localeName.split('_')[0];
     localStorageService.saveString("languageCode", languageCode);
-    log("isFromLogin: $_isFromLogin");
 
     Future.delayed(const Duration(milliseconds: 300), () {
       if (_isFromLogin) {

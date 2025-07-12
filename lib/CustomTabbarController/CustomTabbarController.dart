@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AfterLoginFlow/Restaurant/view/restaurant_screen.dart';
+import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/view/screens/RestaurantList.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
@@ -30,12 +31,17 @@ class CustomTabBarController extends StatefulWidget {
 
 class CustomTabBarControllerState extends State<CustomTabBarController> {
   int? selectedIndex = inActivateBottomBar ? -1 : currentSelectedTab;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> bottomTabs = ["/tab1", "/tab2", "/tab3"];
   SocketUtils socketUtils = SocketUtils.instance;
 
   @override
   void initState() {
     initSocket();
+    context.read<RestaurantListController>().loadRestaurantList(
+          context: context,
+          scaffoldKey: scaffoldKey,
+        );
     if (widget.fromChat == 2) {
       currentSelectedTab = 2;
       selectedMenuItemIndex = 0;
@@ -48,10 +54,11 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
 
   Future<void> initSocket() async {
     await socketUtils.connectSocket();
-    await socketUtils.setConnectListener((value) {});
-    await socketUtils.setOnDisconnectListener((value) {});
-    await socketUtils.setOnCustomErrorListener((value) {});
-    await socketUtils.setOnConnectionErrorListener((value) {});
+     socketUtils.setOnChatMessageReceivedListener((value) {});
+     socketUtils.setConnectListener((value) {});
+     socketUtils.setOnDisconnectListener((value) {});
+     socketUtils.setOnCustomErrorListener((value) {});
+     socketUtils.setOnConnectionErrorListener((value) {});
   }
 
   @override

@@ -29,8 +29,8 @@ class _RestaurantListState extends State<RestaurantList> {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController tableNumberController = TextEditingController();
   final RestaurantListRepository _repository = RestaurantListRepository();
-  // List<RestaurantListResult> restaurants = [];
-  // List<RestaurantListResult> filteredRestaurants = [];
+  List<RestaurantListResult> restaurants = [];
+  List<RestaurantListResult> filteredRestaurants = [];
   OverlayEntry? overlayEntry;
   bool isAgree = false;
   bool isNewLetterSelected = false;
@@ -38,15 +38,15 @@ class _RestaurantListState extends State<RestaurantList> {
   UserResult? userInfo;
   @override
   void initState() {
+    super.initState();
     _getUserDetail();
     // _loadRestaurants();
-    super.initState();
-    _onConnect();
+    // _onConnect();
   }
 
   // Future<void> _loadRestaurants() async {
   //   final results = await _repository.getRestaurants(context, scaffoldKey);
-  //   log("Restaurant List: ${results} restaurants loaded");
+  //   // log("Restaurant List: ${results} restaurants loaded");
   //   setState(() {
   //     restaurants = results;
   //     filteredRestaurants = results;
@@ -62,12 +62,12 @@ class _RestaurantListState extends State<RestaurantList> {
   //   });
   // }
 
-  _onConnect() async {
-    // await GlobalWidgets.initSocket();
-    // await GlobalWidgets.socketUtils.initSocket(null, '');
-    // GlobalWidgets.socketUtils.connectToSocket();
-    // SocketUtils.instance.setOnCheckedInListener(onCheckedInReceived);
-  }
+  // _onConnect() async {
+  //   // await GlobalWidgets.initSocket();
+  //   // await GlobalWidgets.socketUtils.initSocket(null, '');
+  //   // GlobalWidgets.socketUtils.connectToSocket();
+  //   // SocketUtils.instance.setOnCheckedInListener(onCheckedInReceived);
+  // }
 
 
   Future<void> _getUserDetail() async {

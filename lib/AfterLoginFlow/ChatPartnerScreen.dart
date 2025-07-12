@@ -81,6 +81,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
 
     if (response is String && response != '') {
       var jsonRes = jsonDecode(response);
+      debugPrint("Response: $jsonRes");
 
       // Check if response has 'success' field
       if (jsonRes["success"] == true) {

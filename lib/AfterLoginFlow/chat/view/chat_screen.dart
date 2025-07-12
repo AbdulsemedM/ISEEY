@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iseey/AfterLoginFlow/Friend/Friend_Profile/view/screens/friend_profile_screen.dart';
+import 'package:iseey/AfterLoginFlow/chat/controller/chat_controller.dart';
 import 'package:iseey/AfterLoginFlow/chat/model/chat_message.dart';
 import 'package:iseey/AfterLoginFlow/chat/widgets/widgets.dart';
 import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
@@ -13,6 +14,9 @@ import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
 import 'package:iseey/Models/TableListModel.dart';
 import 'package:iseey/Services/Services.dart';
 import 'package:iseey/generated/l10n.dart';
+import 'package:provider/provider.dart';
+
+import '../model/chat_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserResult fromUser;
@@ -44,6 +48,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   late UserDetail toUser;
   UserResult? localUser;
 
+  var x = GlobalWidgets();
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +61,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _connectSocket();
-      callGetAllMessageApi();
+      context.read<ChatController>().callGetAllMessageApi(
+            context: context,
+            scaffoldKey: scaffoldKey,
+            chatId: widget.chatId,
+            toUser: widget.toUser,
+            fromUser: widget.fromUser,
+            localUser: localUser,
+          );
+      // callGetAllMessageApi();
       callUpdateUser();
     });
   }
@@ -188,6 +202,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void _connectSocket() async {
     // await GlobalWidgets.initSocket();
     SocketUtils.instance.initChatSocket(widget.fromUser, widget.chatId);
+    SocketUtils.instance
+        .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
     // await GlobalWidgets.socketUtils.initSocket(widget.fromUser, widget.chatId);
     // GlobalWidgets.socketUtils.connectToSocket();
     // GlobalWidgets.socketUtils.setConnectListener(onConnect);
@@ -211,44 +227,30 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (localUser?.userId == data['sender']) {
       return;
     }
+    final chatController = context.read<ChatController>();
+
     if (!mounted) return;
-    setState(() {
-      if (widget.fromUser.userId != data["sender"]) {
-        _chatDataList.add({
-          "isRight": false,
-          "nameText": toUser.firstName,
-          "timeText": data["created"],
-          "chatText": data["message"],
-          "imgPath": toUser.image,
-          "showTime": false,
-        });
-        _chatListController.addMsgToList({
-          "isRight": false,
-          "nameText": toUser.firstName,
-          "timeText": data["created"],
-          "chatText": data["message"],
-          "imgPath": toUser.image,
-          "showTime": false,
-        });
-      } else {
-        _chatDataList.add({
-          "isRight": true,
-          "nameText": widget.fromUser.firstName,
-          "timeText": data["created"],
-          "chatText": data["message"],
-          "imgPath": widget.fromUser.image,
-          "showTime": false,
-        });
-        _chatListController.addMsgToList({
-          "isRight": true,
-          "nameText": widget.fromUser.firstName,
-          "timeText": data["created"],
-          "chatText": data["message"],
-          "imgPath": widget.fromUser.image,
-          "showTime": false,
-        });
-      }
-    });
+    if (widget.fromUser.userId != data["sender"]) {
+      final chatModel = ChatModel(
+        id: data["id"],
+        nameText: toUser.firstName,
+        timeText: data["created"],
+        chatText: data["message"],
+        imgPath: toUser.image,
+        isRight: false,
+      );
+      chatController.saveChatMessage(chat: chatModel);
+    } else {
+      final chatModel = ChatModel(
+        id: data["id"],
+        nameText: widget.fromUser.firstName,
+        timeText: data["created"],
+        chatText: data["message"],
+        imgPath: widget.fromUser.image,
+        isRight: true,
+      );
+      chatController.saveChatMessage(chat: chatModel);
+    }
     _controller.jumpTo(_controller.position.maxScrollExtent);
   }
 
@@ -281,30 +283,23 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void sendMessage() async {
     if (!mounted && messageBoxController.text.isEmpty) return;
+    final message = messageBoxController.text.trim();
     SocketUtils.instance.sendSingleChatMessage(
-      messageBoxController.text.trim(),
+      message,
       toUser,
     );
+    final chatController = context.read<ChatController>();
+    final chatModel = ChatModel(
+      id: '',
+      nameText: widget.fromUser.firstName,
+      timeText: DateTime.now().millisecondsSinceEpoch,
+      chatText: message,
+      imgPath: widget.fromUser.image,
+      isRight: true,
+    );
+    chatController.saveChatMessage(chat: chatModel);
 
     setState(() {
-      _chatDataList.add({
-        "isRight": true,
-        "nameText": widget.fromUser.firstName,
-        "timeText": DateTime.now().millisecondsSinceEpoch,
-        "chatText": messageBoxController.text,
-        "imgPath": widget.fromUser.image,
-        "showTime": false,
-      });
-
-      _chatListController.addMsgToList({
-        "isRight": true,
-        "nameText": widget.fromUser.firstName,
-        "timeText": DateTime.now().millisecondsSinceEpoch,
-        "chatText": messageBoxController.text,
-        "imgPath": widget.fromUser.image,
-        "showTime": false,
-      });
-
       messageBoxController.clear();
     });
     _controller.jumpTo(_controller.position.maxScrollExtent);
@@ -342,8 +337,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ),
                         ),
                         onPressed: () {
-                          SocketUtils.instance
-                              .updateSeenCounts(widget.chatId);
+                          SocketUtils.instance.updateSeenCounts(widget.chatId);
                           Navigator.pop(context);
                           _chatListController.chatData.clear();
                           globalChatUserId = '';
@@ -539,11 +533,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
-                                child: Obx(() {
-                                  return Container(
-                                    child: _buildChatList(),
-                                  );
-                                }),
+                                child: Container(
+                                  child: _buildChatList(),
+                                ),
                               ),
                               // Message Input Box
                               Container(
@@ -668,65 +660,77 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   Widget _buildChatList() {
-    return ListView.builder(
-      padding: EdgeInsets.only(top: 20, bottom: 0),
-      controller: _controller,
-      itemCount: _chatListController.chatData.length,
-      itemBuilder: (context, index) {
-        final message = _chatListController.chatData[index];
+    return Consumer<ChatController>(
+      builder: (context, chatController, child) {
+        final _list = chatController.chatDataList;
+        final _loading = chatController.isLoading;
+        if (_loading) {
+          return Expanded(child: Center(child: CircularProgressIndicator()));
+        }
+        if (_list.isNotEmpty && !_loading) {
+          return ListView.builder(
+            padding: EdgeInsets.only(top: 20, bottom: 0),
+            controller: _controller,
+            itemCount: _list.length,
+            itemBuilder: (context, index) {
+              final message = _list[index];
 
-        // Check if we should show a date divider
-        bool showDateDivider = index == 0 ||
-            !_isSameDay(_chatListController.chatData[index - 1]["timeText"],
-                message["timeText"]);
+              // Check if we should show a date divider
+              bool showDateDivider = index == 0 ||
+                  !_isSameDay(_list[index - 1].timeText, message.timeText);
 
-        return Column(
-          children: [
-            if (showDateDivider) _buildDateDivider(message["timeText"]),
-            GestureDetector(
-              onLongPress: () {
-                getActionSheet(message['id']);
-              },
-              onTap: () {
-                // Toggle timestamp visibility for this message
-                if (_chatListController.chatData[index]["showTime"] == null) {
-                  _chatListController.chatData[index]["showTime"] = true;
-                } else {
-                  _chatListController.chatData[index]["showTime"] =
-                      !_chatListController.chatData[index]["showTime"];
-                }
-                _chatListController.chatData.refresh();
-              },
-              child: Column(
+              return Column(
                 children: [
-                  message["isRight"]
-                      ? RightChatBubble(
-                          imgPath: message["imgPath"],
-                          nameText: message["nameText"],
-                          timestamp: message["timeText"],
-                          chatText: message["chatText"],
-                        )
-                      : LeftChatBubble(
-                          imgPath: message["imgPath"],
-                          nameText: message["nameText"],
-                          timestamp: message["timeText"],
-                          chatText: message["chatText"],
-                        ),
-                  if (message["showTime"] == true)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4, bottom: 8),
-                      child: Text(
-                        _formatTime(message["timeText"]),
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 10,
-                        ),
-                      ),
+                  if (showDateDivider) _buildDateDivider(message.timeText),
+                  GestureDetector(
+                    onLongPress: () {
+                      getActionSheet(message.id);
+                    },
+                    onTap: () {
+                      context.read<ChatController>().toggleShowTime(message.id);
+                    },
+                    child: Column(
+                      children: [
+                        message.isRight
+                            ? RightChatBubble(
+                                imgPath: message.imgPath,
+                                nameText: message.nameText,
+                                timestamp: message.timeText,
+                                chatText: message.chatText,
+                              )
+                            : LeftChatBubble(
+                                imgPath: message.imgPath,
+                                nameText: message.nameText,
+                                timestamp: message.timeText,
+                                chatText: message.chatText,
+                              ),
+                        if (message.showTime)
+                          Padding(
+                            padding: EdgeInsets.only(top: 4, bottom: 8),
+                            child: Text(
+                              _formatTime(message.timeText),
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
+                  ),
                 ],
-              ),
-            ),
-          ],
+              );
+            },
+          );
+        }
+
+        return Center(
+          child: GlobalWidgets.setText(
+            L10n.current.no_chats_connection,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            strTextColor: AppColors.strMainTextColorGrey,
+          ),
         );
       },
     );
@@ -883,7 +887,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       authMethod: true,
     );
 
-    var x = GlobalWidgets();
     try {
       final context = scaffoldKey.currentContext;
       if (context != null) {
@@ -951,7 +954,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       authMethod: true,
     );
     var response;
-    var x = GlobalWidgets();
     try {
       x.showLoading(scaffoldKey.currentContext ?? context);
       response = await HttpService().init(req, scaffoldKey);
@@ -987,7 +989,7 @@ class ChatListController extends GetxController {
   var chatData = <Map>[].obs;
 
   void addMsgToList(Map msg) {
-    chatData.add(msg); // Add to end (bottom) of list
+    chatData.add(msg);
   }
 
   void clearChat() {
