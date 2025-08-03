@@ -13,8 +13,8 @@ class RestaurantListRepository {
     GlobalKey<ScaffoldState> scaffoldKey,
   ) async {
     log("Fetching restaurants...");
-    // Position _currentPosition = await determinePosition();
-    final latitude = 52.51913; // Replace with actual latitude
+    Position _currentPosition = await determinePosition();
+    final latitude =  52.51913; // Replace with actual latitude
     final longitude = 13.40017; // Replace with actual longitude
 
     log("Latitude: $latitude, Longitude: $longitude");

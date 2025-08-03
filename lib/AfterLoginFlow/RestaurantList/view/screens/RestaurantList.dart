@@ -383,6 +383,7 @@ class _RestaurantListState extends State<RestaurantList> {
         tableNumberController.text,
         isAgree,
       );
+      debugPrint("Check-in Response: ${response.toString()}");
 
       if (response['success'] == true) {
         _navigateToTableList(restaurantId);

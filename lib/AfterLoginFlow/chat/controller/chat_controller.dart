@@ -112,4 +112,10 @@ class ChatController with ChangeNotifier {
 
     notifyListeners();
   }
+
+  // remove chat message by id
+  void removeChatMessage(String id) {
+    _chatDataList.removeWhere((chat) => chat.id == id);
+    notifyListeners();
+  }
 }

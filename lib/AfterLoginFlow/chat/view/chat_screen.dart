@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iseey/AfterLoginFlow/Friend/Friend_Profile/view/screens/friend_profile_screen.dart';
 import 'package:iseey/AfterLoginFlow/chat/controller/chat_controller.dart';
-import 'package:iseey/AfterLoginFlow/chat/model/chat_message.dart';
 import 'package:iseey/AfterLoginFlow/chat/widgets/widgets.dart';
 import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
 import 'package:iseey/GlobalFiles/GlobalFiles.dart';
@@ -39,8 +37,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController messageBoxController = TextEditingController();
-  List<Map> _chatDataList = [];
-  ChatListController _chatListController = Get.put(ChatListController());
+  // List<Map> _chatDataList = [];
   late ScrollController _controller;
 
   String chatBackgroundPath = AssetsConstant.chatBackgroundGray;
@@ -76,7 +73,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _chatListController.chatData.clear();
     WidgetsBinding.instance.removeObserver(this);
     globalChatUserId = null;
     _controller.dispose();
@@ -90,8 +86,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         if (!SocketUtils.instance.socket.connected) {
           Navigator.pop(context);
-          _chatListController.chatData.clear();
-          globalChatUserId = null;
+         globalChatUserId = null;
         }
         break;
       case AppLifecycleState.inactive:
@@ -108,96 +103,96 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     localUser = UserResult.fromJson(data);
   }
 
-  void clearChatDataList() => setState(() => _chatDataList.clear());
+  // void clearChatDataList() => setState(() => _chatDataList.clear());
 
-  Future<bool> callGetAllMessageApi() async {
-    HttpRequestModel req = HttpRequestModel(
-      url: 'socket/getMessages/${widget.chatId}?limit=1000',
-      method: RequestMethodType.GET,
-      body: '',
-      params: '',
-      headerType: "json",
-      authMethod: true,
-    );
-    var response;
-    var x = GlobalWidgets();
-    try {
-      x.showLoading(scaffoldKey.currentContext ?? context);
-      response = await HttpService().init(req, scaffoldKey);
+  // Future<bool> callGetAllMessageApi() async {
+  //   HttpRequestModel req = HttpRequestModel(
+  //     url: 'socket/getMessages/${widget.chatId}?limit=1000',
+  //     method: RequestMethodType.GET,
+  //     body: '',
+  //     params: '',
+  //     headerType: "json",
+  //     authMethod: true,
+  //   );
+  //   var response;
+  //   var x = GlobalWidgets();
+  //   try {
+  //     x.showLoading(scaffoldKey.currentContext ?? context);
+  //     response = await HttpService().init(req, scaffoldKey);
 
-      Future.delayed(const Duration(milliseconds: 800), () {
-        x.hideLoading();
-        if (mounted) setState(() {});
-      });
+  //     Future.delayed(const Duration(milliseconds: 800), () {
+  //       x.hideLoading();
+  //       if (mounted) setState(() {});
+  //     });
 
-      if (response is String && response != '') {
-        var jsonRes = jsonDecode(response);
+  //     if (response is String && response != '') {
+  //       var jsonRes = jsonDecode(response);
 
-        bool success = jsonRes["success"] ?? false;
-        String message = jsonRes["message"];
+  //       bool success = jsonRes["success"] ?? false;
+  //       String message = jsonRes["message"];
 
-        if (success) {
-          List<dynamic> list = jsonRes["data"] ?? [];
-          List<ChatMessage> chatMessages =
-              (list).map((item) => ChatMessage.fromJson(item)).toList();
-          chatMessages.reversed.forEach((element) {
-            // Check if the message is deleted for the current user
-            if (element.deletedForUser.contains(localUser?.userId ?? '')) {
-              return; // Skip this message if it's deleted for the user
-            }
-            if (widget.fromUser.userId != element.sender) {
-              _chatDataList.add({
-                "id": element.id,
-                "isRight": false,
-                "nameText": toUser.firstName,
-                "timeText": element.created,
-                "chatText": element.message,
-                "imgPath": toUser.image,
-              });
-              _chatListController.addMsgToList({
-                "id": element.id,
-                "isRight": false,
-                "nameText": toUser.firstName,
-                "timeText": element.created,
-                "chatText": element.message,
-                "imgPath": toUser.image,
-              });
-            } else {
-              _chatDataList.add({
-                "id": element.id,
-                "isRight": true,
-                "nameText": widget.fromUser.firstName,
-                "timeText": element.created,
-                "chatText": element.message,
-                "imgPath": widget.fromUser.image,
-              });
-              _chatListController.addMsgToList({
-                "id": element.id,
-                "isRight": true,
-                "nameText": widget.fromUser.firstName,
-                "timeText": element.created,
-                "chatText": element.message,
-                "imgPath": widget.fromUser.image,
-              });
-            }
-          });
-          setState(() {});
-          return true;
-        } else {
-          showSuccessOrFail(message, false, context);
-          return false;
-        }
-      } else {
-        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-        return false;
-      }
-    } catch (e) {
-      debugPrint("EXCEPTION $e");
-    }
+  //       if (success) {
+  //         List<dynamic> list = jsonRes["data"] ?? [];
+  //         List<ChatMessage> chatMessages =
+  //             (list).map((item) => ChatMessage.fromJson(item)).toList();
+  //         chatMessages.reversed.forEach((element) {
+  //           // Check if the message is deleted for the current user
+  //           if (element.deletedForUser.contains(localUser?.userId ?? '')) {
+  //             return; // Skip this message if it's deleted for the user
+  //           }
+  //           if (widget.fromUser.userId != element.sender) {
+  //             _chatDataList.add({
+  //               "id": element.id,
+  //               "isRight": false,
+  //               "nameText": toUser.firstName,
+  //               "timeText": element.created,
+  //               "chatText": element.message,
+  //               "imgPath": toUser.image,
+  //             });
+  //             _chatListController.addMsgToList({
+  //               "id": element.id,
+  //               "isRight": false,
+  //               "nameText": toUser.firstName,
+  //               "timeText": element.created,
+  //               "chatText": element.message,
+  //               "imgPath": toUser.image,
+  //             });
+  //           } else {
+  //             _chatDataList.add({
+  //               "id": element.id,
+  //               "isRight": true,
+  //               "nameText": widget.fromUser.firstName,
+  //               "timeText": element.created,
+  //               "chatText": element.message,
+  //               "imgPath": widget.fromUser.image,
+  //             });
+  //             _chatListController.addMsgToList({
+  //               "id": element.id,
+  //               "isRight": true,
+  //               "nameText": widget.fromUser.firstName,
+  //               "timeText": element.created,
+  //               "chatText": element.message,
+  //               "imgPath": widget.fromUser.image,
+  //             });
+  //           }
+  //         });
+  //         setState(() {});
+  //         return true;
+  //       } else {
+  //         showSuccessOrFail(message, false, context);
+  //         return false;
+  //       }
+  //     } else {
+  //       showSuccessOrFail(L10n.current.something_went_wrong, false, context);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     debugPrint("EXCEPTION $e");
+  //   }
 
-    x.hideLoading();
-    return false;
-  }
+  //   x.hideLoading();
+  //   return false;
+  // }
 
   void _connectSocket() async {
     // await GlobalWidgets.initSocket();
@@ -339,7 +334,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         onPressed: () {
                           SocketUtils.instance.updateSeenCounts(widget.chatId);
                           Navigator.pop(context);
-                          _chatListController.chatData.clear();
                           globalChatUserId = '';
                         },
                         style: NeumorphicStyle(
@@ -477,8 +471,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 onPressOKButton: () {
                                   SocketUtils.instance
                                       .sendClearChat(widget.chatId);
-                                  _chatListController.clearChat();
-                                  clearChatDataList();
+                                      context.read<ChatController>().clearChatData();
                                 },
                                 message: L10n.current
                                     .chat_page_clear_chat_warning_message,
@@ -801,11 +794,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop("Delete");
                 SocketUtils.instance.sendDeleteMessage(id ?? '');
-                _chatListController.chatData.forEach((element) {
-                  if (element["id"] == id) {
-                    _chatListController.chatData.remove(element);
-                  }
-                });
+                context.read<ChatController>().removeChatMessage(id ?? '');
               },
             ),
           ],
@@ -982,17 +971,5 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     x.hideLoading();
     return false;
-  }
-}
-
-class ChatListController extends GetxController {
-  var chatData = <Map>[].obs;
-
-  void addMsgToList(Map msg) {
-    chatData.add(msg);
-  }
-
-  void clearChat() {
-    chatData.clear();
   }
 }
