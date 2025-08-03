@@ -14,8 +14,8 @@ class RestaurantListRepository {
   ) async {
     log("Fetching restaurants...");
     Position _currentPosition = await determinePosition();
-    final latitude =  52.51913; // Replace with actual latitude
-    final longitude = 13.40017; // Replace with actual longitude
+    final latitude = _currentPosition.latitude;
+    final longitude = _currentPosition.longitude;
 
     log("Latitude: $latitude, Longitude: $longitude");
 
