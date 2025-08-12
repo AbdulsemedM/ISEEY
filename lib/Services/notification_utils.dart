@@ -9,9 +9,9 @@ import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 
 class NotificationUtils {
-  Future<void> initializeFirebaseApp() async {
-    await Firebase.initializeApp();
-  }
+  // Future<void> initializeFirebaseApp() async {
+  //   await Firebase.initializeApp();
+  // }
 
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
     'high_importance_channel', // id

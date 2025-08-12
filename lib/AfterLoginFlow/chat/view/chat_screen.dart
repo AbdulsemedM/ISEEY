@@ -76,6 +76,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     globalChatUserId = null;
     _controller.dispose();
+    
+    // Clean up socket listeners to prevent callbacks after disposal
+    try {
+      SocketUtils.instance.socket.off(SocketUtils.ON_MESSAGE_RECEIVED);
+    } catch (e) {
+      debugPrint("Error removing socket listener: $e");
+    }
+    
     super.dispose();
   }
 
@@ -222,12 +230,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (localUser?.userId == data['sender']) {
       return;
     }
-    final chatController = context.read<ChatController>();
-
+    
     if (!mounted) return;
+    
+    final chatController = context.read<ChatController>();
     if (widget.fromUser.userId != data["sender"]) {
       final chatModel = ChatModel(
-        id: data["id"],
+        id: data["_id"],
         nameText: toUser.firstName,
         timeText: data["created"],
         chatText: data["message"],
@@ -237,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       chatController.saveChatMessage(chat: chatModel);
     } else {
       final chatModel = ChatModel(
-        id: data["id"],
+        id: data["_id"],
         nameText: widget.fromUser.firstName,
         timeText: data["created"],
         chatText: data["message"],
@@ -246,7 +255,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
       chatController.saveChatMessage(chat: chatModel);
     }
-    _controller.jumpTo(_controller.position.maxScrollExtent);
+    if (mounted && _controller.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _controller.hasClients) {
+          _controller.animateTo(
+            _controller.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
   }
 
   void onCustomError(data) {
@@ -277,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void sendMessage() async {
-    if (!mounted && messageBoxController.text.isEmpty) return;
+    if (!mounted || messageBoxController.text.isEmpty) return;
     final message = messageBoxController.text.trim();
     SocketUtils.instance.sendSingleChatMessage(
       message,
@@ -297,7 +316,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     setState(() {
       messageBoxController.clear();
     });
-    _controller.jumpTo(_controller.position.maxScrollExtent);
+    if (mounted && _controller.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _controller.hasClients) {
+          _controller.animateTo(
+            _controller.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -471,7 +500,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 onPressOKButton: () {
                                   SocketUtils.instance
                                       .sendClearChat(widget.chatId);
-                                      context.read<ChatController>().clearChatData();
+                                  if (mounted) {
+                                    context.read<ChatController>().clearChatData();
+                                  }
                                 },
                                 message: L10n.current
                                     .chat_page_clear_chat_warning_message,
@@ -794,7 +825,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop("Delete");
                 SocketUtils.instance.sendDeleteMessage(id ?? '');
-                context.read<ChatController>().removeChatMessage(id ?? '');
+                if (mounted) {
+                  context.read<ChatController>().removeChatMessage(id ?? '');
+                }
               },
             ),
           ],

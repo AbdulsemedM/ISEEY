@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "339382794876",
-    "project_id": "iseey-42563",
-    "storage_bucket": "iseey-42563.firebasestorage.app"
+    "project_number": "360369770207",
+    "project_id": "iseey-b8562",
+    "storage_bucket": "iseey-b8562.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:339382794876:android:e4b1e554f6aa9e7ff527f9",
+        "mobilesdk_app_id": "1:360369770207:android:6837b8769f368d85f5236a",
+        "android_client_info": {
+          "package_name": "com.iseey.de"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ7H6lnm5RGWoU27MSnvWAmUZ2q6bJgUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360369770207:android:9930fd0a709ac817f5236a",
         "android_client_info": {
           "package_name": "de.iseey.com"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDbJjynNXLQ3bhXxw3b7TIOawIRZHZK5mg"
+          "current_key": "AIzaSyAQ7H6lnm5RGWoU27MSnvWAmUZ2q6bJgUA"
         }
       ],
       "services": {

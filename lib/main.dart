@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
@@ -9,6 +10,7 @@ import 'package:iseey/AuthFlow/domain/auth_repository.dart';
 import 'package:iseey/AfterLoginFlow/Edit_profile/domain/Edit_profile_repository.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 import 'package:iseey/Services/notification_utils.dart';
+import 'package:iseey/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:iseey/Services/ApiService.dart';
 import 'NavigationRouteScreen.dart';
@@ -16,11 +18,17 @@ import 'Services/StateManagement.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await NotificationUtils().initializeFirebaseApp();
-  FirebaseMessaging.onBackgroundMessage(
-    (message) async => await _firebaseMessagingBackgroundHandler(message),
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // await NotificationUtils().initializeFirebaseApp();
+  // FirebaseMessaging.onBackgroundMessage(
+  //   (message) async {
+  //     debugPrint('Handling a background message: ${message.messageId}');
+  //     // return await _firebaseMessagingBackgroundHandler(message);
+  //   },
+  // );
 
   await NotificationUtils().setupFlutterNotifications();
   HttpOverrides.global = MyHttpOverrides();
@@ -59,9 +67,9 @@ Future<void> main() async {
   );
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await NotificationUtils().initializeFirebaseApp();
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await NotificationUtils().initializeFirebaseApp();
+// }
 
 class MyHttpOverrides extends HttpOverrides {
   @override
