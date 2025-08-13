@@ -76,14 +76,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     globalChatUserId = null;
     _controller.dispose();
-    
+
     // Clean up socket listeners to prevent callbacks after disposal
     try {
       SocketUtils.instance.socket.off(SocketUtils.ON_MESSAGE_RECEIVED);
     } catch (e) {
       debugPrint("Error removing socket listener: $e");
     }
-    
+
     super.dispose();
   }
 
@@ -94,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         if (!SocketUtils.instance.socket.connected) {
           Navigator.pop(context);
-         globalChatUserId = null;
+          globalChatUserId = null;
         }
         break;
       case AppLifecycleState.inactive:
@@ -230,11 +230,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (localUser?.userId == data['sender']) {
       return;
     }
-    
+
     if (!mounted) return;
-    
+
     final chatController = context.read<ChatController>();
     if (widget.fromUser.userId != data["sender"]) {
+      NotificationUtils().showAndroidNotification(
+        hashCode: hashCode,
+        title: toUser.firstName,
+        body: data["message"],
+      );
       final chatModel = ChatModel(
         id: data["_id"],
         nameText: toUser.firstName,
@@ -501,7 +506,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                   SocketUtils.instance
                                       .sendClearChat(widget.chatId);
                                   if (mounted) {
-                                    context.read<ChatController>().clearChatData();
+                                    context
+                                        .read<ChatController>()
+                                        .clearChatData();
                                   }
                                 },
                                 message: L10n.current

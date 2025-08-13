@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,29 +44,51 @@ class NotificationUtils {
     var android = message.notification?.android;
 
     if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description!,
-              icon: '@mipmap/launcher_icon',
-            ),
-          ),
-          payload: jsonEncode(message.data));
-    } else {
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification!.title,
-          notification.body,
-          NotificationDetails(
-            iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
-          ),
-          payload: jsonEncode(message.data));
+      showAndroidNotification(
+        hashCode: notification.hashCode,
+        title: notification.title ?? '',
+        body: notification.body ?? '',
+        data: message.data,
+      );
+    } else if (notification != null) {
+      _showIOSNotification(notification, message.data);
     }
+  }
+
+  void showAndroidNotification({
+    required int hashCode,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) {
+    flutterLocalNotificationsPlugin.show(
+        hashCode,
+        title,
+        body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description!,
+            icon: '@mipmap/launcher_icon',
+          ),
+        ),
+        payload: jsonEncode(data));
+  }
+
+  void _showIOSNotification(RemoteNotification notification, Map<String, dynamic> data) {
+    flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          iOS: DarwinNotificationDetails(
+            presentAlert: true, 
+            presentBadge: true, 
+            presentSound: true
+          ),
+        ),
+        payload: jsonEncode(data));
   }
 
   Future<void> initFirebaseActions(BuildContext context) async {
