@@ -42,7 +42,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace "de.iseey.com"
-    compileSdkVersion 35
+    compileSdkVersion 36
     
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

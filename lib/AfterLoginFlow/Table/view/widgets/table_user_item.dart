@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/Models/TableListModel.dart';
@@ -102,11 +101,15 @@ class TableUserItem extends StatelessWidget {
                     errorWidget: (context, url, error) => Container(
                       height: 50,
                       width: 50,
-                      child: GFAvatar(
-                        backgroundColor: Colors.white.withOpacity(0.5),
-                        maxRadius: 20,
-                        backgroundImage: AssetImage(AssetsConstant.manPlaceholder),
-                        shape: GFAvatarShape.square,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          image: DecorationImage(
+                            image: AssetImage(AssetsConstant.manPlaceholder),
+                            fit: BoxFit.cover,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                   ),

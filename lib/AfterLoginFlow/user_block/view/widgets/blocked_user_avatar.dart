@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/AfterLoginFlow/user_block/domain/BlockedUser_Models/BlockedUserListModel.dart';
 import 'package:iseey/Services/assets_constant.dart';
@@ -38,13 +37,15 @@ class BlockedUserAvatar extends StatelessWidget {
               return Container(
                 height: 80,
                 width: 80,
-                child: GFAvatar(
-                  backgroundColor: Colors.white.withOpacity(0.5),
-                  maxRadius: 20,
-                  backgroundImage: AssetImage(
-                    AssetsConstant.manPlaceholder,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    image: DecorationImage(
+                      image: AssetImage(AssetsConstant.manPlaceholder),
+                      fit: BoxFit.cover,
+                    ),
+                    shape: BoxShape.circle,
                   ),
-                  shape: GFAvatarShape.square,
                 ),
               );
             },
