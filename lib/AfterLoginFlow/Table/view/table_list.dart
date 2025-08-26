@@ -16,7 +16,6 @@ import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/transitions/slide_route.dart';
 import 'package:iseey/Models/TableListModel.dart';
 import 'package:iseey/Services/SocketUtils.dart';
-import 'package:iseey/Services/assets_constant.dart';
 import 'package:iseey/generated/l10n.dart';
 
 class TableList extends StatefulWidget {
@@ -171,9 +170,6 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
   //   GlobalWidgets.socketUtils.setConnectListener(_onConnect);
   //   GlobalWidgets.socketUtils.setOnDisconnectListener(_onDisconnect);
   // }
-
-  void _onConnect(dynamic data) => debugPrint('Connected $data');
-  void _onDisconnect(dynamic data) => debugPrint('onDisconnect $data');
 
   Future<void> _callGetTableApi(bool showLoader) async {
     var x = GlobalWidgets();

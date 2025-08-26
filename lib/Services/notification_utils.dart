@@ -158,6 +158,8 @@ class NotificationUtils {
     }
 
     fcmRegistrationToken = await FirebaseMessaging.instance.getToken() ?? 'no token';
+    // FirebaseMessaging.instance.subscribeToTopic(fcmRegistrationToken);
+    debugPrint('FCM Registration Token: $fcmRegistrationToken');
     await setFCM(fcmRegistrationToken);
   }
 
