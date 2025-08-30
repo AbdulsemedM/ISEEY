@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AuthFlow/domain/user_model/user_model.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
@@ -16,7 +17,8 @@ class AuthRepository {
 
   AuthRepository(this.httpService);
 
-  Future<void> login(String email, String password, GlobalKey<ScaffoldState> scaffoldKey, BuildContext context) async {
+  Future<void> login(String email, String password,
+      GlobalKey<ScaffoldState> scaffoldKey, BuildContext context) async {
     if (email.isEmpty) {
       GlobalWidgets.showSnackBarWithText(
         scaffoldKey.currentState!,
@@ -73,7 +75,8 @@ class AuthRepository {
         if (jsonRes['data'] != null && jsonRes['data']['user'] != null) {
           final user = UserModel.fromJson(jsonRes);
           if (user.success == 200) {
-            Provider.of<StateManagement>(context, listen: false).setCurrentUserId(user.result?.userId ?? '');
+            Provider.of<StateManagement>(context, listen: false)
+                .setCurrentUserId(user.result?.userId ?? '');
 
             await _saveUserData(user.result?.token ?? '', user.result);
           } else {
@@ -86,6 +89,59 @@ class AuthRepository {
     } catch (e) {
       x.hideLoading();
       rethrow;
+    }
+  }
+
+  Future<void> updateDeviceDetails(GlobalKey<ScaffoldState> scaffoldKey) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      final data = {
+        'device_token': token,
+        'device_type': Platform.isIOS ? 'ios' : 'android',
+      };
+      final req = HttpRequestModel(
+        url: 'users/updateDeviceDetails',
+        method: RequestMethodType.POST,
+        params: '',
+        body: json.encode(data),
+        headerType: "json",
+        authMethod: true,
+      );
+      try {
+        final response = await httpService.init(req, scaffoldKey);
+        debugPrint("Update FCM Token API Response: $response");
+      } catch (e) {
+        debugPrint("Error updating FCM token: $e");
+        throw Exception("Failed to update FCM token");
+      }
+    }
+  }
+Future<void> updateUserCurrentLocation({
+  required GlobalKey<ScaffoldState> scaffoldKey,
+  required double latitude,
+  required double longitude,
+}) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      final data = {
+        'lat': latitude,
+        'lng': longitude,
+      };
+      final req = HttpRequestModel(
+        url: 'users/updatelatlng',
+        method: RequestMethodType.POST,
+        params: '',
+        body: json.encode(data),
+        headerType: "json",
+        authMethod: true,
+      );
+      try {
+        final response = await httpService.init(req, scaffoldKey);
+        debugPrint("Update FCM Token API Response: $response");
+      } catch (e) {
+        debugPrint("Error updating FCM token: $e");
+        throw Exception("Failed to update FCM token");
+      }
     }
   }
 
@@ -105,14 +161,13 @@ class AuthRepository {
     }
   }
 
-  Future<void> signup({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-    required GlobalKey<ScaffoldState> scaffoldKey,
-    required BuildContext context
-  }) async {
+  Future<void> signup(
+      {required String firstName,
+      required String lastName,
+      required String email,
+      required String password,
+      required GlobalKey<ScaffoldState> scaffoldKey,
+      required BuildContext context}) async {
     final data = <String, dynamic>{
       'first_name': firstName,
       'last_name': lastName,
@@ -140,7 +195,8 @@ class AuthRepository {
       debugPrint("Decoded JSON: $jsonRes");
       final user = UserModel.fromJson(jsonRes);
       if (user.success == 200) {
-        Provider.of<StateManagement>(context, listen: false).setCurrentUserId(user.result?.userId ?? '');
+        Provider.of<StateManagement>(context, listen: false)
+            .setCurrentUserId(user.result?.userId ?? '');
         await login(email, password, scaffoldKey, context);
       } else {
         throw Exception(user.message);

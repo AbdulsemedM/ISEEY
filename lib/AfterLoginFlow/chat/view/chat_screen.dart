@@ -235,11 +235,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     final chatController = context.read<ChatController>();
     if (widget.fromUser.userId != data["sender"]) {
-      NotificationUtils().showAndroidNotification(
-        hashCode: hashCode,
-        title: toUser.firstName,
-        body: data["message"],
-      );
       final chatModel = ChatModel(
         id: data["_id"],
         nameText: toUser.firstName,

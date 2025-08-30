@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iseey/AfterLoginFlow/Restaurant/view/restaurant_screen.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/view/screens/RestaurantList.dart';
+import 'package:iseey/AuthFlow/domain/auth_repository.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 import 'package:iseey/GlobalFiles/GlobalVariables.dart';
@@ -35,9 +39,45 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   List<String> bottomTabs = ["/tab1", "/tab2", "/tab3"];
   SocketUtils socketUtils = SocketUtils.instance;
 
+  void updateDetails() {
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
+    authRepository.updateDeviceDetails(scaffoldKey);
+  }
+
+  // this method updates the user current location every 30 seconds
+  void startLocationUpdateTimer() {
+    Timer.periodic(Duration(seconds: 30), (timer) {
+      if(selectedRestaurantId == null){
+        return;
+      }
+      _updateUserLocation();
+    });
+  }
+
+  void _updateUserLocation() async {
+    try {
+      final authRepository =
+          Provider.of<AuthRepository>(context, listen: false);
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+      await authRepository.updateUserCurrentLocation(
+        scaffoldKey: scaffoldKey,
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+    } catch (e) {
+      print("Error getting location: $e");
+    }
+  }
+
   @override
   void initState() {
     initSocket();
+    updateDetails();
+    startLocationUpdateTimer();
     context.read<RestaurantListController>().loadRestaurantList(
           context: context,
           scaffoldKey: scaffoldKey,
@@ -54,11 +94,11 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
 
   Future<void> initSocket() async {
     await socketUtils.connectSocket();
-     socketUtils.setOnChatMessageReceivedListener((value) {});
-     socketUtils.setConnectListener((value) {});
-     socketUtils.setOnDisconnectListener((value) {});
-     socketUtils.setOnCustomErrorListener((value) {});
-     socketUtils.setOnConnectionErrorListener((value) {});
+    socketUtils.setOnChatMessageReceivedListener((value) {});
+    socketUtils.setConnectListener((value) {});
+    socketUtils.setOnDisconnectListener((value) {});
+    socketUtils.setOnCustomErrorListener((value) {});
+    socketUtils.setOnConnectionErrorListener((value) {});
   }
 
   @override
