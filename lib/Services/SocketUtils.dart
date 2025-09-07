@@ -93,6 +93,15 @@ class SocketUtils {
       _attemptReconnect();
     });
 
+    socket.on('recieveMessage', (data) {
+      // Handle incoming chat messages
+      debugPrint("New chat message received: $data");
+    });
+    socket.on('getChats', (data) {
+      // Handle incoming chat messages
+      debugPrint("Get: $data");
+    });
+
     socket.onError((error) => debugPrint("🔴 Socket error: $error"));
   }
 

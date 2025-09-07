@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:geolocator/geolocator.dart';
@@ -47,7 +45,6 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
       body: Stack(
         fit: StackFit.expand,
         children: [
-         
           Container(color: AppColors.screensBackgroundsColor),
           SafeArea(
             child: Container(
@@ -106,6 +103,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    // NotificationUtils().initFirebaseActions(context); // REMOVED: This was causing duplicate listeners
     WidgetsBinding.instance.addObserver(this);
     _tableRepository = TableRepository(scaffoldKey);
 
@@ -119,7 +117,7 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
       // _connectSocket();
     });
 
-    _firebaseNotificationListen();
+    // _firebaseNotificationListen(); // REMOVED: This was causing duplicate listeners
     timer = Timer(const Duration(minutes: 1), () => _pullRefresh());
   }
 
@@ -143,7 +141,8 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
       accuracy: LocationAccuracy.high,
       distanceFilter: 50,
     );
-    Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position position) {
       lat = position.latitude.toString();
       lng = position.longitude.toString();
       if (mounted) setState(() {});
@@ -175,7 +174,8 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
     var x = GlobalWidgets();
     try {
       if (showLoader) x.showLoading(scaffoldKey.currentContext ?? context);
-      final modelData = await _tableRepository.getTables(widget.restaurantId ?? '');
+      final modelData =
+          await _tableRepository.getTables(widget.restaurantId ?? '');
       x.hideLoading();
 
       if (modelData != null && modelData.success) {
@@ -184,44 +184,51 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
           restaurant = modelData.data?.restaurant;
         });
       } else {
-        showSuccessOrFail(modelData?.message ?? L10n.current.something_went_wrong, false, context);
+        showSuccessOrFail(
+            modelData?.message ?? L10n.current.something_went_wrong,
+            false,
+            context);
       }
     } catch (e) {
       x.hideLoading();
-    
     }
   }
 
- Future<bool> _callCheckoutFromRestaurant() async {
-  var x = GlobalWidgets();
-  try {
-    x.showLoading(scaffoldKey.currentContext ?? context);
-    final success = await _tableRepository.checkoutFromRestaurant(restaurant?.sId ?? '');
-    x.hideLoading();
+  Future<bool> _callCheckoutFromRestaurant() async {
+    var x = GlobalWidgets();
+    try {
+      x.showLoading(scaffoldKey.currentContext ?? context);
+      final success =
+          await _tableRepository.checkoutFromRestaurant(restaurant?.sId ?? '');
+      x.hideLoading();
 
-    if (success) {
-      // Clear the selected restaurant
-      selectedRestaurantId = "";
-      
-      // Show success message
-      showSuccessOrFail("Checkout completed successfully! Hope you enjoyed your time.", true, context);
-      
-      // Navigate back after a short delay
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        Navigator.pop(context); // Close the current screen
-      });
-      
-      return true;
-    } else {
+      if (success) {
+        // Clear the selected restaurant
+        selectedRestaurantId = "";
+
+        // Show success message
+        showSuccessOrFail(
+            "Checkout completed successfully! Hope you enjoyed your time.",
+            true,
+            context);
+
+        // Navigate back after a short delay
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          Navigator.pop(context); // Close the current screen
+        });
+
+        return true;
+      } else {
+        showSuccessOrFail(L10n.current.something_went_wrong, false, context);
+        return false;
+      }
+    } catch (e) {
+      x.hideLoading();
       showSuccessOrFail(L10n.current.something_went_wrong, false, context);
       return false;
     }
-  } catch (e) {
-    x.hideLoading();
-    showSuccessOrFail(L10n.current.something_went_wrong, false, context);
-    return false;
   }
-}
+
   Future<void> _pullRefresh() async => await _callGetTableApi(false);
 
   void searchList(String text) {
@@ -236,7 +243,10 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
           var countryDetails = tableUser.userDetail?.countryDetails?.name ?? '';
           if (firstName.toLowerCase().contains(text.toLowerCase()) ||
               lastName.toLowerCase().contains(text.toLowerCase()) ||
-              (countryDetails.toString().toLowerCase().contains(text.toLowerCase()))) {
+              (countryDetails
+                  .toString()
+                  .toLowerCase()
+                  .contains(text.toLowerCase()))) {
             tempSearchResult.add(tableItem);
           }
         });
@@ -248,45 +258,14 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
     }
   }
 
-  void _firebaseNotificationListen() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      var jsonData = jsonDecode(jsonEncode(message.data));
-      try {
-        if (jsonData["notification_type"] == "checkout") _callCheckoutFromRestaurant();
-      } catch (error) {
-        debugPrint(error.toString());
-      }
-    });
-
-    FirebaseMessaging.instance.getInitialMessage().then((value) {
-      try {
-        final result = value?.data;
-        if (result != null && jsonDecode(jsonEncode(result))["notification_type"] == "checkout") {
-          _callCheckoutFromRestaurant();
-        }
-      } catch (error) {
-        debugPrint(error.toString());
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      try {
-        if (jsonDecode(jsonEncode(message.data))["notification_type"] == "checkout") {
-          _callCheckoutFromRestaurant();
-        }
-      } catch (error) {
-        debugPrint(error.toString());
-      }
-    });
-  }
-
   Future<void> _checkUserExistInTableList() async {
     await _callGetTableApi(false);
     Map<String, dynamic> data = await getMapData("userdata");
     UserResult userInfo = UserResult.fromJson(data);
     var userId = userInfo.userId;
 
-    bool isUserContain = tableListResult.any((table) => table.users.any((user) => user.userDetail?.sId == userId));
+    bool isUserContain = tableListResult.any(
+        (table) => table.users.any((user) => user.userDetail?.sId == userId));
 
     if (!isUserContain) await _callCheckoutFromRestaurant();
   }

@@ -111,6 +111,7 @@ class NotificationUtils {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      debugPrint("🟢 [FCM] Message received: ${jsonEncode(message?.data)}");
       if (message != null) {
         var jsonData = message.data;
         var notificationType = jsonData['notification_type'] as String? ?? '';

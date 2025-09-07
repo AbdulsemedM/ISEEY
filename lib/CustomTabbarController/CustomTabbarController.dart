@@ -39,6 +39,14 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   List<String> bottomTabs = ["/tab1", "/tab2", "/tab3"];
   SocketUtils socketUtils = SocketUtils.instance;
 
+  // Create a listen of the websocket events using this event `receiveMessage`
+  void listenToChatMessages() {
+    socketUtils.socket.on('receiveMessage', (data) {
+      // Handle incoming chat messages
+      print("New chat message received: $data");
+    });
+  }
+
   void updateDetails() {
     final authRepository = Provider.of<AuthRepository>(context, listen: false);
     authRepository.updateDeviceDetails(scaffoldKey);
@@ -77,6 +85,7 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   void initState() {
     initSocket();
     updateDetails();
+    // listenToChatMessages();
     startLocationUpdateTimer();
     context.read<RestaurantListController>().loadRestaurantList(
           context: context,

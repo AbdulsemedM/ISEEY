@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iseey/AuthFlow/LoaderScreen.dart';
-import 'package:iseey/Services/notification_utils.dart';
 import 'package:iseey/generated/l10n.dart';
 
 import 'AfterLoginFlow/Abc.dart';
@@ -26,7 +25,6 @@ class NavigationRouteScreen extends StatelessWidget {
       supportedLocales: L10n.delegate.supportedLocales,
       theme: ThemeData(colorScheme: ColorScheme.fromSwatch().copyWith(secondary: AppColors.mainBackgroundColorOrange)),
       home: Builder(builder: (context) {
-        NotificationUtils().initFirebaseActions(context);
         screenSize = MediaQuery.of(context).size;
         return LoaderScreen(isInitial: true);
       }),

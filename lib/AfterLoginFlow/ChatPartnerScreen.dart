@@ -34,7 +34,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
       callGetFriendListApi(scaffoldKey, showLoader: true);
     });
 
-    firebaseNotificationListen();
+    // firebaseNotificationListen();
   }
   //       void connectSocket() {
   // GlobalWidgets.socketUtils
