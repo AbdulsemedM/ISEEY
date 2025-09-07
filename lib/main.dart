@@ -22,13 +22,12 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // await NotificationUtils().initializeFirebaseApp();
-  // FirebaseMessaging.onBackgroundMessage(
-  //   (message) async {
-  //     debugPrint('Handling a background message: ${message.messageId}');
-  //     // return await _firebaseMessagingBackgroundHandler(message);
-  //   },
-  // );
+  // Configure Firebase to show notifications when app is in foreground
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
   await NotificationUtils().setupFlutterNotifications();
   HttpOverrides.global = MyHttpOverrides();

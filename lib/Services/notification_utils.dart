@@ -42,16 +42,26 @@ class NotificationUtils {
   void showFlutterNotification(RemoteMessage message) {
     var notification = message.notification;
     var android = message.notification?.android;
+    
+    // Generate a unique notification ID using timestamp to avoid collisions
+    int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    
+    debugPrint("🔔 [NOTIFICATION] Attempting to show notification with ID: $notificationId");
+    debugPrint("🔔 [NOTIFICATION] Title: ${notification?.title}, Body: ${notification?.body}");
 
     if (notification != null && android != null) {
+      debugPrint("🔔 [NOTIFICATION] Showing Android notification");
       showAndroidNotification(
-        hashCode: notification.hashCode,
+        hashCode: notificationId,
         title: notification.title ?? '',
         body: notification.body ?? '',
         data: message.data,
       );
     } else if (notification != null) {
-      _showIOSNotification(notification, message.data);
+      debugPrint("🔔 [NOTIFICATION] Showing iOS notification");
+      _showIOSNotification(notification, message.data, notificationId);
+    } else {
+      debugPrint("🔴 [NOTIFICATION] No notification content found in message");
     }
   }
 
@@ -71,14 +81,19 @@ class NotificationUtils {
             channel.name,
             channelDescription: channel.description!,
             icon: '@mipmap/launcher_icon',
+            importance: Importance.high,
+            priority: Priority.high,
+            showWhen: true,
+            enableVibration: true,
+            playSound: true,
           ),
         ),
         payload: jsonEncode(data));
   }
 
-  void _showIOSNotification(RemoteNotification notification, Map<String, dynamic> data) {
+  void _showIOSNotification(RemoteNotification notification, Map<String, dynamic> data, int notificationId) {
     flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
+        notificationId,
         notification.title,
         notification.body,
         NotificationDetails(
@@ -113,16 +128,28 @@ class NotificationUtils {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
       debugPrint("🟢 [FCM] Message received: ${jsonEncode(message?.data)}");
       if (message != null) {
+        debugPrint("🟢 [FCM] Notification title: ${message.notification?.title}");
+        debugPrint("🟢 [FCM] Notification body: ${message.notification?.body}");
+        
         var jsonData = message.data;
         var notificationType = jsonData['notification_type'] as String? ?? '';
+        debugPrint("🟢 [FCM] Notification type: $notificationType");
+        
         if (notificationType == 'chat_message') {
           var senderId = jsonData['sender_id'] as String? ?? '';
+          debugPrint("🟢 [FCM] Chat message from sender: $senderId, current user: $globalChatUserId");
           if (senderId != globalChatUserId) {
+            debugPrint("🟢 [FCM] Showing notification for chat message");
             showFlutterNotification(message);
+          } else {
+            debugPrint("🟡 [FCM] Skipping notification - message from current user");
           }
         } else {
+          debugPrint("🟢 [FCM] Showing notification for type: $notificationType");
           showFlutterNotification(message);
         }
+      } else {
+        debugPrint("🔴 [FCM] Message is null");
       }
     });
 

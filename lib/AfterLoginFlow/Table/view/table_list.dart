@@ -103,7 +103,6 @@ class _TableListState extends State<TableList> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // NotificationUtils().initFirebaseActions(context); // REMOVED: This was causing duplicate listeners
     WidgetsBinding.instance.addObserver(this);
     _tableRepository = TableRepository(scaffoldKey);
 
