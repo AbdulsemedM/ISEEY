@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iseey/AfterLoginFlow/chat/controller/chat_controller.dart';
 import 'package:iseey/CustomTabbarController/CustomTabbarController.dart';
 
 import 'GlobalWidgets.dart';
@@ -14,6 +15,7 @@ String? selectedRestaurantId;
 String profileImgUrl = '';
 String fcmRegistrationToken = "";
 String? globalChatUserId;
+ChatController? globalChatController; // Global chat controller reference
 var globalWidget = GlobalWidgets();
 GlobalKey<ScaffoldState> mainTabsScaffoldKey = new GlobalKey<ScaffoldState>();
 GlobalKey<NavigatorState> mainNavKey = new GlobalKey<NavigatorState>();

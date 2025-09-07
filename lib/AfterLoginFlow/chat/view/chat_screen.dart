@@ -75,6 +75,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     globalChatUserId = null;
+    
+    // Clear current chat info when leaving chat screen
+    context.read<ChatController>().clearCurrentChat();
+    
     _controller.dispose();
 
     // Clean up socket listeners to prevent callbacks after disposal
@@ -362,6 +366,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         ),
                         onPressed: () {
                           SocketUtils.instance.updateSeenCounts(widget.chatId);
+                          context.read<ChatController>().clearCurrentChat();
                           Navigator.pop(context);
                           globalChatUserId = '';
                         },

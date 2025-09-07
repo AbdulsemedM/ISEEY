@@ -54,7 +54,11 @@ Future<void> main() async {
           ),
         ),
         ChangeNotifierProvider<ChatController>(
-          create: (_) => ChatController(),
+          create: (_) {
+            final chatController = ChatController();
+            globalChatController = chatController; // Set global reference
+            return chatController;
+          },
         ),
       ],
       child: MaterialApp(

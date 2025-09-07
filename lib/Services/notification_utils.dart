@@ -138,14 +138,35 @@ class NotificationUtils {
         
         var jsonData = message.data;
         var notificationType = jsonData['notification_type'] as String? ?? '';
+        var chatId = jsonData['chat_id'] as String? ?? '';
+        var senderId = jsonData['sender_id'] as String? ?? '';
+        
         debugPrint("🟢 [FCM] Notification type: $notificationType");
+        debugPrint("🟢 [FCM] Chat ID: $chatId");
+        debugPrint("🟢 [FCM] Sender ID: $senderId");
+        
+        // If no notification_type is specified but we have chat_id, assume it's a chat message
+        if (notificationType.isEmpty && chatId.isNotEmpty) {
+          notificationType = 'chat_message';
+          debugPrint("🟢 [FCM] Inferred notification type as chat_message based on chat_id");
+        }
         
         if (notificationType == 'chat_message') {
-          var senderId = jsonData['sender_id'] as String? ?? '';
-          debugPrint("🟢 [FCM] Chat message from sender: $senderId, current user: $globalChatUserId");
-          if (senderId != globalChatUserId) {
-            debugPrint("🟢 [FCM] Showing notification for chat message");
-            showFlutterNotification(message);
+        
+          // Check if sender is not the current user (if sender_id is available)
+          bool isFromDifferentUser = senderId.isEmpty || senderId != globalChatUserId;
+          
+          // Check if user is currently in the same chat
+          bool isCurrentChat = chatId.isNotEmpty && (globalChatController?.isCurrentlyInChat(chatId) == true);
+          
+       
+          if (isFromDifferentUser) {
+            if (isCurrentChat) {
+              debugPrint("🟡 [FCM] Skipping notification - user is currently in this chat");
+            } else {
+              debugPrint("🟢 [FCM] Showing notification for chat message from different chat");
+              showFlutterNotification(message);
+            }
           } else {
             debugPrint("🟡 [FCM] Skipping notification - message from current user");
           }

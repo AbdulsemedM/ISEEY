@@ -13,6 +13,45 @@ class ChatController with ChangeNotifier {
   List<ChatModel> get chatDataList => _chatDataList;
   bool isLoading = false;
 
+  String chatId = '';
+  String currentChatUserId = ''; // Track the current chat user ID
+
+  // set chat id
+  void setChatId(String id) {
+    chatId = id;
+    debugPrint("🔄 [CHAT] Set chat ID to: $id");
+    notifyListeners();
+  }
+
+  // set current chat user id
+  void setCurrentChatUserId(String userId) {
+    currentChatUserId = userId;
+    debugPrint("🔄 [CHAT] Set current chat user ID to: $userId");
+    notifyListeners();
+  }
+
+  // clear current chat when leaving
+  void clearCurrentChat() {
+    chatId = '';
+    currentChatUserId = '';
+    debugPrint("🔄 [CHAT] Cleared current chat info");
+    notifyListeners();
+  }
+
+  // Helper method to check if currently in chat with specific user
+  bool isCurrentlyChatting(String userId) {
+    bool isChatting = currentChatUserId.isNotEmpty && currentChatUserId == userId;
+    debugPrint("🔄 [CHAT] Is currently chatting with user $userId? $isChatting (current: $currentChatUserId)");
+    return isChatting;
+  }
+
+  // Helper method to check if currently in a specific chat by chat ID
+  bool isCurrentlyInChat(String chatIdToCheck) {
+    bool inChat = chatId.isNotEmpty && chatId == chatIdToCheck;
+    debugPrint("🔄 [CHAT] Is currently in chat $chatIdToCheck? $inChat (current: $chatId)");
+    return inChat;
+  }
+
   Future<void> callGetAllMessageApi({
     required BuildContext context,
     required GlobalKey<ScaffoldState> scaffoldKey,
@@ -23,6 +62,11 @@ class ChatController with ChangeNotifier {
   }) async {
     isLoading = true;
     _chatDataList.clear();
+    
+    // Set current chat user when starting a chat
+    setCurrentChatUserId(toUser.sId);
+    setChatId(chatId);
+    
     notifyListeners();
     HttpRequestModel req = HttpRequestModel(
       url: 'socket/getMessages/${chatId}?limit=1000',
@@ -92,6 +136,7 @@ class ChatController with ChangeNotifier {
   // clear chat data
   void clearChatData() {
     _chatDataList.clear();
+    clearCurrentChat(); // Clear current chat info when clearing data
     notifyListeners();
   }
 

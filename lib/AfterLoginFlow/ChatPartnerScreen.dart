@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:iseey/AfterLoginFlow/chat/controller/chat_controller.dart';
 import 'package:iseey/AfterLoginFlow/chat/view/chat_screen.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
@@ -33,28 +33,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       callGetFriendListApi(scaffoldKey, showLoader: true);
     });
-
-    // firebaseNotificationListen();
   }
-  //       void connectSocket() {
-  // GlobalWidgets.socketUtils
-  //       .setOnChatMessageReceivedListener(setOnChatMessageReceivedListener);
 
-  //       }
-
-  void firebaseNotificationListen() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        debugPrint('Message also contained a notification: ${message.notification}');
-      }
-      var jsonData = jsonDecode(jsonEncode(message.data));
-      try {
-        if (jsonData["notification_type"] == "chat_message") {
-          callGetFriendListApi(scaffoldKey, showLoader: false);
-        }
-      } catch (_) {}
-    });
-  }
 
   List<ChatUserResult> chatUserListResult = [];
 
@@ -277,7 +257,7 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                             ),
                           ],
                         ),
-                        chatUserListResult.length == 0
+                        chatUserListResult.isEmpty
                             ? Padding(
                                 padding: const EdgeInsets.only(top: 100.0),
                                 child: Center(
@@ -321,6 +301,8 @@ class _ChatPartnerScreenState extends State<ChatPartnerScreen> {
                                           : GestureDetector(
                                               onTap: () async {
                                                 FocusScope.of(context).unfocus();
+                                                Provider.of<ChatController>(context, listen: false)
+                                                    .setChatId(friend.chatId);
 
                                                 Map<String, dynamic> data = await getMapData("userdata");
                                                 UserResult userInfo = UserResult.fromJson(data);
