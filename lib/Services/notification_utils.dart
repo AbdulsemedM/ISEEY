@@ -45,12 +45,8 @@ class NotificationUtils {
     
     // Generate a unique notification ID using timestamp to avoid collisions
     int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    
-    debugPrint("🔔 [NOTIFICATION] Attempting to show notification with ID: $notificationId");
-    debugPrint("🔔 [NOTIFICATION] Title: ${notification?.title}, Body: ${notification?.body}");
-
+   
     if (notification != null && android != null) {
-      debugPrint("🔔 [NOTIFICATION] Showing Android notification");
       showAndroidNotification(
         hashCode: notificationId,
         title: notification.title ?? '',
@@ -58,7 +54,6 @@ class NotificationUtils {
         data: message.data,
       );
     } else if (notification != null) {
-      debugPrint("🔔 [NOTIFICATION] Showing iOS notification");
       _showIOSNotification(notification, message.data, notificationId);
     } else {
       debugPrint("🔴 [NOTIFICATION] No notification content found in message");
@@ -71,6 +66,7 @@ class NotificationUtils {
     required String body,
     Map<String, dynamic>? data,
   }) {
+
     flutterLocalNotificationsPlugin.show(
         hashCode,
         title,
@@ -80,15 +76,22 @@ class NotificationUtils {
             channel.id,
             channel.name,
             channelDescription: channel.description!,
-            icon: '@mipmap/launcher_icon',
+            icon: '@mipmap/ic_launcher',
             importance: Importance.high,
             priority: Priority.high,
             showWhen: true,
             enableVibration: true,
             playSound: true,
+            autoCancel: true,
+            colorized: false,
+            enableLights: true,
+            // Use app icon as large icon for better visibility
+            largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
           ),
         ),
         payload: jsonEncode(data));
+    
+    debugPrint("🔔 [ANDROID NOTIFICATION] Notification show() called successfully");
   }
 
   void _showIOSNotification(RemoteNotification notification, Map<String, dynamic> data, int notificationId) {
@@ -100,7 +103,9 @@ class NotificationUtils {
           iOS: DarwinNotificationDetails(
             presentAlert: true, 
             presentBadge: true, 
-            presentSound: true
+            presentSound: true,
+            badgeNumber: 1,
+            threadIdentifier: 'ISEEY_notifications',
           ),
         ),
         payload: jsonEncode(data));
