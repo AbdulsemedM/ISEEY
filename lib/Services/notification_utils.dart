@@ -133,18 +133,11 @@ class NotificationUtils {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
       debugPrint("🟢 [FCM] Message received: ${jsonEncode(message?.data)}");
       if (message != null) {
-        debugPrint("🟢 [FCM] Notification title: ${message.notification?.title}");
-        debugPrint("🟢 [FCM] Notification body: ${message.notification?.body}");
-        
+  
         var jsonData = message.data;
         var notificationType = jsonData['notification_type'] as String? ?? '';
         var chatId = jsonData['chat_id'] as String? ?? '';
         var senderId = jsonData['sender_id'] as String? ?? '';
-        
-        debugPrint("🟢 [FCM] Notification type: $notificationType");
-        debugPrint("🟢 [FCM] Chat ID: $chatId");
-        debugPrint("🟢 [FCM] Sender ID: $senderId");
-        
         // If no notification_type is specified but we have chat_id, assume it's a chat message
         if (notificationType.isEmpty && chatId.isNotEmpty) {
           notificationType = 'chat_message';
@@ -164,7 +157,6 @@ class NotificationUtils {
             if (isCurrentChat) {
               debugPrint("🟡 [FCM] Skipping notification - user is currently in this chat");
             } else {
-              debugPrint("🟢 [FCM] Showing notification for chat message from different chat");
               showFlutterNotification(message);
             }
           } else {

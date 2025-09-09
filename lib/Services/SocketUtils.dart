@@ -27,6 +27,7 @@ class SocketUtils {
   static const String NEW_CHECK_OUT_CREATED = "NEW_CHECK_OUT_CREATED";
 
   static const String ON_MESSAGE_RECEIVED = 'recieveMessage';
+  static const String ON_MESSAGE_NOTIFICATION = 'notification';
   static const String ON_JOINED_ROOM = 'joinedRoom';
   static const String ON_GET_CHATS = 'getChats';
   static const String ON_LEAVE_CHAT_ROOM = 'leaveChatRoom';
@@ -340,6 +341,13 @@ class SocketUtils {
     socket.on(ON_MESSAGE_RECEIVED, (data) {
       debugPrint('🟡 ON_MESSAGE_RECEIVED: $data');
       onChatMessageReceived(data);
+    });
+    
+  }
+  setOnChatMessageNotificationListener(Function onChatMessageNotification) {
+    socket.on(ON_MESSAGE_NOTIFICATION, (data) {
+      debugPrint('🟡 ON_MESSAGE_NOTIFICATION: $data');
+      onChatMessageNotification(data);
     });
   }
 

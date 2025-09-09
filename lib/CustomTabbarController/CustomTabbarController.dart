@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:iseey/AfterLoginFlow/Restaurant/view/restaurant_screen.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/view/screens/RestaurantList.dart';
+import 'package:iseey/AfterLoginFlow/chat/controller/chat_controller.dart';
 import 'package:iseey/AuthFlow/domain/auth_repository.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
@@ -39,13 +40,6 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   List<String> bottomTabs = ["/tab1", "/tab2", "/tab3"];
   SocketUtils socketUtils = SocketUtils.instance;
 
-  // Create a listen of the websocket events using this event `receiveMessage`
-  void listenToChatMessages() {
-    socketUtils.socket.on('receiveMessage', (data) {
-      // Handle incoming chat messages
-      print("New chat message received: $data");
-    });
-  }
 
   void updateDetails() {
     final authRepository = Provider.of<AuthRepository>(context, listen: false);
@@ -55,7 +49,7 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   // this method updates the user current location every 30 seconds
   void startLocationUpdateTimer() {
     Timer.periodic(Duration(seconds: 30), (timer) {
-      if(selectedRestaurantId == null){
+      if (selectedRestaurantId == null) {
         return;
       }
       _updateUserLocation();
@@ -104,6 +98,13 @@ class CustomTabBarControllerState extends State<CustomTabBarController> {
   Future<void> initSocket() async {
     await socketUtils.connectSocket();
     socketUtils.setOnChatMessageReceivedListener((value) {});
+    socketUtils.setOnChatMessageNotificationListener((value) {
+      // Handle chat message notifications here
+      context.read<ChatController>().updateChatUserListWithMessage(
+            messageId: value['chat_id'] ?? '',
+            message: value['message'] ?? '',
+          );
+    });
     socketUtils.setConnectListener((value) {});
     socketUtils.setOnDisconnectListener((value) {});
     socketUtils.setOnCustomErrorListener((value) {});
