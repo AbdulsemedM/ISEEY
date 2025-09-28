@@ -52,7 +52,7 @@ class AuthRepository {
       'email': email,
       'password': password,
       'device_token': fcmRegistrationToken,
-      'device_type': Platform.isIOS ? 'ios' : 'android',
+      'device_type': Platform.isIOS ? 'ios' : 'android'
     };
 
     final req = HttpRequestModel(
@@ -79,13 +79,13 @@ class AuthRepository {
                 .setCurrentUserId(user.result?.userId ?? '');
 
             await _saveUserData(user.result?.token ?? '', user.result);
+            return;
           } else {
             throw Exception(user.message);
           }
-        } else {
-          throw Exception("Invalid response structure");
         }
       }
+      throw Exception("Invalid response structure");
     } catch (e) {
       x.hideLoading();
       rethrow;
@@ -116,11 +116,12 @@ class AuthRepository {
       }
     }
   }
-Future<void> updateUserCurrentLocation({
-  required GlobalKey<ScaffoldState> scaffoldKey,
-  required double latitude,
-  required double longitude,
-}) async {
+
+  Future<void> updateUserCurrentLocation({
+    required GlobalKey<ScaffoldState> scaffoldKey,
+    required double latitude,
+    required double longitude,
+  }) async {
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
       final data = {
