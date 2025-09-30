@@ -12,8 +12,11 @@ class RestaurantImage with _$RestaurantImage {
     required String? location,
   }) = _RestaurantImage;
 
-  factory RestaurantImage.fromJson(Map<String, dynamic> json) {
-    final model = _$RestaurantImageFromJson(json);
+  factory RestaurantImage.fromJson(Map<String, dynamic> json) =>
+      _fromJsonWithCustomLogic(json);
+
+  static RestaurantImage _fromJsonWithCustomLogic(Map<String, dynamic> json) {
+    final model = RestaurantImage.fromJson(json);
 
     return model.source == RestaurantImageSource.local
         ? model

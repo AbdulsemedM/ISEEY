@@ -20,7 +20,7 @@ class RestaurantListRepository {
     log("Latitude: $latitude, Longitude: $longitude");
 
     HttpRequestModel req = HttpRequestModel(
-      url: 'restaurants/list?lat=$latitude&lng=$longitude',
+      url: 'restaurants/list?lat=48.868503765829935&lng=8.089284476540819',
       method: RequestMethodType.GET,
       headerType: "json",
       authMethod: true,

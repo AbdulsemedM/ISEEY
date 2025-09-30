@@ -48,7 +48,7 @@ class RestaurantListItem extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: CachedNetworkImageProvider(
-                  restaurant.restaurantImage?.location ?? restaurant.logo,
+                  restaurant.restaurantImage?.location ?? restaurant.logo ?? '',
                 ),
                 fit: BoxFit.cover,
               ),

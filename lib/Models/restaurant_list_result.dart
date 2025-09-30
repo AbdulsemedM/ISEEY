@@ -6,14 +6,13 @@ import 'package:iseey/Models/restaurant_image.dart';
 import 'package:iseey/Models/restaurant_list_state_details.dart';
 
 part 'restaurant_list_result.freezed.dart';
-part 'restaurant_list_result.g.dart';
 
 @freezed
 class RestaurantListResult with _$RestaurantListResult {
   const factory RestaurantListResult({
     @JsonKey(name: '_id') required String sId,
     @JsonKey(name: 'email_verified') required String emailVerified,
-    @JsonKey(name: 'image') required String logo,
+    @JsonKey(name: 'image')  String? logo,
     @JsonKey(name: 'lat') required double lat,
     @JsonKey(name: 'lng') required double lng,
     @JsonKey(name: 'active') required String active,
@@ -51,7 +50,7 @@ class RestaurantListResult with _$RestaurantListResult {
   }) = _RestaurantListResult;
 
   factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
-    final model = _$RestaurantListResultFromJson(json);
+    final model = RestaurantListResult.fromJson(json);
     return model.googlePageUrl == null
         ? model
         : model.copyWith(
