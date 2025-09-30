@@ -31,6 +31,15 @@
 .pub/
 /build/
 
+# Generated files
+**/*.g.dart
+**/*.freezed.dart
+**/*.config.dart
+**/*.chopper.dart
+**/*.mocks.dart
+lib/generated/
+lib/firebase_options.dart
+
 # Web related
 lib/generated_plugin_registrant.dart
 
