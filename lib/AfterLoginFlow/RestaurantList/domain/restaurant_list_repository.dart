@@ -18,9 +18,11 @@ class RestaurantListRepository {
     final longitude = _currentPosition.longitude;
 
     log("Latitude: $latitude, Longitude: $longitude");
+    // const tempLat = 48.868503765829935;
+    // const tempLng = 8.089284476540819;
 
     HttpRequestModel req = HttpRequestModel(
-      url: 'restaurants/list?lat=48.868503765829935&lng=8.089284476540819',
+      url: 'restaurants/list?lat=$latitude&lng=$longitude',
       method: RequestMethodType.GET,
       headerType: "json",
       authMethod: true,
