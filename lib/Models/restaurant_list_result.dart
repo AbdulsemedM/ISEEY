@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:iseey/Models/google_rating_model.dart';
 import 'package:iseey/Models/google_review.dart';
 import 'package:iseey/Models/restaurant_image.dart';
 import 'package:iseey/Models/restaurant_list_state_details.dart';
@@ -12,13 +13,13 @@ class RestaurantListResult with _$RestaurantListResult {
   const factory RestaurantListResult({
     @JsonKey(name: '_id') required String sId,
     @JsonKey(name: 'email_verified') required String emailVerified,
-    @JsonKey(name: 'image')  String? logo,
+    @JsonKey(name: 'image') @Default('') String? logo,
     @JsonKey(name: 'lat') required double lat,
     @JsonKey(name: 'lng') required double lng,
     @JsonKey(name: 'active') required String active,
     @JsonKey(name: 'deleted') required String deleted,
     @JsonKey(name: 'name') required String name,
-    @JsonKey(name: 'phoneNumber') required String phoneNumber,
+    @Default('') String phoneNumber,
     @JsonKey(name: 'email') required String email,
     @JsonKey(name: 'updated') int? updated,
     @JsonKey(name: 'created') int? created,
@@ -31,7 +32,7 @@ class RestaurantListResult with _$RestaurantListResult {
     @JsonKey(name: 'place_id') String? googlePageUrl,
     @JsonKey(name: 'restaurant_image') RestaurantImage? restaurantImage,
     @JsonKey(name: 'restaurantReviewCount') int? reviewsCount,
-    @Default(0) int checkedInCount,
+    @JsonKey(name: 'checked_in_count') @Default(0) int checkedInCount,
     required String bio,
     required bool newsletter,
     @Default(0.0) double ratings,
@@ -47,6 +48,7 @@ class RestaurantListResult with _$RestaurantListResult {
     RestaurantListStateDetails? stateDetails,
     RestaurantListStateDetails? cityDetails,
     @Default([]) List<GoogleReview> reviews,
+    @JsonKey(name: 'google_rating') @Default(GoogleRatingModel()) GoogleRatingModel googleRating,
   }) = _RestaurantListResult;
 
   factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
