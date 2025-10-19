@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:iseey/Models/restaurant_data.dart';
-import 'package:iseey/Models/restaurant_list_result.dart';
 
 part 'restaurant_list_model.freezed.dart';
 part 'restaurant_list_model.g.dart';
