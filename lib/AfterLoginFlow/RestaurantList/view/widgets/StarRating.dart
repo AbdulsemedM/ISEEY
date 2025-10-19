@@ -30,7 +30,7 @@ class StarRating extends StatelessWidget {
           } else {
             return const Icon(
               Icons.star_border,
-              color: Colors.white,
+              color: Colors.amber,
               size: 10.0,
             );
           }

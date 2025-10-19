@@ -277,7 +277,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                                   : controller
                                                           .filteredRestaurants[
                                                       index];
-                                          return RestaurantListItem(
+                                          return 
+                                          RestaurantListItem(
                                             restaurant: restaurant,
                                             onTap: () {
                                               _handleRestaurantTap(restaurant);

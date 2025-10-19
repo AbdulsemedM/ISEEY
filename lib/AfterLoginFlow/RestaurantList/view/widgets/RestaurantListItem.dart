@@ -24,7 +24,8 @@ class RestaurantListItem extends StatelessWidget {
       restaurant.address.length,
     );
 
-    return GestureDetector(onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
         child: Neumorphic(
@@ -71,7 +72,8 @@ class RestaurantListItem extends StatelessWidget {
                               splitBackgroundForeground: true,
                               isForeground: false,
                               renderingByPath: true,
-                              shape: NeumorphicBoxShape.roundRect(BorderRadius.all(Radius.circular(4))),
+                              shape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.all(Radius.circular(4))),
                               style: NeumorphicStyle(
                                 shape: NeumorphicShape.concave,
                                 boxShape: NeumorphicBoxShape.circle(),
@@ -81,8 +83,10 @@ class RestaurantListItem extends StatelessWidget {
                                   color: AppColors.innerShadowColor,
                                   width: 1.5,
                                 ),
-                                shadowLightColorEmboss: AppColors.innerShadowColor,
-                                shadowDarkColorEmboss: AppColors.innerShadowColor,
+                                shadowLightColorEmboss:
+                                    AppColors.innerShadowColor,
+                                shadowDarkColorEmboss:
+                                    AppColors.innerShadowColor,
                               ),
                             ),
                             child: Padding(
@@ -113,52 +117,57 @@ class RestaurantListItem extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              restaurant.ratings == 0.0
-                                  ? const SizedBox.shrink()
-                                  : Padding(
-                                      padding: EdgeInsets.only(top: 8, right: 3),
-                                      child: NeumorphicButton(
-                                        onPressed: () => launchUrl(
-                                          Uri.parse(restaurant.googlePageUrl ?? 'www.iseey.app'),
-                                          mode: LaunchMode.inAppWebView,
-                                        ),
-                                        padding: EdgeInsets.only(left: 8, bottom: 8, top: 5),
-                                        style: NeumorphicStyle(
-                                          shape: NeumorphicShape.convex,
-                                          boxShape: NeumorphicBoxShape.beveled(BorderRadius.circular(4)),
-                                          depth: 2,
-                                          lightSource: LightSource.bottomLeft,
-                                          color: AppColors.listBoxBackgroundColor,
-                                          border: NeumorphicBorder(
-                                            color: AppColors.innerShadowColor,
-                                            width: 0.3,
-                                          ),
-                                          shadowDarkColor: AppColors.innerShadowColor,
-                                          shadowLightColorEmboss: AppColors.innerShadowColor,
-                                          shadowDarkColorEmboss: AppColors.innerShadowColor,
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            StarRating(rating: restaurant.ratings),
-                                            restaurant.reviews.isEmpty
-                                                ? const SizedBox.shrink()
-                                                : Flexible(
-                                                    child: GlobalWidgets.setText(
-                                                      ' ${restaurant.ratings}' +
-                                                          ' Reviews (${restaurant.reviewsCount ?? '-'})',
-                                                      fontSize: 10,
-                                                      fontHeight: 1,
-                                                      strTextColor: AppColors.strMainTextColorWhite,
-                                                      maxLine: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8, right: 3),
+                                child: NeumorphicButton(
+                                  onPressed: () => launchUrl(
+                                    Uri.parse(restaurant.googlePageUrl ??
+                                        'www.iseey.app'),
+                                    mode: LaunchMode.inAppWebView,
+                                  ),
+                                  padding: EdgeInsets.only(
+                                      left: 8, bottom: 8, top: 5),
+                                  style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    boxShape: NeumorphicBoxShape.beveled(
+                                        BorderRadius.circular(4)),
+                                    depth: 2,
+                                    lightSource: LightSource.bottomLeft,
+                                    color: AppColors.listBoxBackgroundColor,
+                                    border: NeumorphicBorder(
+                                      color: AppColors.innerShadowColor,
+                                      width: 0.3,
                                     ),
+                                    shadowDarkColor: AppColors.innerShadowColor,
+                                    shadowLightColorEmboss:
+                                        AppColors.innerShadowColor,
+                                    shadowDarkColorEmboss:
+                                        AppColors.innerShadowColor,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      StarRating(
+                                        rating: restaurant.ratings,
+                                      ),
+                                      Flexible(
+                                              child: GlobalWidgets.setText(
+                                                ' ${restaurant.ratings}' +
+                                                    ' Reviews (${restaurant.reviewsCount ?? '0'})',
+                                                fontSize: 10,
+                                                fontHeight: 1,
+                                                strTextColor: AppColors
+                                                    .strMainTextColorWhite,
+                                                maxLine: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -168,7 +177,8 @@ class RestaurantListItem extends StatelessWidget {
                   Flexible(
                     flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
+                      padding:
+                          const EdgeInsets.only(right: 8, top: 8, bottom: 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,21 +186,24 @@ class RestaurantListItem extends StatelessWidget {
                           if (restaurant.facebook != '') ...[
                             _buildSocialButton(
                               AssetsConstant.facebook,
-                              () => launchURL(restaurant.facebook ?? 'https://www.facebook.com'),
+                              () => launchURL(restaurant.facebook ??
+                                  'https://www.facebook.com'),
                             ),
                             if (restaurant.instagram != '') _buildDivider(),
                           ],
                           if (restaurant.instagram != '') ...[
                             _buildSocialButton(
                               AssetsConstant.instagram,
-                              () => launchURL(restaurant.instagram ?? 'https://www.instagram.com'),
+                              () => launchURL(restaurant.instagram ??
+                                  'https://www.instagram.com'),
                             ),
                             if (restaurant.website != '') _buildDivider(),
                           ],
                           if (restaurant.website != '') ...[
                             _buildSocialButton(
                               AssetsConstant.website,
-                              () => launchURL(restaurant.website ?? 'https://iseey.app/'),
+                              () => launchURL(
+                                  restaurant.website ?? 'https://iseey.app/'),
                               isWebsite: true,
                             ),
                           ],
@@ -207,10 +220,11 @@ class RestaurantListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialButton(String asset, VoidCallback onPressed, {bool isWebsite = false}) {
+  Widget _buildSocialButton(String asset, VoidCallback onPressed,
+      {bool isWebsite = false}) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 35,
+      height: 35,
       child: NeumorphicButton(
         padding: EdgeInsets.zero,
         child: Center(
@@ -218,7 +232,7 @@ class RestaurantListItem extends StatelessWidget {
             asset,
             fit: BoxFit.contain,
             color: isWebsite ? Colors.white : null,
-            height: isWebsite ? 25 : null,
+            height: isWebsite ? 20 : null,
           ),
         ),
         onPressed: onPressed,
