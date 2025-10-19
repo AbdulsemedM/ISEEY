@@ -49,7 +49,7 @@ dependencies:
   webview_flutter: ^4.4.2
   freezed: ^2.4.6
   freezed_annotation: ^2.4.1
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
   flutter_neumorphic_plus: ^3.4.0
   mime: ^1.0.4
   rive: ^0.13.20

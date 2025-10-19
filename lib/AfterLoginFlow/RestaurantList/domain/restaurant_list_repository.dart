@@ -31,10 +31,11 @@ class RestaurantListRepository {
     try {
       final response = await HttpService().init(req, scaffoldKey);
       if (response != '') {
+        final decodedResponse = jsonDecode(response);
         RestaurantListModel modelData =
-            RestaurantListModel.fromJson(jsonDecode(response));
+            RestaurantListModel.fromJson(decodedResponse);
         if (modelData.success) {
-          return modelData.result;
+          return modelData.data.restaurants;
         } else {
           showSuccessOrFail(modelData.message, false, context);
           return [];

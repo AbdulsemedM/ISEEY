@@ -1,0 +1,36 @@
+{
+    "success": true,
+    "message": "Restaurants list retrieved successfully",
+    "data": {
+        "restaurants": [
+            {
+                "_id": "68da5697752034e6cf30108a",
+                "email_verified": "N",
+                "image": "https://iseey.eu-central-1.linodeobjects.com/iseey/restaurant/1759139400926-68bdd2a4a3e8adee4a60ebea.jpg",
+                "lat": 48.8638357,
+                "lng": 8.084420099999999,
+                "address": "26 Rue Principale A, 67930 Beinheim, Frankreich",
+                "active": "Y",
+                "deleted": "N",
+                "number_of_tables": 30,
+                "menu": "https://www.facebook.com/pages/A-Lagneau/149442468428392",
+                "drinkMenu": "https://www.facebook.com/pages/A-Lagneau/149442468428392",
+                "name": "A l'Agneau",
+                "phoneNumber": "+33333888647",
+                "email": "bl3333@gmx.de",
+                "place_id": "ChIJ44nRI3TklkcRKZ2X-hi7HpM",
+                "bio": "",
+                "facebook": "https://www.facebook.com/pages/A-Lagneau/149442468428392",
+                "instagram": "https://www.facebook.com/pages/A-Lagneau/149442468428392",
+                "website": "https://www.facebook.com/pages/A-Lagneau/149442468428392",
+                "newsletter": false,
+                "checked_in_count": 0,
+                "google_rating": {
+                    "overall": 0,
+                    "total_ratings": 0,
+                    "last_updated": "2025-10-19T00:29:03.132Z"
+                }
+            }
+        ]
+    }
+}

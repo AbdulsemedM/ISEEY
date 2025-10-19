@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:iseey/GlobalFiles/GlobalVariables.dart';
 
 part 'restaurant_image.freezed.dart';
 part 'restaurant_image.g.dart';
@@ -12,19 +11,21 @@ class RestaurantImage with _$RestaurantImage {
     required String? location,
   }) = _RestaurantImage;
 
+  // factory RestaurantImage.fromJson(Map<String, dynamic> json) =>
+  //     _fromJsonWithCustomLogic(json);
+
+  // static RestaurantImage _fromJsonWithCustomLogic(Map<String, dynamic> json) {
+  //   final model = RestaurantImage.fromJson(json);
+
+  //   return model.source == RestaurantImageSource.local
+  //       ? model
+  //       : model.copyWith(
+  //           location:
+  //               "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${model.location}&key=$googleApiKey",
+  //         );
+  // }
   factory RestaurantImage.fromJson(Map<String, dynamic> json) =>
-      _fromJsonWithCustomLogic(json);
-
-  static RestaurantImage _fromJsonWithCustomLogic(Map<String, dynamic> json) {
-    final model = RestaurantImage.fromJson(json);
-
-    return model.source == RestaurantImageSource.local
-        ? model
-        : model.copyWith(
-            location:
-                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${model.location}&key=$googleApiKey",
-          );
-  }
+      _$RestaurantImageFromJson(json);
 }
 
 enum RestaurantImageSource { local, google }

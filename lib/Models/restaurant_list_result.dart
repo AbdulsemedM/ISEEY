@@ -7,6 +7,7 @@ import 'package:iseey/Models/restaurant_image.dart';
 import 'package:iseey/Models/restaurant_list_state_details.dart';
 
 part 'restaurant_list_result.freezed.dart';
+part 'restaurant_list_result.g.dart';
 
 @freezed
 class RestaurantListResult with _$RestaurantListResult {
@@ -33,8 +34,8 @@ class RestaurantListResult with _$RestaurantListResult {
     @JsonKey(name: 'restaurant_image') RestaurantImage? restaurantImage,
     @JsonKey(name: 'restaurantReviewCount') int? reviewsCount,
     @JsonKey(name: 'checked_in_count') @Default(0) int checkedInCount,
-    required String bio,
-    required bool newsletter,
+    @Default("") String bio,
+    @Default(false) bool newsletter,
     @Default(0.0) double ratings,
     int? stateExists,
     int? cityExists,
@@ -51,13 +52,15 @@ class RestaurantListResult with _$RestaurantListResult {
     @JsonKey(name: 'google_rating') @Default(GoogleRatingModel()) GoogleRatingModel googleRating,
   }) = _RestaurantListResult;
 
-  factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
-    final model = RestaurantListResult.fromJson(json);
-    return model.googlePageUrl == null
-        ? model
-        : model.copyWith(
-            googlePageUrl:
-                "https://www.google.com/maps/search/?api=1&query=${model.lat},${model.lng}&query_place_id=${model.googlePageUrl}",
-          );
-  }
+  // factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
+  //   final model = _$RestaurantListResultFromJson(json);
+  //   return model.googlePageUrl == null
+  //       ? model
+  //       : model.copyWith(
+  //           googlePageUrl:
+  //               "https://www.google.com/maps/search/?api=1&query=${model.lat},${model.lng}&query_place_id=${model.googlePageUrl}",
+  //         );
+  // }
+  factory RestaurantListResult.fromJson(Map<String, dynamic> json) =>
+      _$RestaurantListResultFromJson(json);
 }

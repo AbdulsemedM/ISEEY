@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:iseey/AfterLoginFlow/RestaurantList/controller/restaurant_list_controller.dart';
@@ -40,18 +42,18 @@ class _RestaurantListState extends State<RestaurantList> {
   void initState() {
     super.initState();
     _getUserDetail();
-    // _loadRestaurants();
+    _loadRestaurants();
     // _onConnect();
   }
 
-  // Future<void> _loadRestaurants() async {
-  //   final results = await _repository.getRestaurants(context, scaffoldKey);
-  //   // log("Restaurant List: ${results} restaurants loaded");
-  //   setState(() {
-  //     restaurants = results;
-  //     filteredRestaurants = results;
-  //   });
-  // }
+  Future<void> _loadRestaurants() async {
+    final results = await _repository.getRestaurants(context, scaffoldKey);
+    log("Restaurant List: ${results.length} restaurants loaded");
+    setState(() {
+      restaurants = results;
+      filteredRestaurants = results;
+    });
+  }
 
   // void _searchRestaurants(String query) {
   //   setState(() {
