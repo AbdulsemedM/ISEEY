@@ -98,13 +98,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_profile_example_last_name":
             MessageLookupByLibrary.simpleMessage("z.B. Parker"),
         "edit_profile_facebook_text_field":
-            MessageLookupByLibrary.simpleMessage("Facebook Link"),
+            MessageLookupByLibrary.simpleMessage("Facebook Link (Optional)"),
         "edit_profile_gender_selection_title":
             MessageLookupByLibrary.simpleMessage("Geschlecht ?"),
         "edit_profile_gender_text_field_text":
             MessageLookupByLibrary.simpleMessage("Geschlecht"),
         "edit_profile_instagram_text_field":
-            MessageLookupByLibrary.simpleMessage("Instagram Link"),
+            MessageLookupByLibrary.simpleMessage("Instagram Link (Optional)"),
         "edit_profile_missing_info_error_message":
             MessageLookupByLibrary.simpleMessage("Bitte ausfüllen"),
         "edit_profile_new_password_text_field":
