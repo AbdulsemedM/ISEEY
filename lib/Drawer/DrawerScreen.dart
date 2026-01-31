@@ -190,13 +190,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 AppColors.mainBackgroundColorOrange,
                           ),
                         )
-                      : userInfo?.image != null
+                      : (userInfo?.image ?? '').trim().isNotEmpty
                           ? CircleAvatar(
                               radius: 70,
                               backgroundColor: Colors.transparent,
                               child: ClipOval(
                                 child: CachedNetworkImage(
-                                  imageUrl: userInfo?.image ?? '',
+                                  imageUrl: userInfo!.image,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
                                       const CircularProgressIndicator(),

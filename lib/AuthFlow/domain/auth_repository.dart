@@ -79,6 +79,7 @@ class AuthRepository {
                 .setCurrentUserId(user.result?.userId ?? '');
 
             await _saveUserData(user.result?.token ?? '', user.result);
+            _postLoginLocationUpdate(scaffoldKey);
             return;
           } else {
             throw Exception(user.message);
@@ -93,8 +94,10 @@ class AuthRepository {
   }
 
   Future<void> updateDeviceDetails(GlobalKey<ScaffoldState> scaffoldKey) async {
-    final token = await FirebaseMessaging.instance.getToken();
-    if (token != null) {
+    String? token = fcmRegistrationToken.isNotEmpty
+        ? fcmRegistrationToken
+        : await FirebaseMessaging.instance.getToken();
+    if (token != null && token.isNotEmpty) {
       final data = {
         'device_token': token,
         'device_type': Platform.isIOS ? 'ios' : 'android',
@@ -109,12 +112,37 @@ class AuthRepository {
       );
       try {
         final response = await httpService.init(req, scaffoldKey);
-        debugPrint("Update FCM Token API Response: $response");
+        debugPrint("Update device details API Response: $response");
       } catch (e) {
-        debugPrint("Error updating FCM token: $e");
-        throw Exception("Failed to update FCM token");
+        debugPrint("Error updating device details: $e");
+        throw Exception("Failed to update device details");
       }
     }
+  }
+
+  /// Post-login location update with up to 3 retries and exponential backoff.
+  /// Failure does not block login; errors are caught and logged.
+  void _postLoginLocationUpdate(GlobalKey<ScaffoldState> scaffoldKey) {
+    Future<void> attempt(int tryIndex) async {
+      const maxRetries = 3;
+      if (tryIndex > maxRetries) return;
+      try {
+        final position = await determinePosition();
+        await updateUserCurrentLocation(
+          scaffoldKey: scaffoldKey,
+          latitude: position.latitude,
+          longitude: position.longitude,
+        );
+      } catch (e) {
+        debugPrint("Post-login location update attempt $tryIndex failed: $e");
+        if (tryIndex < maxRetries) {
+          final delay = Duration(seconds: 1 << (tryIndex - 1));
+          await Future.delayed(delay);
+          await attempt(tryIndex + 1);
+        }
+      }
+    }
+    attempt(1);
   }
 
   Future<void> updateUserCurrentLocation({
@@ -122,27 +150,24 @@ class AuthRepository {
     required double latitude,
     required double longitude,
   }) async {
-    final token = await FirebaseMessaging.instance.getToken();
-    if (token != null) {
-      final data = {
-        'lat': latitude,
-        'lng': longitude,
-      };
-      final req = HttpRequestModel(
-        url: 'users/updatelatlng',
-        method: RequestMethodType.POST,
-        params: '',
-        body: json.encode(data),
-        headerType: "json",
-        authMethod: true,
-      );
-      try {
-        final response = await httpService.init(req, scaffoldKey);
-        debugPrint("Update FCM Token API Response: $response");
-      } catch (e) {
-        debugPrint("Error updating FCM token: $e");
-        throw Exception("Failed to update FCM token");
-      }
+    final data = {
+      'lat': latitude,
+      'lng': longitude,
+    };
+    final req = HttpRequestModel(
+      url: 'users/updatelatlng',
+      method: RequestMethodType.POST,
+      params: '',
+      body: json.encode(data),
+      headerType: "json",
+      authMethod: true,
+    );
+    try {
+      final response = await httpService.init(req, scaffoldKey);
+      debugPrint("Update location API Response: $response");
+    } catch (e) {
+      debugPrint("Error updating location: $e");
+      rethrow;
     }
   }
 

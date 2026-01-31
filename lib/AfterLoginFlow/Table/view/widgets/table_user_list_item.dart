@@ -42,47 +42,60 @@ class TableUserListItem extends StatelessWidget {
         ),
         child: IntrinsicHeight(
           child: Row(
-            children: [
+            children: <Widget>[
               Container(
                 width: 80,
                 margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Container(
-                    child: CachedNetworkImage(
-                      imageUrl: user.userDetail?.image ?? '',
-                      imageBuilder: (context, imageProvider) {
-                        return Container(
+                  child: (user.userDetail?.image ?? '').trim().isEmpty
+                      ? Container(
                           height: 80,
                           width: 80,
                           decoration: BoxDecoration(
-                            color: HexColor("F3F3F3"),
+                            color: Colors.white.withOpacity(0.5),
                             image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fitWidth,
+                              image: AssetImage(AssetsConstant.manPlaceholder),
+                              fit: BoxFit.cover,
                             ),
+                            shape: BoxShape.circle,
                           ),
-                        );
-                      },
-                      placeholder: (context, url) => CircularProgressIndicator(),
-                      errorWidget: (context, url, error) {
-                        return Container(
-                          height: 80,
-                          width: 80,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              image: DecorationImage(
-                                image: AssetImage(AssetsConstant.manPlaceholder),
-                                fit: BoxFit.cover,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: (user.userDetail?.image ?? '').trim(),
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: HexColor("F3F3F3"),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.fitWidth,
+                                ),
                               ),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                            );
+                          },
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) {
+                            return Container(
+                              height: 80,
+                              width: 80,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        AssetsConstant.manPlaceholder),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ),
               Flexible(

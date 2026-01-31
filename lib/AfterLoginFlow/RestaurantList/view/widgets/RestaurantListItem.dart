@@ -5,7 +5,14 @@ import 'package:iseey/Models/restaurant_list_result.dart';
 import 'package:iseey/GlobalFiles/GlobalWidgets.dart';
 import 'package:iseey/GlobalFiles/AppColors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
 import 'package:iseey/Services/assets_constant.dart';
+
+ImageProvider _restaurantImageProvider(RestaurantListResult restaurant) {
+  final url = (restaurant.restaurantImage?.location ?? restaurant.logo ?? '').trim();
+  if (url.isEmpty) return AssetImage(AssetsConstant.logo);
+  return CachedNetworkImageProvider(url);
+}
 
 class RestaurantListItem extends StatelessWidget {
   final RestaurantListResult restaurant;
@@ -48,9 +55,7 @@ class RestaurantListItem extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  restaurant.restaurantImage?.location ?? restaurant.logo ?? '',
-                ),
+                image: _restaurantImageProvider(restaurant),
                 fit: BoxFit.cover,
               ),
             ),

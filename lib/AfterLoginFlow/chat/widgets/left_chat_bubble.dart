@@ -31,8 +31,17 @@ class LeftChatBubble extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-               CachedNetworkImage(
-                  imageUrl: imgPath,
+               (imgPath.trim().isEmpty)
+                  ? CircleAvatar(
+                      radius: 16,
+                      child: Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    )
+                  : CachedNetworkImage(
+                  imageUrl: imgPath.trim(),
                   useOldImageOnUrlChange: true,
                   fadeInDuration: Duration(milliseconds: 300),
                   imageBuilder: (context, imageProvider) {

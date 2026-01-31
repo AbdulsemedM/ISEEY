@@ -83,9 +83,21 @@ class TableUserItem extends StatelessWidget {
               margin: EdgeInsets.only(left: 15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Container(
-                  child: CachedNetworkImage(
-                    imageUrl: user.userDetail?.image ?? '',
+                child: (user.userDetail?.image ?? '').trim().isEmpty
+                    ? Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          image: DecorationImage(
+                            image: AssetImage(AssetsConstant.manPlaceholder),
+                            fit: BoxFit.cover,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      )
+                    : CachedNetworkImage(
+                    imageUrl: (user.userDetail?.image ?? '').trim(),
                     imageBuilder: (context, imageProvider) => Container(
                       height: 50,
                       width: 50,
@@ -110,7 +122,6 @@ class TableUserItem extends StatelessWidget {
                           ),
                           shape: BoxShape.circle,
                         ),
-                      ),
                     ),
                   ),
                 ),

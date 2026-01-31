@@ -10,13 +10,27 @@ class FriendAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final url = (imageUrl).trim();
+    final usePlaceholder = url.isEmpty;
     return Container(
       width: 80,
       margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
+        child: usePlaceholder
+            ? Container(
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  image: DecorationImage(
+                    image: AssetImage(AssetsConstant.manPlaceholder),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            : CachedNetworkImage(
+          imageUrl: url,
           imageBuilder: (context, imageProvider) => Container(
             height: 80,
             width: 80,

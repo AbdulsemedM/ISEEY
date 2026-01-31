@@ -23,8 +23,19 @@ class ImageNetwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveUrl = url.trim();
+    if (effectiveUrl.isEmpty) {
+      return placeHolder ??
+          Container(
+            padding: EdgeInsets.all(5),
+            color: Color(0xfff7f7f7),
+            height: height,
+            width: width,
+            child: Image.asset(AssetsConstant.leftArrowIcon),
+          );
+    }
     return CachedNetworkImage(
-      imageUrl: url,
+      imageUrl: effectiveUrl,
       imageBuilder: (context, imageProvider) {
         return this.isZoomableViewEnable
             ? GestureDetector(

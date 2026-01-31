@@ -18,9 +18,16 @@ import 'Services/StateManagement.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') rethrow;
+  } catch (e) {
+    // Hot restart: native Firebase already has [DEFAULT], Dart VM was restarted
+    if (e.toString().contains('duplicate-app') == false) rethrow;
+  }
 
   // Configure Firebase to show notifications when app is in foreground
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(

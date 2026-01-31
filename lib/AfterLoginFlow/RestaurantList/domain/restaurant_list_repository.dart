@@ -1,31 +1,27 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:iseey/Models/restaurant_list_model.dart';
 import 'package:iseey/Models/restaurant_list_result.dart';
 import 'package:iseey/Services/ApiService.dart';
 import 'package:iseey/GlobalFiles/GlobalMethods.dart';
 
 class RestaurantListRepository {
+  static const String _restaurantListEndpoint = 'restaurants/list';
+
+  /// Fetches the restaurant list from [restaurants/list].
+  /// Sends the auth token in the Authorization header (Bearer) via [authMethod: true].
   Future<List<RestaurantListResult>> getRestaurants(
     BuildContext context,
     GlobalKey<ScaffoldState> scaffoldKey,
   ) async {
     log("Fetching restaurants...");
-    Position _currentPosition = await determinePosition();
-    final latitude = _currentPosition.latitude;
-    final longitude = _currentPosition.longitude;
-
-    log("Latitude: $latitude, Longitude: $longitude");
-    // const tempLat = 48.868503765829935;
-    // const tempLng = 8.089284476540819;
 
     HttpRequestModel req = HttpRequestModel(
-      url: 'restaurants/list?lat=$latitude&lng=$longitude',
+      url: _restaurantListEndpoint,
       method: RequestMethodType.GET,
       headerType: "json",
-      authMethod: true,
+      authMethod: true, // sends token from SharedPreferences in Authorization: Bearer <token>
       body: '',
       params: '',
     );

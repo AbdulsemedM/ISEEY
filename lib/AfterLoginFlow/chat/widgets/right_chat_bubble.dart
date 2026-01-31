@@ -78,8 +78,17 @@ class RightChatBubble extends StatelessWidget {
                   ],
                 ),
                 SizedBox(width: 8),
-                CachedNetworkImage(
-                  imageUrl: imgPath,
+                (imgPath.trim().isEmpty)
+                    ? CircleAvatar(
+                        radius: 16,
+                        child: Icon(
+                          Icons.person,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      )
+                    : CachedNetworkImage(
+                  imageUrl: imgPath.trim(),
                   useOldImageOnUrlChange: true,
                   fadeInDuration: Duration(milliseconds: 300),
                   imageBuilder: (context, imageProvider) {

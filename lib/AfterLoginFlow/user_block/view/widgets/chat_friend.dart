@@ -38,8 +38,19 @@ class ChatFriend extends StatelessWidget {
                             ),
                           ),
                         )
-                      : CachedNetworkImage(
-                          imageUrl: friend.userDetail.image,
+                      : (friend.userDetail.image ?? '').trim().isEmpty
+                          ? Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(AssetsConstant.manPlaceholder),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : CachedNetworkImage(
+                          imageUrl: (friend.userDetail.image ?? '').trim(),
                           imageBuilder: (context, imageProvider) {
                             return Container(
                               height: 80,

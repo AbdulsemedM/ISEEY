@@ -144,14 +144,14 @@ class _RestaurantListState extends State<RestaurantList> {
                             fontSize: 22,
                           ),
                           Spacer(),
-                          userInfo?.image != null
+                          (userInfo?.image ?? '').trim().isNotEmpty
                               ? Container(
                                   width: 37,
                                   height: 37,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: CachedNetworkImage(
-                                      imageUrl: userInfo!.image,
+                                      imageUrl: userInfo!.image.trim(),
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         decoration: BoxDecoration(
